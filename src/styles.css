@@ -1,0 +1,165 @@
+@import "material-symbols/rounded.css";
+
+:root {
+  font-family: "Lato", "Noto Sans TC", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  
+  --surface-hsl: 0deg 0% 25%;
+  --surface-variant-hsl: 0deg 0% 20%;
+  --background-hsl: 0deg 0% 13%;
+  --background-variant-hsl: 0deg 0% 16%;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+body {
+  margin: 0;
+}
+
+.container {
+  margin: 0;
+  padding-top: 10vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.pga-intensity-0 {
+  background-color: lightgray;
+
+  &:empty::after {
+    content: "1";
+  }
+}
+
+.intensity-0 {
+  border: 1px solid #808080;
+  color: white;
+  background-color: #202020;
+  box-sizing: border-box;
+
+  &:empty::after {
+    content: "0";
+  }
+}
+
+.intensity-1 {
+  color: white;
+  background-color: #003264;
+
+  &:empty::after {
+    content: "1";
+  }
+}
+
+.intensity-2 {
+  color: white;
+  background-color: #0064C8;
+
+  &:empty::after {
+    content: "2";
+  }
+}
+
+.intensity-3 {
+  color: white;
+  background-color: #1E9632;
+
+  &:empty::after {
+    content: "3";
+  }
+}
+
+.intensity-4 {
+  color: black;
+  background-color: #FFC800;
+
+  &:empty::after {
+    content: "4";
+  }
+}
+
+.intensity-5 {
+  color: black;
+  background-color: #FF9600;
+
+  &:empty::after {
+    content: "5⁻";
+  }
+}
+
+.intensity-6 {
+  color: black;
+  background-color: #FF6400;
+
+  &:empty::after {
+    content: "5⁺";
+  }
+}
+
+.intensity-7 {
+  color: white;
+  background-color: #FF0000;
+
+  &:empty::after {
+    content: "6⁻";
+  }
+}
+
+.intensity-8 {
+  color: white;
+  background-color: #C00000;
+
+  &:empty::after {
+    content: "6⁺";
+  }
+}
+
+.intensity-9 {
+  color: white;
+  background-color: #9600C8;
+
+  &:empty::after {
+    content: "7";
+  }
+}
+
+.intensity-unknow {
+  color: white;
+  background-color: #202020;
+  box-shadow: inset 0px 0px 0px 2px #808080;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f6f6f6;
+    background-color: #2f2f2f;
+  }
+
+  a:hover {
+    color: #24c8db;
+  }
+
+  input,
+  button {
+    color: #ffffff;
+    background-color: #0f0f0f98;
+  }
+  button:active {
+    background-color: #0f0f0f69;
+  }
+}

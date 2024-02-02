@@ -1,0 +1,16 @@
+{
+  "version": 8,
+  "name": "TREM Map",
+  "sources": {
+    "tw_county": {
+      "type": "geojson",
+      "data": "./tw_county.json",
+      "tolerance": 1
+    },
+    "tw_town": {
+      "type": "geojson",
+      "data": "./tw_town.json"
+    }
+  },
+  "layers": []
+}
