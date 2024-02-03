@@ -9,7 +9,6 @@ import maplibregl from "maplibre-gl";
 import type { Station, Report, Rts, PartialReport } from '../../scripts/class/api';
 import MapReportListMarker from '../component/MapReportListMarker.vue';
 import MapRtsBox from '../component/MapRtsBox.vue';
-import { i } from '../../scripts/helper/color';
 
 defineProps<{
   currentView: string;
