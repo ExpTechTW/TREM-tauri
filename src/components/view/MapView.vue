@@ -9,9 +9,9 @@ import maplibregl from "maplibre-gl";
 import type { Station, Report, Rts } from '../../scripts/class/api';
 
 defineProps<{
+  currentView: string;
   activeReport?: Report;
   rts: Ref<Rts>;
-  isReportBoxShown: boolean;
 }>();
 
 const stations = inject<Record<string, Station> | undefined>('stations');
@@ -76,9 +76,9 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-#map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': isReportBoxShown }")
+#map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': currentView.startsWith('report') }")
 .map-layers(v-if="map")
-  .active-report(v-if="activeReport && isReportBoxShown")
+  .active-report(v-if="activeReport && currentView == 'report'")
     MapReportMarker(:map="map", :report="activeReport")
   .rts(v-if="stations")
     MapRtsMarker(:map="map", :stations="stations", :rts="rts")

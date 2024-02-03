@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { PartialReport } from '../../scripts/class/api';
 import ReportItem from '../component/ReportItem.vue';
-defineProps<{ reports: PartialReport[]; changeReport: Function; }>();
+defineProps<{ currentView: string; reports: PartialReport[]; changeReport: Function; }>();
 </script>
 
 <template lang="pug">
 .report-list-wrapper
-  #report-panel.report-list-scrollview.panel.show
+  #report-panel.report-list-scrollview.panel(:class="{ show: currentView.startsWith('report') }")
     .report-list-scroller
       .report-list
         ReportItem(v-for="report in reports", :report='report', :changeReport="changeReport")

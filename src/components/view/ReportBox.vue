@@ -10,15 +10,15 @@ import { extractLocationFromString, toFormattedTimeString } from "../../scripts/
 import ReportIntensityItem from "../component/ReportIntensityItem.vue";
 
 defineProps<{
+  currentView: string;
   report?: Report,
   handleHideReportBox: () => void;
-  isReportBoxShown: boolean;
 }>();
 </script>
 
 <template lang="pug">
 .report-box-wrapper
-  #report-box.report-box.panel(:class="{ show: isReportBoxShown }")
+  #report-box.report-box.panel(:class="{ show: currentView == 'report' }")
     .report-box-header
       .report-box-header
         FilledButton(@click="handleHideReportBox")
@@ -72,7 +72,7 @@ defineProps<{
               FieldValueUnitPair
                 template(#leading-unit) M#[sub L]
                 template(#value) {{ report.mag }}
-          ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 60%'")
+          ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 40%'")
             template(#icon) keyboard_double_arrow_down
             template(#name) 深度
             template(#value, v-if="report?.depth != undefined")
@@ -99,7 +99,7 @@ defineProps<{
             #report-intensity-grouped.report-intensity-container
               ReportIntensityGroup(v-for="area in report?.list" :area="area")
             #report-intensity-all.report-intensity-container
-              ReportIntensityItem(v-if="report?.list" v-for="station in report.list.flatMap(v=>v.stations.map(s=>({...s,area: v.area })))" :station="station")
+              ReportIntensityItem(v-if="report?.list" v-for="station in report.list.flatMap(v=>v.stations.map(s=>({...s,area: v.area }))).sort((a, b) => b.int - a.int)" :station="station")
 </template>
 
 <style scoped>

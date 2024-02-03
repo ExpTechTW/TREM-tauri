@@ -12,16 +12,16 @@ const { reports } = defineProps<{ reports: PartialReport[]; rts: Ref<Rts>; }>();
 const api = inject<ExpTechApi>("api");
 
 const activeReport = ref<Report>();
-const isReportBoxShown = ref<boolean>(false);
+const currentView = ref<string>("report-list");
 
 const handleHideReportBox = () => {
-  isReportBoxShown.value = false;
+  currentView.value = "report-list";
 };
 
 const changeReport = async (report: PartialReport) => {
   if (!api) return;
   activeReport.value = undefined;
-  isReportBoxShown.value = true;
+  currentView.value = "report";
   const fullReport = await api?.getReport(report.id);
   console.log(fullReport);
   activeReport.value = fullReport;
@@ -30,9 +30,9 @@ const changeReport = async (report: PartialReport) => {
 </script>
 
 <template lang="pug">
-MapView(:active-report="activeReport", :rts="rts", :is-report-box-shown="isReportBoxShown")
-ReportBox(:report="activeReport", :is-report-box-shown="isReportBoxShown", :handle-hide-report-box="handleHideReportBox")
-ReportListBox(:reports="reports", :change-report="changeReport")
+MapView(:current-view="currentView", :active-report="activeReport", :rts="rts")
+ReportBox(:current-view="currentView", :report="activeReport", :handle-hide-report-box="handleHideReportBox")
+ReportListBox(:current-view="currentView", :reports="reports", :change-report="changeReport")
 </template>
 
 <style scoped></style>

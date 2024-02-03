@@ -11,7 +11,7 @@ defineProps<{ report: PartialReport; changeReport: Function; }>();
   .report-list-item-content
     span.report-list-item-location {{ extractLocationFromString(report.loc) }}
     span.report-list-item-time {{ toFormattedTimeString(report.time) }}
-  .report-list-item-magnitude {{ report.mag }}
+  .report-list-item-magnitude {{ report.mag.toFixed(1) }}
 </template>
 
 <style scoped>
