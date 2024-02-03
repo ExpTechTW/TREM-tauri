@@ -9,15 +9,17 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import stationJsonData from "./assets/json/station.json";
 import "./styles.css";
 
+
 const props = {
   reports: reactive<PartialReport[]>([]),
   rts: ref<Rts>({ station: {}, box: {}, time: Date.now() }),
 };
 
-const app = createApp(App, props);
 const settings = new SettingsManager({ apikey: "" });
 const api = new ExpTechApi();
 const stations = ref<Record<string, Station>>(stationJsonData);
+
+const app = createApp(App, props);
 
 app.provide("settings", settings);
 app.provide("api", api);

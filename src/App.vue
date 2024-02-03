@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import Time from "./components/component/Time.vue";
 import MapView from "./components/view/MapView.vue";
+import NavigationBar from "./components/component/NavigationBar.vue";
 import ReportBox from "./components/view/ReportBox.vue";
 import ReportListBox from "./components/view/ReportListBox.vue";
 
@@ -12,7 +14,11 @@ const { reports } = defineProps<{ reports: PartialReport[]; rts: Ref<Rts>; }>();
 const api = inject<ExpTechApi>("api");
 
 const activeReport = ref<Report>();
-const currentView = ref<string>("report-list");
+const currentView = ref<string>("home");
+
+const changeView = (view: string) => {
+  currentView.value = view;
+};
 
 const handleHideReportBox = () => {
   currentView.value = "report-list";
@@ -30,6 +36,8 @@ const changeReport = async (report: PartialReport) => {
 </script>
 
 <template lang="pug">
+NavigationBar(:current-view="currentView", :change-view="changeView")
+Time(:timestamp="rts.value.time")
 MapView(:current-view="currentView", :active-report="activeReport", :rts="rts")
 ReportBox(:current-view="currentView", :report="activeReport", :handle-hide-report-box="handleHideReportBox")
 ReportListBox(:current-view="currentView", :reports="reports", :change-report="changeReport")
