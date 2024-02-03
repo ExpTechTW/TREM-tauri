@@ -12,6 +12,10 @@ export default class Route {
     this.key = options.key ?? "";
   }
 
+  randomHostUrl() {
+    return `https://lb-${Math.ceil(Math.random() * 4)}.exptech.com.tw` as const;
+  }
+
   randomBaseUrl() {
     return `https://lb-${Math.ceil(Math.random() * 4)}.exptech.com.tw/api/v${this.version}` as const;
   }
@@ -30,5 +34,9 @@ export default class Route {
 
   rts(timestamp: string) {
     return `${this.randomBaseUrl()}/trem/rts?time=${timestamp}` as const;
+  }
+
+  station() {
+    return `${this.randomHostUrl()}/file/resource/station.json` as const;
   }
 }

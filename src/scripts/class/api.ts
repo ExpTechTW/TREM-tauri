@@ -1,6 +1,19 @@
 import EventEmitter from "events";
 import Route from "./route.js";
 
+export interface StationInfo {
+  code: number;
+  lat: number;
+  lon: number;
+  time: string;
+}
+
+export interface Station {
+  net: string;
+  info: StationInfo[];
+  work: boolean;
+}
+
 export interface WebSocketConnectionConfig {
   type?: string,
   key?: string,
@@ -51,6 +64,12 @@ export interface Rts {
   time: number;
 };
 
+export interface Ntp {
+  type: "ntp";
+  time: number;
+  version: number;
+}
+
 export enum WebSocketCloseCode {
   InsufficientPermission = 4000,
 };
@@ -77,6 +96,13 @@ export enum WebSocketEvent {
   Verify = "verify",
   Close = "close",
 };
+
+export declare interface ExpTechApi {
+  on(event: WebSocketEvent.Rts, listener: (rts: Rts) => void): this;
+  on(event: WebSocketEvent.Eew, listener: (eew: any) => void): this;
+  on(event: WebSocketEvent.Ntp, listener: (ntp: Ntp) => void): this;
+  on(event: WebSocketEvent.Close, listener: (ev: CloseEvent) => void): this;
+}
 
 export class ExpTechApi extends EventEmitter {
   key: string;
@@ -130,12 +156,10 @@ export class ExpTechApi extends EventEmitter {
     this.ws.addEventListener("message", (raw) => {
       try {
         const data = JSON.parse(raw.data);
-        console.debug(data);
 
         if (data)
           switch (data.type) {
             case WebSocketEvent.Verify: {
-
               this.ws.send(JSON.stringify(this.wsConfig));
               break;
             }
@@ -159,16 +183,18 @@ export class ExpTechApi extends EventEmitter {
             case "data": {
               switch (data.data.type) {
                 case WebSocketEvent.Rts:
-                  this.emit(WebSocketEvent.Rts, data.data);
+                  this.emit(WebSocketEvent.Rts, data.data.data);
                   break;
                 case WebSocketEvent.Eew:
-                  this.emit(WebSocketEvent.Eew, data.data);
+                  this.emit(WebSocketEvent.Eew, data.data.data);
                   break;
               }
               break;
             }
 
             case WebSocketEvent.Ntp: {
+              console.log(data);
+
               this.emit(WebSocketEvent.Ntp, data);
               break;
             }
@@ -222,8 +248,8 @@ export class ExpTechApi extends EventEmitter {
     }
   }
 
-  async getStations() {
-    const url = "https://data.exptech.com.tw/file/resource/station.json";
+  async getStations(): Promise<Record<string, Station>> {
+    const url = this.route.station();
 
     try {
       return await this.#get(url);

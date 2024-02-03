@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import MapCrossMarker from './MapCrossMarker.vue';
 
+import type { ComponentPublicInstance } from 'vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 import maplibregl from "maplibre-gl";
 
-import type { ComponentPublicInstance } from 'vue';
 import type { Report } from '../../scripts/class/api';
+import { TaiwanBounds } from '../../scripts/helper/constant';
 
 const { map, report } = defineProps<{ map: maplibregl.Map; report: Report; }>();
 
@@ -42,12 +43,13 @@ onUnmounted(() => {
   for (const marker of markers) {
     marker.remove();
   }
+  map.fitBounds(TaiwanBounds, { padding: { top: 16, left: 16, bottom: 16, right: 316 } });
 });
 </script>
 
 <template lang="pug">
 MapCrossMarker(ref="epicenterMarkerTemplate", :size="32")
-template(v-for="station of stations")
+template(v-for="station in stations")
   .report-intensity-marker(ref="intensityMarkerTemplate", :class="`intensity-${station.int}`", :style="`z-index:${station.int}`")
 </template>
 

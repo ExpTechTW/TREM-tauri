@@ -12,6 +12,7 @@
   "dependencies": {
     "@tauri-apps/api": "^1.5.3",
     "@vue/devtools": "^7.0.14",
+    "chroma-js": "^2.4.2",
     "events": "^3.3.0",
     "maplibre-gl": "^4.0.0",
     "material-symbols": "^0.14.6",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.5.8",
+    "@types/chroma-js": "^2.4.3",
     "@types/events": "^3.0.3",
     "@types/ws": "^8.5.10",
     "@vitejs/plugin-vue": "^4.2.3",

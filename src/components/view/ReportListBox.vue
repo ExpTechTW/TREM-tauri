@@ -9,7 +9,7 @@ defineProps<{ reports: PartialReport[]; changeReport: Function; }>();
   #report-panel.report-list-scrollview.panel.show
     .report-list-scroller
       .report-list
-        ReportItem(v-for="report of reports", :report='report', :changeReport="changeReport")
+        ReportItem(v-for="report in reports", :report='report', :changeReport="changeReport")
 </template>
 
 <style scoped>

@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import MapReportMarker from '../component/MapReportMarker.vue';
+import MapRtsMarker from '../component/MapRtsMarker.vue';
 
-import { markRaw, onMounted, onUnmounted, shallowRef } from 'vue';
+import { inject, markRaw, onMounted, onUnmounted, shallowRef } from 'vue';
+import type { Ref } from 'vue';
 import maplibregl from "maplibre-gl";
 
-import type { Report } from '../../scripts/class/api';
+import type { Station, Report, Rts } from '../../scripts/class/api';
 
-const { activeReport } = defineProps<{
+defineProps<{
   activeReport?: Report;
+  rts: Ref<Rts>;
   isReportBoxShown: boolean;
 }>();
+
+const stations = inject<Record<string, Station> | undefined>('stations');
 
 const map = shallowRef<maplibregl.Map | null>(null);
 
@@ -71,17 +76,23 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-#map.map-container
+#map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': isReportBoxShown }")
 .map-layers(v-if="map")
   .active-report(v-if="activeReport && isReportBoxShown")
-    MapReportMarker(:map="map" :report="activeReport")
+    MapReportMarker(:map="map", :report="activeReport")
+  .rts(v-if="stations")
+    MapRtsMarker(:map="map", :stations="stations", :rts="rts")
 </template>
 
-<style scoped>
+<style>
 .map-container {
   position: absolute;
   inset: 0;
   height: 100svh;
   width: 100svw;
+
+  &.hide-rts-markers .rts-marker {
+    opacity: 0 !important;
+  }
 }
 </style>

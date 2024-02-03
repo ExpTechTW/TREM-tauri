@@ -6,7 +6,7 @@ defineProps<{ report: PartialReport; changeReport: Function; }>();
 </script>
 
 <template lang="pug">
-.report-list-item(@click="changeReport(report)")
+.report-list-item(@click="changeReport(report)", :class="{numbered: report.no % 1000}")
   IntensityBox(:int="report.int")
   .report-list-item-content
     span.report-list-item-location {{ extractLocationFromString(report.loc) }}

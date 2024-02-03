@@ -97,9 +97,9 @@ defineProps<{
         .report-intensity-list-scrollview
           .report-intensity-list-scroller
             #report-intensity-grouped.report-intensity-container
-              ReportIntensityGroup(v-for="area of report?.list" :area="area")
+              ReportIntensityGroup(v-for="area in report?.list" :area="area")
             #report-intensity-all.report-intensity-container
-              ReportIntensityItem(v-if="report?.list" v-for="station of report.list.flatMap(v=>v.stations.map(s=>({...s,area: v.area })))" :station="station")
+              ReportIntensityItem(v-if="report?.list" v-for="station in report.list.flatMap(v=>v.stations.map(s=>({...s,area: v.area })))" :station="station")
 </template>
 
 <style scoped>
