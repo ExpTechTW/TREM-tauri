@@ -10,7 +10,7 @@ import type { Ref } from "vue";
 
 import type { ExpTechApi, Report, PartialReport, Rts } from "./scripts/class/api";
 
-const { reports } = defineProps<{ reports: PartialReport[]; rts: Ref<Rts>; }>();
+defineProps<{ reports: PartialReport[]; rts: Ref<Rts>; }>();
 const api = inject<ExpTechApi>("api");
 
 const activeReport = ref<Report>();
@@ -29,7 +29,6 @@ const changeReport = async (report: PartialReport) => {
   activeReport.value = undefined;
   currentView.value = "report";
   const fullReport = await api?.getReport(report.id);
-  console.log(fullReport);
   activeReport.value = fullReport;
 };
 
@@ -38,7 +37,7 @@ const changeReport = async (report: PartialReport) => {
 <template lang="pug">
 NavigationBar(:current-view="currentView", :change-view="changeView")
 Time(:timestamp="rts.value.time")
-MapView(:current-view="currentView", :active-report="activeReport", :rts="rts")
+MapView(:current-view="currentView", :reports="reports", :active-report="activeReport", :rts="rts")
 ReportBox(:current-view="currentView", :report="activeReport", :handle-hide-report-box="handleHideReportBox")
 ReportListBox(:current-view="currentView", :reports="reports", :change-report="changeReport")
 </template>

@@ -5,10 +5,9 @@ import App from "./App.vue";
 import { ExpTechApi, WebSocketEvent } from "./scripts/class/api";
 import type { Station, PartialReport, Rts } from "./scripts/class/api";
 
-import "maplibre-gl/dist/maplibre-gl.css";
 import stationJsonData from "./assets/json/station.json";
+import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
-
 
 const props = {
   reports: reactive<PartialReport[]>([]),
@@ -35,7 +34,6 @@ app.mount("#app");
 
   api.on(WebSocketEvent.Rts, (raw) => {
     props.rts.value = raw;
-    console.debug(raw);
   });
 
   api.on(WebSocketEvent.Close, console.debug);

@@ -6,10 +6,12 @@ import { inject, markRaw, onMounted, onUnmounted, shallowRef } from 'vue';
 import type { Ref } from 'vue';
 import maplibregl from "maplibre-gl";
 
-import type { Station, Report, Rts } from '../../scripts/class/api';
+import type { Station, Report, Rts, PartialReport } from '../../scripts/class/api';
+import MapReportListMarker from '../component/MapReportListMarker.vue';
 
 defineProps<{
   currentView: string;
+  reports: PartialReport[];
   activeReport?: Report;
   rts: Ref<Rts>;
 }>();
@@ -76,8 +78,10 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-#map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': currentView.startsWith('report') }")
+#map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': currentView.startsWith('report'), 'hide-report-list-markers': currentView != 'report-list' }")
 .map-layers(v-if="map")
+  .report-list(v-if="reports && currentView == 'report-list'")
+    MapReportListMarker(:map="map", :reports="reports")
   .active-report(v-if="activeReport && currentView == 'report'")
     MapReportMarker(:map="map", :report="activeReport")
   .rts(v-if="stations")
@@ -92,6 +96,10 @@ onUnmounted(() => {
   width: 100svw;
 
   &.hide-rts-markers .rts-marker {
+    opacity: 0 !important;
+  }
+
+  &.hide-report-list-markers .report-list-marker {
     opacity: 0 !important;
   }
 }
