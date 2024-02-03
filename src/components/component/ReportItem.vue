@@ -2,7 +2,7 @@
 import type { PartialReport } from '../../scripts/class/api';
 import { extractLocationFromString, toFormattedTimeString } from '../../scripts/helper/utils';
 import IntensityBox from './IntensityBox.vue';
-defineProps<{ report: PartialReport, changeReport: Function; }>();
+defineProps<{ report: PartialReport; changeReport: Function; }>();
 </script>
 
 <template lang="pug">

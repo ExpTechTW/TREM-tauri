@@ -24,12 +24,13 @@ const changeReport = async (report: PartialReport) => {
   console.log(fullReport);
   activeReport.value = fullReport;
 };
+
 </script>
 
 <template lang="pug">
-MapView
-ReportBox(:report="activeReport", :isReportBoxShown="isReportBoxShown", :handleHideReportBox="handleHideReportBox")
-ReportListBox(:reports="reports", :changeReport="changeReport")
+MapView(:active-report="activeReport", :is-report-box-shown="isReportBoxShown")
+ReportBox(:report="activeReport", :is-report-box-shown="isReportBoxShown", :handle-hide-report-box="handleHideReportBox")
+ReportListBox(:reports="reports", :change-report="changeReport")
 </template>
 
 <style scoped></style>

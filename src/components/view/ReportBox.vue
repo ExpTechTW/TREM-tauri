@@ -11,7 +11,7 @@ import ReportIntensityItem from "../component/ReportIntensityItem.vue";
 
 defineProps<{
   report?: Report,
-  handleHideReportBox: () => void,
+  handleHideReportBox: () => void;
   isReportBoxShown: boolean;
 }>();
 </script>

@@ -1,8 +1,23 @@
+:root {
+  --intensity-0: #202020;
+  --intensity-1: #003264;
+  --intensity-2: #0064c8;
+  --intensity-3: #1e9632;
+  --intensity-4: #ffc800;
+  --intensity-5: #ff9600;
+  --intensity-6: #ff6400;
+  --intensity-7: #ff0000;
+  --intensity-8: #c00000;
+  --intensity-9: #9600c8;
+}
+
 .intensity-0 {
-  border: 1px solid #808080;
-  color: white;
-  background-color: #202020;
-  box-sizing: border-box;
+  color: #fff;
+
+  &:not(> .report-epicenter-marker) {
+    outline: 1px solid #808080;
+    background-color: #202020;
+  }
 
   &:empty::after {
     content: "0";
@@ -10,8 +25,16 @@
 }
 
 .intensity-1 {
-  color: white;
-  background-color: #003264;
+  color: #fff;
+  background-color: var(--intensity-1);
+
+  .cross-inner {
+    fill: var(--intensity-1);
+  }
+
+  .cross-outer {
+    fill: #fff;
+  }
 
   &:empty::after {
     content: "1";
@@ -19,8 +42,16 @@
 }
 
 .intensity-2 {
-  color: white;
-  background-color: #0064c8;
+  color: #fff;
+  background-color: var(--intensity-2);
+
+  .cross-inner {
+    fill: var(--intensity-2);
+  }
+
+  .cross-outer {
+    fill: #fff;
+  }
 
   &:empty::after {
     content: "2";
@@ -28,8 +59,16 @@
 }
 
 .intensity-3 {
-  color: white;
-  background-color: #1e9632;
+  color: #fff;
+  background-color: var(--intensity-3);
+
+  .cross-inner {
+    fill: var(--intensity-3);
+  }
+
+  .cross-outer {
+    fill: #fff;
+  }
 
   &:empty::after {
     content: "3";
@@ -37,8 +76,16 @@
 }
 
 .intensity-4 {
-  color: black;
-  background-color: #ffc800;
+  color: #000;
+  background-color: var(--intensity-4);
+
+  .cross-inner {
+    fill: var(--intensity-4);
+  }
+
+  .cross-outer {
+    fill: #fff;
+  }
 
   &:empty::after {
     content: "4";
@@ -46,8 +93,16 @@
 }
 
 .intensity-5 {
-  color: black;
-  background-color: #ff9600;
+  color: #000;
+  background-color: var(--intensity-5);
+
+  .cross-inner {
+    fill: var(--intensity-5);
+  }
+
+  .cross-outer {
+    fill: #fff;
+  }
 
   &:empty::after {
     content: "5⁻";
@@ -55,8 +110,16 @@
 }
 
 .intensity-6 {
-  color: black;
-  background-color: #ff6400;
+  color: #000;
+  background-color: var(--intensity-6);
+
+  .cross-inner {
+    fill: var(--intensity-6);
+  }
+
+  .cross-outer {
+    fill: #fff;
+  }
 
   &:empty::after {
     content: "5⁺";
@@ -64,8 +127,16 @@
 }
 
 .intensity-7 {
-  color: white;
-  background-color: #ff0000;
+  color: #fff;
+  background-color: var(--intensity-7);
+
+  .cross-inner {
+    fill: var(--intensity-7);
+  }
+
+  .cross-outer {
+    fill: #fff;
+  }
 
   &:empty::after {
     content: "6⁻";
@@ -73,8 +144,16 @@
 }
 
 .intensity-8 {
-  color: white;
-  background-color: #c00000;
+  color: #fff;
+  background-color: var(--intensity-8);
+
+  .cross-inner {
+    fill: var(--intensity-8);
+  }
+
+  .cross-outer {
+    fill: #fff;
+  }
 
   &:empty::after {
     content: "6⁺";
@@ -82,8 +161,16 @@
 }
 
 .intensity-9 {
-  color: white;
-  background-color: #9600c8;
+  color: #fff;
+  background-color: var(--intensity-9);
+
+  .cross-inner {
+    fill: var(--intensity-9);
+  }
+
+  .cross-outer {
+    fill: #fff;
+  }
 
   &:empty::after {
     content: "7";
@@ -91,7 +178,7 @@
 }
 
 .intensity-unknow {
-  color: white;
+  color: #fff;
   background-color: #202020;
   box-shadow: inset 0px 0px 0px 2px #808080;
 

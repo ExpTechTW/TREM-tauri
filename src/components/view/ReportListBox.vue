@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PartialReport } from '../../scripts/class/api';
 import ReportItem from '../component/ReportItem.vue';
-defineProps<{ reports: PartialReport[], changeReport: Function; }>();
+defineProps<{ reports: PartialReport[]; changeReport: Function; }>();
 </script>
 
 <template lang="pug">

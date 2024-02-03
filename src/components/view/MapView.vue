@@ -1,6 +1,15 @@
 <script setup lang="ts">
+import MapReportMarker from '../component/MapReportMarker.vue';
+
 import { markRaw, onMounted, onUnmounted, shallowRef } from 'vue';
 import maplibregl from "maplibre-gl";
+
+import type { Report } from '../../scripts/class/api';
+
+const { activeReport } = defineProps<{
+  activeReport?: Report;
+  isReportBoxShown: boolean;
+}>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
 
@@ -54,15 +63,18 @@ onMounted(() => {
         }
       });
   });
-}),
+});
 
-  onUnmounted(() => {
-    map.value?.remove();
-  });
+onUnmounted(() => {
+  map.value?.remove();
+});
 </script>
 
 <template lang="pug">
 #map.map-container
+.map-layers(v-if="map")
+  .active-report(v-if="activeReport && isReportBoxShown")
+    MapReportMarker(:map="map" :report="activeReport")
 </template>
 
 <style scoped>
