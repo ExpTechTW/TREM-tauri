@@ -8,6 +8,8 @@ import maplibregl from "maplibre-gl";
 
 import type { Station, Report, Rts, PartialReport } from '../../scripts/class/api';
 import MapReportListMarker from '../component/MapReportListMarker.vue';
+import MapRtsBox from '../component/MapRtsBox.vue';
+import { i } from '../../scripts/helper/color';
 
 defineProps<{
   currentView: string;
@@ -36,27 +38,35 @@ onMounted(() => {
         tw_town: {
           type: "geojson",
           data: "./tw_town.json"
+        },
+        box: {
+          type: "geojson",
+          data: "./box.json"
         }
       },
       layers: []
     },
     center: [initialState.lng, initialState.lat],
-    zoom: initialState.zoom
+    zoom: initialState.zoom,
+    keyboard: false,
+    dragRotate: false,
+    touchPitch: false,
   }));
 
   map.value.on("load", () => {
     if (!map.value) return;
 
-    map.value.addLayer({
-      id: "county",
-      type: "fill",
-      source: "tw_county",
-      layout: {},
-      paint: {
-        "fill-color": "#43474e",
-        "fill-opacity": 1
-      }
-    })
+    map.value
+      .addLayer({
+        id: "county",
+        type: "fill",
+        source: "tw_county",
+        layout: {},
+        paint: {
+          "fill-color": "#43474e",
+          "fill-opacity": 1
+        }
+      })
       .addLayer({
         id: "county_outline",
         type: "line",
@@ -67,6 +77,50 @@ onMounted(() => {
           "line-opacity": 1,
           "line-width": 0.6
         }
+      })
+      .addLayer({
+        id: "box",
+        type: "line",
+        source: "box",
+        paint: {
+          "line-color": [
+            "match",
+            [
+              "coalesce",
+              ["feature-state", "int"],
+              0,
+            ],
+            9, "#f22",
+            8, "#f22",
+            7, "#f22",
+            6, "#f22",
+            5, "#f22",
+            4, "#f22",
+            3, "#ff2",
+            2, "#ff2",
+            1, "#2f2",
+            "#2f2",
+          ],
+          "line-offset": 1.5,
+          "line-width": 3,
+          "line-opacity": [
+            "case",
+            [
+              ">=",
+              [
+                "coalesce",
+                ["feature-state", "int"],
+                -1,
+              ],
+              0,
+            ],
+            1,
+            0,
+          ],
+        },
+        layout: {
+          visibility: "none",
+        },
       });
   });
 });
@@ -85,6 +139,8 @@ onUnmounted(() => {
     MapReportMarker(:map="map", :report="activeReport")
   .rts(v-if="stations")
     MapRtsMarker(:map="map", :stations="stations", :rts="rts")
+  .rts-box(v-if="Object.keys(rts.value.box).length")
+    MapRtsBox(:map="map", :box="rts.value.box")
 </template>
 
 <style>

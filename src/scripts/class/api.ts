@@ -56,11 +56,14 @@ export interface RtsStation {
   pgv: number;
   i: number;
   I: number;
+  alert: boolean;
 };
+
+export type Box = Record<string, number>;
 
 export interface Rts {
   station: Record<string, RtsStation>;
-  box: Record<string, number[][]>;
+  box: Box;
   time: number;
 };
 

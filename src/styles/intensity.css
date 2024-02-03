@@ -106,11 +106,12 @@
 
   &:empty::after {
     content: "5⁻";
+    letter-spacing: -1px;
   }
 }
 
 .intensity-6 {
-  color: #000;
+  color: #fff;
   background-color: var(--intensity-6);
 
   .cross-inner {
@@ -123,6 +124,7 @@
 
   &:empty::after {
     content: "5⁺";
+    letter-spacing: -1px;
   }
 }
 
@@ -140,6 +142,7 @@
 
   &:empty::after {
     content: "6⁻";
+    letter-spacing: -1px;
   }
 }
 
@@ -157,6 +160,7 @@
 
   &:empty::after {
     content: "6⁺";
+    letter-spacing: -1px;
   }
 }
 

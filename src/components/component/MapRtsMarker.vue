@@ -46,24 +46,37 @@ onUnmounted(() => {
 
 <template lang="pug">
 template(v-for="(_, id) in stations.value")
-  .rts-marker(:ref="(el) => rtsMarkerTemplate[id] = el" :style="{ zIndex: (rts.value.station[id]?.i ?? -5) + 5 * 10}")
-    .rts-marker-color(:style="rts.value.station[id] ? `background-color: ${pga(rts.value.station[id].i)}`: ''")
+  .rts-marker(:ref="(el) => rtsMarkerTemplate[id] = el", :style="{ zIndex: ((rts.value.station[id]?.i ?? -5) + 5) * 10}")
+    .rts-marker-color(:class="(rts.value.station[id] && rts.value.station[id].alert && rts.value.station[id].i >= 1) ? `has-intensity intensity-${~~rts.value.station[id].i}`:''", :style="(rts.value.station[id] && rts.value.station[id].i < 1 ) ? `background-color: ${pga(rts.value.station[id].i)}`: ''")
 </template>
 
 <style scoped>
 .rts-marker {
-  height: 8px;
-  width: 8px;
-  border-radius: 4px;
-  outline: 1px solid #aaa;
   opacity: 1;
-  overflow: hidden;
   transition: opacity .1s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .rts-marker-color {
-  height: 100%;
-  width: 100%;
-  transition: background-color .1s cubic-bezier(0.2, 0, 0, 1);
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  height: 8px;
+  width: 8px;
+  border-radius: 8px;
+  outline: 1px solid #aaa;
+  overflow: hidden;
+  transition: height .1s cubic-bezier(0.2, 0, 0, 1),
+    width .1s cubic-bezier(0.2, 0, 0, 1),
+    background-color .1s cubic-bezier(0.2, 0, 0, 1);
+
+  &.has-intensity {
+    height: 16px;
+    width: 16px;
+    line-height: 18px;
+    font-size: 14px;
+    font-weight: 700;
+    outline: 2px solid #fff;
+    text-align: center;
+  }
 }
 </style>
