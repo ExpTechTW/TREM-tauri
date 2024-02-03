@@ -67,6 +67,38 @@ export interface Rts {
   time: number;
 };
 
+export enum EewOrigin {
+  Cwa = "cwa",
+  Kma = "kma",
+  Jma = "jma",
+  Nied = "nied",
+}
+
+export enum EewStatus {
+  Warn = 0,
+  Alert = 1,
+  Cancel = 2,
+  Test = 3,
+}
+
+export interface Eew {
+  type: "eew";
+  author: EewOrigin;
+  id: string,
+  serial: number,
+  status: EewStatus,
+  final: 1,
+  eq: {
+    time: number,
+    lon: number,
+    lat: number,
+    depth: number,
+    mag: number,
+    loc: string,
+    max: number,
+  };
+}
+
 export interface Ntp {
   type: "ntp";
   time: number;
@@ -102,7 +134,7 @@ export enum WebSocketEvent {
 
 export declare interface ExpTechApi {
   on(event: WebSocketEvent.Rts, listener: (rts: Rts) => void): this;
-  on(event: WebSocketEvent.Eew, listener: (eew: any) => void): this;
+  on(event: WebSocketEvent.Eew, listener: (eew: Eew) => void): this;
   on(event: WebSocketEvent.Ntp, listener: (ntp: Ntp) => void): this;
   on(event: WebSocketEvent.Close, listener: (ev: CloseEvent) => void): this;
 }
@@ -196,8 +228,6 @@ export class ExpTechApi extends EventEmitter {
             }
 
             case WebSocketEvent.Ntp: {
-              console.log(data);
-
               this.emit(WebSocketEvent.Ntp, data);
               break;
             }
