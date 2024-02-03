@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { markRaw, onMounted, onUnmounted, shallowRef } from 'vue';
-import mapstyle from "../assets/json/style.json";
 import maplibregl from "maplibre-gl";
 
 const map = shallowRef<maplibregl.Map | null>(null);
@@ -10,7 +9,22 @@ onMounted(() => {
 
   map.value = markRaw(new maplibregl.Map({
     container: "map",
-    style: mapstyle,
+    style: {
+      "version": 8,
+      "name": "TREM Map",
+      "sources": {
+        "tw_county": {
+          "type": "geojson",
+          "data": "./tw_county.json",
+          "tolerance": 1
+        },
+        "tw_town": {
+          "type": "geojson",
+          "data": "./tw_town.json"
+        }
+      },
+      "layers": []
+    },
     center: [initialState.lng, initialState.lat],
     zoom: initialState.zoom
   }))

@@ -1,8 +1,8 @@
 ![](https://img.shields.io/github/downloads/ExpTechTW/TREM-tauri/total)
 <img alt="Logo" src="https://upload.cc/i1/2022/08/11/DOqzZM.png" width="128px" height="128px" align="left"/>
 
-# Taiwan Real-time Earthquake Monitoring Lite
-臺灣即時地震監測 tauri 版
+# Taiwan Real-time Earthquake Monitoring Tauri
+臺灣即時地震監測 Tauri 版
 <a href="https://github.com/ExpTechTW/TREM/actions/workflows/github_actions.yml"><img alt="GitHub Workflow Status" align="right" src="https://github.com/ExpTechTW/TREM/actions/workflows/github_actions.yml/badge.svg"></a>
 <a href="https://discord.gg/5dbHqV8ees"><img alt="TREM Discord" align="right" src="https://img.shields.io/discord/926545182407688273?color=%237289DA&logo=discord&logoColor=white"></a>\
 &nbsp;
