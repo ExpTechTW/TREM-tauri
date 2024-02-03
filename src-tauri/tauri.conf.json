@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "trem-tauri",
+    "productName": "TREM Tauri",
     "version": "0.0.0"
   },
   "tauri": {
@@ -40,6 +40,7 @@
       ],
       "windows": {
         "nsis": {
+          "sidebarImage": "assets/sidebar.bmp",
           "installerIcon": "icons/icon.ico",
           "installMode": "currentUser",
           "license": "../LICENSE",
