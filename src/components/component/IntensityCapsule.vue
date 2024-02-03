@@ -2,7 +2,7 @@
 const { int } = defineProps<{ int: number; }>();
 </script>
 <template lang="pug">
-.intensity-box(:class="`intensity-${int}`")
+.report-intensity-item-intensity(:class="`intensity-${int}`")
 </template>
 
 <style scoped>

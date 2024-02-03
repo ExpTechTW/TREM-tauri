@@ -1,32 +1,35 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import MapView from "./components/MapView.vue";
+import { inject, ref } from "vue";
+import MapView from "./components/view/MapView.vue";
 import ReportBox from "./components/view/ReportBox.vue";
 import ReportListBox from "./components/view/ReportListBox.vue";
 
-import type { PartialReport } from "./scripts/class/api";
+import type { ExpTechApi, Report, PartialReport } from "./scripts/class/api";
 
-const { reports } = defineProps<{reports: PartialReport[] }>();
+const { reports } = defineProps<{ reports: PartialReport[]; }>();
+const api = inject<ExpTechApi>("api");
 
-const activeReport = ref<PartialReport>()
+const activeReport = ref<Report>();
+const isReportBoxShown = ref<boolean>(false);
 
-const hideReport = () => {
-  document.getElementById("report-box")?.classList.remove("show");
-}
+const handleHideReportBox = () => {
+  isReportBoxShown.value = false;
+};
 
-const changeReport = (report: PartialReport) => {
-  activeReport.value = report;
-  document.getElementById("report-box")?.classList.add("show");
-}
+const changeReport = async (report: PartialReport) => {
+  if (!api) return;
+  activeReport.value = undefined;
+  isReportBoxShown.value = true;
+  const fullReport = await api?.getReport(report.id);
+  console.log(fullReport);
+  activeReport.value = fullReport;
+};
 </script>
 
 <template lang="pug">
 MapView
-ReportBox(:report="activeReport" :hideReport="hideReport")
-ReportListBox(:reports="reports" :activeReport="activeReport" :changeReport="changeReport")
+ReportBox(:report="activeReport", :isReportBoxShown="isReportBoxShown", :handleHideReportBox="handleHideReportBox")
+ReportListBox(:reports="reports", :changeReport="changeReport")
 </template>
 
-<style scoped>
-
-</style>
-./scripts/class/api
+<style scoped></style>

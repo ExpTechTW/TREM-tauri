@@ -10,18 +10,22 @@ import "./styles.css";
 
 const props = {
   reports: reactive<PartialReport[]>([]),
-}
+};
 
-createApp(App, props).mount("#app");
+const app = createApp(App, props);
+const api = new ExpTechApi();
+app.provide("api", api);
+app.mount("#app");
 
 const settings = new SettingsManager({
   apikey: ""
 });
 
-(async() => {
+(async () => {
   await settings.initialize();
   await settings.syncCache();
-  const api = new ExpTechApi(await settings.get("apikey"));
+
+  api.setApiKey(await settings.get("apikey"));
 
   api.on(WebSocketEvent.Rts, console.debug);
   api.on(WebSocketEvent.Close, console.debug);

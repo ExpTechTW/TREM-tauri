@@ -1,11 +1,11 @@
 import EventEmitter from "events";
-import Route from"./route.js";
+import Route from "./route.js";
 
 export interface WebSocketConnectionConfig {
-  type    ?: string,
-  key     ?: string,
-  service ?: ("trem.rts" | "websocket.eew" | "websocket.report" | "websocket.tsunami" | "trem.intensity" | "cwa.intensity")[],
-}
+  type?: string,
+  key?: string,
+  service?: ("trem.rts" | "websocket.eew" | "websocket.report" | "websocket.tsunami" | "trem.intensity" | "cwa.intensity")[],
+};
 
 export interface PartialReport {
   id: string;
@@ -19,74 +19,97 @@ export interface PartialReport {
   trem: number;
   no: number;
   md5: string;
-}
+};
 
 export interface StationIntensity {
+  station: string;
   lat: number;
   lon: number;
   int: number;
-}
+};
 
 export interface AreaIntensity {
+  area: string;
   int: number;
-  town: Record<string, StationIntensity>;
-}
+  stations: StationIntensity[];
+};
 
-export interface Report extends Omit<PartialReport, "int" | "md5"> {
-  list: Record<string, AreaIntensity>;
-}
+export interface Report extends Omit<PartialReport, "md5"> {
+  list: AreaIntensity[];
+};
 
 export interface RtsStation {
   pga: number;
   pgv: number;
   i: number;
   I: number;
-}
+};
 
 export interface Rts {
   station: Record<string, RtsStation>;
   box: Record<string, number[][]>;
   time: number;
-}
+};
 
 export enum WebSocketCloseCode {
   InsufficientPermission = 4000,
-}
+};
+
+export const Intensity = [
+  { value: 0, label: "0", text: "０級" },
+  { value: 1, label: "1", text: "１級" },
+  { value: 2, label: "2", text: "２級" },
+  { value: 3, label: "3", text: "３級" },
+  { value: 4, label: "4", text: "４級" },
+  { value: 5, label: "5-", text: "５弱" },
+  { value: 6, label: "5+", text: "５強" },
+  { value: 7, label: "6-", text: "６弱" },
+  { value: 8, label: "6+", text: "６強" },
+  { value: 9, label: "7", text: "７級" }
+] as const;
 
 export enum WebSocketEvent {
-  Eew    = "eew",
-  Info   = "info",
-  Ntp    = "ntp",
+  Eew = "eew",
+  Info = "info",
+  Ntp = "ntp",
   Report = "report",
-  Rts    = "rts",
+  Rts = "rts",
   Verify = "verify",
-  Close  = "close",
-}
+  Close = "close",
+};
 
 export class ExpTechApi extends EventEmitter {
-  private _key!: string;
-  wsConfig: WebSocketConnectionConfig;
+  key: string;
   route: Route;
+  wsConfig: WebSocketConnectionConfig;
   ws!: WebSocket;
-  
+
   constructor(key: string = "") {
     super();
     this.key = key;
     this.route = new Route({ key });
     this.wsConfig = {
-      type    : "start",
-      key     : key,
-      service : ["trem.rts", "websocket.eew", "websocket.report", "websocket.tsunami", "trem.intensity", "cwa.intensity"],
+      type: "start",
+      key,
+      service: ["trem.rts", "websocket.eew", "websocket.report", "websocket.tsunami", "trem.intensity", "cwa.intensity"],
+    };
+
+    if (key) {
+      this.#initWebSocket();
     }
-    this.#initWebSocket();
   }
 
-  get key() {
-    return this._key;
-  }
+  setApiKey(apiKey: string): this {
+    this.key = apiKey;
+    this.wsConfig.key = apiKey;
 
-  set key(val) {
-    this._key = val;
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify(this.wsConfig));
+    } else {
+      this.#initWebSocket();
+    }
+
+    return this;
   }
 
   #initWebSocket() {
@@ -96,7 +119,7 @@ export class ExpTechApi extends EventEmitter {
 
     console.log("[WebSocket] Initializing connection");
     console.log(`[WebSocket] Connecting to ${url}`);
-    
+
     this.ws = new WebSocket(url);
 
     this.ws.addEventListener("open", () => {
@@ -112,7 +135,7 @@ export class ExpTechApi extends EventEmitter {
         if (data)
           switch (data.type) {
             case WebSocketEvent.Verify: {
-              
+
               this.ws.send(JSON.stringify(this.wsConfig));
               break;
             }
@@ -176,13 +199,13 @@ export class ExpTechApi extends EventEmitter {
     try {
       const ac = new AbortController();
       const request = new Request(url, {
-        method  : "GET",
-        cache   : "default",
-        signal  : ac.signal,
-        headers : {
+        method: "GET",
+        cache: "default",
+        signal: ac.signal,
+        headers: {
           // TODO: Replace User-Agent with a variable
-          "User-Agent" : "TREM-Lite/v2.0.0",
-          "Accept"     : "application/json",
+          "User-Agent": "TREM-Lite/v2.0.0",
+          "Accept": "application/json",
         },
       });
 
@@ -231,15 +254,29 @@ export class ExpTechApi extends EventEmitter {
 
   /**
    * Get a specific earthquake report.
-   * @param {number} id Report number
+   * @param {string} id Report identifier
    * @returns {Promise<Report>}
    */
-  async getReport(id: number): Promise<Report> {
+  async getReport(id: string): Promise<Report> {
     const url = this.route.earthquakeReport(`${id}`);
 
     try {
       const data = await this.#get(url);
       data.no = +data.id.split("-")[0];
+      data.int = Object.keys(data.list)
+        .reduce((acc, key) => data.list[key].int > acc ? data.list[key].int : acc, 0);
+      data.list = Object.keys(data.list)
+        .map(key => ({
+          area: key,
+          int: data.list[key].int,
+          stations: Object.keys(data.list[key].town)
+            .map(k => ({
+              ...data.list[key].town[k],
+              station: k
+            }))
+            .sort((a, b) => b.int - a.int)
+        }))
+        .sort((a, b) => b.int - a.int);
 
       return data;
     } catch (error) {

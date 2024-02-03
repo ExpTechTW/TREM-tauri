@@ -1,0 +1,101 @@
+.intensity-0 {
+  border: 1px solid #808080;
+  color: white;
+  background-color: #202020;
+  box-sizing: border-box;
+
+  &:empty::after {
+    content: "0";
+  }
+}
+
+.intensity-1 {
+  color: white;
+  background-color: #003264;
+
+  &:empty::after {
+    content: "1";
+  }
+}
+
+.intensity-2 {
+  color: white;
+  background-color: #0064c8;
+
+  &:empty::after {
+    content: "2";
+  }
+}
+
+.intensity-3 {
+  color: white;
+  background-color: #1e9632;
+
+  &:empty::after {
+    content: "3";
+  }
+}
+
+.intensity-4 {
+  color: black;
+  background-color: #ffc800;
+
+  &:empty::after {
+    content: "4";
+  }
+}
+
+.intensity-5 {
+  color: black;
+  background-color: #ff9600;
+
+  &:empty::after {
+    content: "5⁻";
+  }
+}
+
+.intensity-6 {
+  color: black;
+  background-color: #ff6400;
+
+  &:empty::after {
+    content: "5⁺";
+  }
+}
+
+.intensity-7 {
+  color: white;
+  background-color: #ff0000;
+
+  &:empty::after {
+    content: "6⁻";
+  }
+}
+
+.intensity-8 {
+  color: white;
+  background-color: #c00000;
+
+  &:empty::after {
+    content: "6⁺";
+  }
+}
+
+.intensity-9 {
+  color: white;
+  background-color: #9600c8;
+
+  &:empty::after {
+    content: "7";
+  }
+}
+
+.intensity-unknow {
+  color: white;
+  background-color: #202020;
+  box-shadow: inset 0px 0px 0px 2px #808080;
+
+  &:empty::after {
+    content: "?";
+  }
+}

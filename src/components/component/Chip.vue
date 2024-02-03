@@ -35,18 +35,18 @@ button.chip
     opacity: .4;
   }
 
-  > .chip-leading-icon {
+  >.chip-leading-icon {
     height: 16px;
     aspect-ratio: 1;
     font-size: 16px;
   }
 
-  > .chip-label {
+  >.chip-label {
     line-height: 12px;
     font-size: 12px;
   }
 
-  &:not(:disabled){
+  &:not(:disabled) {
     &:hover {
       background-color: hsl(var(--chip-background-hover-hsl));
       color: hsl(var(--chip-label-hover-hsl));

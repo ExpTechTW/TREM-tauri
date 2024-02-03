@@ -2,7 +2,7 @@
 import type { PartialReport } from '../../scripts/class/api';
 import { extractLocationFromString, toFormattedTimeString } from '../../scripts/helper/utils';
 import IntensityBox from './IntensityBox.vue';
-defineProps<{ report: PartialReport, changeReport: Function }>()
+defineProps<{ report: PartialReport, changeReport: Function; }>();
 </script>
 
 <template lang="pug">
@@ -31,33 +31,33 @@ defineProps<{ report: PartialReport, changeReport: Function }>()
   cursor: pointer;
 
   transition: background-color .1s ease-in-out,
-              opacity .1s ease-in-out,
-              outline .1s ease-in-out,
-              box-shadow .1s ease-in-out;
+    opacity .1s ease-in-out,
+    outline .1s ease-in-out,
+    box-shadow .1s ease-in-out;
 
-  > .intensity-box {
+  >.intensity-box {
     height: 44px;
     font-size: 28px;
     line-height: 28px;
     font-weight: 700;
   }
 
-  > .report-list-item-content {
+  >.report-list-item-content {
     display: flex;
     flex-direction: column;
     flex: 1;
 
-    > .report-list-item-location {
+    >.report-list-item-location {
       font-weight: 500;
     }
 
-    > .report-list-item-time {
+    >.report-list-item-time {
       font-size: 75%;
       font-variant-numeric: tabular-nums;
     }
   }
 
-  > .report-list-item-magnitude {
+  >.report-list-item-magnitude {
     padding-right: 12px;
     font-size: 18px;
     font-variant-numeric: tabular-nums;
@@ -70,7 +70,7 @@ defineProps<{ report: PartialReport, changeReport: Function }>()
   }
 
   &.numbered {
-    > .report-list-item-magnitude {
+    >.report-list-item-magnitude {
       color: hsl(51deg 100% 60%);
     }
   }

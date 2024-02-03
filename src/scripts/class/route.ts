@@ -6,7 +6,7 @@ interface RouteOptions {
 export default class Route {
   version: number;
   key: string;
-  
+
   constructor(options: RouteOptions = {}) {
     this.version = options.version ?? 2;
     this.key = options.key ?? "";
@@ -17,8 +17,8 @@ export default class Route {
   }
 
   websocket() {
-		return `wss://lb-${Math.ceil(Math.random() * 4)}.exptech.com.tw/websocket` as const;
-	}
+    return `wss://lb-${Math.ceil(Math.random() * 4)}.exptech.com.tw/websocket` as const;
+  }
 
   earthquakeReportList(limit: number = 50) {
     return `${this.randomBaseUrl()}/eq/report?limit=${limit}&key=${this.key}` as const;

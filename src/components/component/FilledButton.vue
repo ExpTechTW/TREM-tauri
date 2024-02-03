@@ -16,15 +16,15 @@ button#report-back-btn.filled-button.button
   font-family: "Noto Sans TC", sans-serif;
   cursor: pointer;
   transition: background-color .1s cubic-bezier(0.2, 0, 0, 1),
-              opacity .1s cubic-bezier(0.2, 0, 0, 1);
-  
-  > .button-leading-icon {
+    opacity .1s cubic-bezier(0.2, 0, 0, 1);
+
+  >.button-leading-icon {
     width: 20px;
     aspect-ratio: 1;
     font-size: 20px;
   }
 
-  > .button-label {
+  >.button-label {
     line-height: 16px;
     font-size: 12px;
     font-weight: 500;
@@ -34,7 +34,7 @@ button#report-back-btn.filled-button.button
     color: #000;
     background-color: #D9D9D9;
   }
-  
+
   &.filled-button:hover {
     background-color: #e9e9e9;
   }

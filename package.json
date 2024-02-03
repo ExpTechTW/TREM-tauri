@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.3",
+    "@vue/devtools": "^7.0.14",
     "events": "^3.3.0",
     "maplibre-gl": "^4.0.0",
     "material-symbols": "^0.14.6",

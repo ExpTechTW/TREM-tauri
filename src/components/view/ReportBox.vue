@@ -1,27 +1,36 @@
 <script setup lang="ts">
-import type { PartialReport } from "../../scripts/class/api";
+import Chip from "../component/Chip.vue";
+import FieldValueUnitPair from "../component/FieldValueUnitPair.vue";
+import FilledButton from "../component/FilledButton.vue";
+import ReportDetailField from "../component/ReportDetailField.vue";
+import ReportIntensityGroup from "../component/ReportIntensityGroup.vue";
+
+import type { Report } from "../../scripts/class/api";
 import { extractLocationFromString, toFormattedTimeString } from "../../scripts/helper/utils";
-import Chip from "../component/Chip.vue"
-import FilledButton from "../component/FilledButton.vue"
-defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
+import ReportIntensityItem from "../component/ReportIntensityItem.vue";
+
+defineProps<{
+  report?: Report,
+  handleHideReportBox: () => void,
+  isReportBoxShown: boolean;
+}>();
 </script>
 
 <template lang="pug">
-
 .report-box-wrapper
-  #report-box.report-box.panel
+  #report-box.report-box.panel(:class="{ show: isReportBoxShown }")
     .report-box-header
       .report-box-header
-        FilledButton(@click="hideReport()")
+        FilledButton(@click="handleHideReportBox")
         #report-source.report-source 交通部中央氣象署
-                    
+
       // 報告標題
 
       .report-title
         .report-title-container
-          span#report-subtitle.report-subtitle {{ report?.no ?? 0 % 1000 ? `編號 ${112085}` : "小區域有感地震"}}
-          span#report-title.report-title {{ extractLocationFromString(report?.loc ?? '') }}
-        #report-max-intensity.report-max-intensity(:class="`intensity-${report?.int ?? ''}`")
+          .report-subtitle.skeleton(:style="report?.no ? '' : 'max-width: 40%'") {{ report?.no ? report.no % 1000 ? `編號 ${report.no}` : "小區域有感地震" : ""}}
+          .report-title.skeleton(:style="report?.no ? '' : 'max-width: 80%'") {{ extractLocationFromString(report?.loc ?? "") }}
+        #report-max-intensity.report-max-intensity(:class="`intensity-${report?.int ?? 'unknow'}`")
 
       .report-action-container
         Chip.report-action-chip
@@ -37,69 +46,60 @@ defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
     .report-box-body
       // 報告資訊
       .report-detail
-        .report-detail-field
-          .report-detail-field-icon.material-symbols-rounded schedule
-          .report-detail-field-divider
-          .report-detail-field-content-container
-            .report-detail-field-name 發震時間
-            #report-time.report-detail-field-value {{ toFormattedTimeString(report?.time ?? 0) }}
-        .report-detail-field
-          .report-detail-field-icon.material-symbols-rounded pin_drop
-          .report-detail-field-divider
-          .report-detail-field-content-container
-            .report-detail-field-name 震央位置
-            #report-time.report-detail-field-value 宜蘭縣政府南南東方 14.2 公里
-        .report-detail-field
-          .report-detail-field-icon.material-symbols-rounded point_scan
-          .report-detail-field-divider
-          .report-detail-field-content-container
-            .report-detail-field-name 震央座標
-            #report-time.report-detail-field-value
-              span.value-unit-pair
-                span#report-longitude.field-value 121.83
-                span.field-unit °E
-              span.value-unit-pair
-                span#report-latitude.field-value 24.62
-                span.field-unit °N
-
+        ReportDetailField(:style="report?.time ? '' : 'max-width: 70%'")
+          template(#icon) schedule
+          template(#name) 發震時間
+          template(#value, v-if="report?.time") {{ toFormattedTimeString(report.time) }}
+        ReportDetailField(:style="report?.loc ? '' : 'max-width: 85%'")
+          template(#icon) pin_drop
+          template(#name) 震央位置
+          template(#value, v-if="report?.loc") {{ report.loc.substring(0, report.loc.indexOf("(")).trim() }}
+        ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 55%'")
+          template(#icon) point_scan
+          template(#name) 震央座標
+          template(#value, v-if="report?.lat != undefined && report?.lon != undefined")
+            FieldValueUnitPair
+              template(#value) {{ report.lon }}
+              template(#trailing-unit) {{ report.lon ? report.lon > 0 ? "°E" : "°W" : "°" }}
+            FieldValueUnitPair
+              template(#value) {{ report.lat }}
+              template(#trailing-unit) {{ report.lat ? report.lat > 0 ? "°N" : "°S" : "°" }}
         .report-detail-field-row
-          .report-detail-field
-            .report-detail-field-icon.material-symbols-rounded speed
-            .report-detail-field-divider
-            .report-detail-field-content-container
-              .report-detail-field-name 規模
-              #report-time.report-detail-field-value
-                span.value-unit-pair
-                  span.field-unit M#[sub L]
-                  #report-magnitude.field-value 4.5
-                  
-          .report-detail-field
-            .report-detail-field-icon.material-symbols-rounded keyboard_double_arrow_down
-            .report-detail-field-divider
-            .report-detail-field-content-container
-              .report-detail-field-name 深度
-              #report-time.report-detail-field-value
-                span.value-unit-pair
-                  #report-depth.field-value 47.4
-                  .field-unit ㎞
-                  
+          ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 60%'")
+            template(#icon) speed
+            template(#name) 規模
+            template(#value, v-if="report?.mag != undefined")
+              FieldValueUnitPair
+                template(#leading-unit) M#[sub L]
+                template(#value) {{ report.mag }}
+          ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 60%'")
+            template(#icon) keyboard_double_arrow_down
+            template(#name) 深度
+            template(#value, v-if="report?.depth != undefined")
+              FieldValueUnitPair
+                template(#value) {{ report.depth }}
+                template(#trailing-unit) ㎞
+
+
       // 各地最大震度
 
       .report-intensity-list
         .report-intensity-list-header
-            .report-intensity-list-title 各地最大震度
-            .report-intensity-sort-btn-container
-                label.report-intensity-sort-btn(for="report-intensity-sort-group")
-                  input#report-intensity-sort-group(type="radio", name="report-intensity-sort", title="依縣市分組", checked)
-                  span.report-intensity-sort-btn-icon.material-symbols-rounded category
-                label.report-intensity-sort-btn(for="report-intensity-sort-intensity")
-                  input#report-intensity-sort-intensity(type="radio", name="report-intensity-sort", title="依震度排序")
-                  span.report-intensity-sort-btn-icon.material-symbols-rounded swap_vert
+          .report-intensity-list-title 各地最大震度
+          .report-intensity-sort-btn-container
+            label.report-intensity-sort-btn(for="report-intensity-sort-group")
+              input#report-intensity-sort-group(type="radio", name="report-intensity-sort", title="依縣市分組", checked)
+              span.report-intensity-sort-btn-icon.material-symbols-rounded category
+            label.report-intensity-sort-btn(for="report-intensity-sort-intensity")
+              input#report-intensity-sort-intensity(type="radio", name="report-intensity-sort", title="依震度排序")
+              span.report-intensity-sort-btn-icon.material-symbols-rounded swap_vert
 
         .report-intensity-list-scrollview
           .report-intensity-list-scroller
             #report-intensity-grouped.report-intensity-container
+              ReportIntensityGroup(v-for="area of report?.list" :area="area")
             #report-intensity-all.report-intensity-container
+              ReportIntensityItem(v-if="report?.list" v-for="station of report.list.flatMap(v=>v.stations.map(s=>({...s,area: v.area })))" :station="station")
 </template>
 
 <style scoped>
@@ -148,8 +148,8 @@ defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
       padding: 12px;
       border-radius: 12px;
       background-color: hsl(var(--background-variant-hsl));
-      
-      > .report-box-header {
+
+      >.report-box-header {
         display: flex;
 
         >.report-source {
@@ -161,7 +161,7 @@ defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
           text-align: right;
         }
       }
-      
+
       >.report-title {
         display: flex;
         align-items: center;
@@ -176,12 +176,14 @@ defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
           font-family: "Lato", "Noto Sans TC", sans-serif;
 
           >.report-subtitle {
+            height: 16px;
             opacity: .86;
             line-height: 16px;
             font-size: 14px;
           }
 
           >.report-title {
+            height: 32px;
             line-height: 32px;
             font-size: 28px;
             font-weight: 900;
@@ -200,7 +202,7 @@ defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
         }
       }
 
-      > .report-action-container {
+      >.report-action-container {
         display: flex;
         gap: 8px;
       }
@@ -222,66 +224,6 @@ defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
         >.report-detail-field-row {
           display: grid;
           grid-auto-flow: column;
-        }
-
-        .report-detail-field {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-
-          >.report-detail-field-icon {
-            width: 24px;
-            aspect-ratio: 1;
-            opacity: .8;
-            font-size: 24px;
-          }
-
-          >.report-detail-field-divider {
-            width: 2px;
-            height: 90%;
-            background-color: rgb(255 255 255 / .6);
-            border-radius: 2px;
-          }
-
-          >.report-detail-field-content-container {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-
-            >.report-detail-field-name {
-              line-height: 12px;
-              font-size: 12px;
-              font-weight: 300;
-              opacity: .8;
-            }
-
-            >.report-detail-field-value {
-              display: flex;
-              gap: 16px;
-              height: 16px;
-              line-height: 16px;
-              font-family: "Lato", "Noto Sans TC", sans-serif;
-              font-size: 16px;
-              font-weight: 700;
-
-              .value-unit-pair {
-                display: inline-flex;
-                align-items: baseline;
-                gap: 2px;
-              }
-
-              .field-value {
-                line-height: 18px;
-                font-size: 16px;
-              }
-
-              .field-unit {
-                line-height: 10px;
-                font-size: 10px;
-                opacity: .6;
-              }
-            }
-          }
         }
       }
 
@@ -316,6 +258,11 @@ defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
             background-color: hsl(var(--background-variant-hsl));
 
             >.report-intensity-sort-btn {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 14px;
+              height: 14px;
               padding: 2px;
               border-radius: 4px;
               background-color: transparent;
@@ -328,8 +275,6 @@ defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
               }
 
               >.report-intensity-sort-btn-icon {
-                width: 14px;
-                aspect-ratio: 1;
                 color: hsl(0deg 0% 100% / .5);
                 font-size: 14px;
                 transition: color .1s cubic-bezier(0.2, 0, 0, 1);
@@ -377,7 +322,7 @@ defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
               height: 4px;
             }
 
-            > .report-intensity-container {
+            >.report-intensity-container {
               display: flex;
               flex-direction: column;
               position: absolute;
@@ -397,98 +342,14 @@ defineProps<{ report?: Partial<PartialReport>, hideReport: Function }>();
                 gap: 12px;
                 translate: -10%;
               }
-              
+
               &#report-intensity-all {
-                gap: 8px; 
+                gap: 8px;
                 translate: 10%;
               }
 
-              .report-intensity-item {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding-right: 8px;
-                border-radius: 24px;
-                background-color: hsl(var(--background-variant-hsl));
-
-                >.report-intensity-item-intensity {
-                  height: 24px;
-                  width: 44px;
-                  border-radius: 24px;
-                  line-height: 24px;
-                  font-family: "Open Sans", "Lato", "Noto Sans TC", sans-serif;
-                  font-size: 22px;
-                  font-weight: 900;
-                  text-align: center;
-                }
-
-                &.collapsible > .report-intensity-item-location {
-                  flex: 1;
-                }
-
-                &:has(> .report-intensity-item-location + .report-intensity-item-station) > .report-intensity-item-location {
-                  font-weight: 700;
-                }
-
-                > .report-intensity-item-location,
-                > .report-intensity-item-station {
-                  font-size: 13px;
-                }
-                
-                > .report-intensity-collapse {
-                  width: 16px;
-                  aspect-ratio: 1;
-                  font-size: 16px;
-                  opacity: .6;
-                }
-              }
-
-              > .report-intensity-item {
+              >.report-intensity-item {
                 background-color: hsl(var(--background-hsl));
-              }
-
-              .report-intensity-group {
-                flex-shrink: 0;
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-                height: 24px;
-                overflow: hidden;
-                transition: height .2s cubic-bezier(0.2, 0, 0, 1);
-                
-                &.expanded {
-                  height: auto;
-                  transition-duration: .4s;
-                  transition-timing-function: cubic-bezier(0.05, 0.7, 0.1, 1);
-
-                  > .report-intensity-item > .report-intensity-group-collapse {
-                    scale: 1 -1;
-                  }
-                }
-
-                >.report-intensity-item {
-                  cursor: pointer;
-
-                  >.report-intensity-item-location {
-                    font-weight: 700;
-                  }
-
-                  > .report-intensity-group-collapse {
-                    opacity: .6;
-                    transition: scale .1s cubic-bezier(0.2, 0, 0, 1);
-                  }
-                }
-
-                >.report-intensity-member {
-                  display: flex;
-                  flex-direction: column;
-                  gap: 4px;
-                  padding-left: 24px;
-
-                  >.report-intensity-item {
-                    background-color: hsl(var(--background-hsl));
-                  }
-                }
               }
             }
           }
