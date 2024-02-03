@@ -17,7 +17,7 @@ export default class Route {
   }
 
   randomBaseUrl() {
-    return `https://lb-${Math.ceil(Math.random() * 4)}.exptech.com.tw/api/v${this.version}` as const;
+    return `${this.randomHostUrl()}/api/v${this.version}` as const;
   }
 
   websocket() {

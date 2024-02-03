@@ -2,7 +2,7 @@
 import MapReportMarker from '../component/MapReportMarker.vue';
 import MapRtsMarker from '../component/MapRtsMarker.vue';
 
-import { inject, markRaw, onMounted, onUnmounted, shallowRef } from 'vue';
+import { markRaw, onMounted, onUnmounted, shallowRef } from 'vue';
 import type { Ref } from 'vue';
 import maplibregl from "maplibre-gl";
 
@@ -13,10 +13,9 @@ defineProps<{
   currentView: string;
   reports: PartialReport[];
   activeReport?: Report;
+  stations: Ref<Record<string, Station>>;
   rts: Ref<Rts>;
 }>();
-
-const stations = inject<Record<string, Station> | undefined>('stations');
 
 const map = shallowRef<maplibregl.Map | null>(null);
 
@@ -80,7 +79,7 @@ onUnmounted(() => {
 <template lang="pug">
 #map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': currentView.startsWith('report'), 'hide-report-list-markers': currentView != 'report-list' }")
 .map-layers(v-if="map")
-  .report-list(v-if="reports && currentView == 'report-list'")
+  .report-list(v-if="currentView == 'report-list'")
     MapReportListMarker(:map="map", :reports="reports")
   .active-report(v-if="activeReport && currentView == 'report'")
     MapReportMarker(:map="map", :report="activeReport")
@@ -96,10 +95,6 @@ onUnmounted(() => {
   width: 100svw;
 
   &.hide-rts-markers .rts-marker {
-    opacity: 0 !important;
-  }
-
-  &.hide-report-list-markers .report-list-marker {
     opacity: 0 !important;
   }
 }

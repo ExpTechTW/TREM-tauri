@@ -8,9 +8,14 @@ import ReportListBox from "./components/view/ReportListBox.vue";
 import { inject, ref } from "vue";
 import type { Ref } from "vue";
 
-import type { ExpTechApi, Report, PartialReport, Rts } from "./scripts/class/api";
+import type { ExpTechApi, Report, PartialReport, Rts, Station } from "./scripts/class/api";
 
-defineProps<{ reports: PartialReport[]; rts: Ref<Rts>; }>();
+defineProps<{
+  reports: PartialReport[];
+  stations: Ref<Record<string, Station>>;
+  rts: Ref<Rts>;
+}>();
+
 const api = inject<ExpTechApi>("api");
 
 const activeReport = ref<Report>();
@@ -37,7 +42,7 @@ const changeReport = async (report: PartialReport) => {
 <template lang="pug">
 NavigationBar(:current-view="currentView", :change-view="changeView")
 Time(:timestamp="rts.value.time")
-MapView(:current-view="currentView", :reports="reports", :active-report="activeReport", :rts="rts")
+MapView(:current-view="currentView", :reports="reports", :active-report="activeReport", :stations="stations", :rts="rts")
 ReportBox(:current-view="currentView", :report="activeReport", :handle-hide-report-box="handleHideReportBox")
 ReportListBox(:current-view="currentView", :reports="reports", :change-report="changeReport")
 </template>

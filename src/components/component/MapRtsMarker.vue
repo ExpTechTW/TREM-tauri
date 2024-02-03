@@ -1,40 +1,53 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
+import { nextTick, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import maplibregl from "maplibre-gl";
 
 import type { Rts, Station } from '../../scripts/class/api';
 import { pga } from '../../scripts/helper/color';
 
-const { map, stations } = defineProps<{ map: maplibregl.Map; stations: Record<string, Station>; rts: Ref<Rts>; }>();
+const { map, stations } = defineProps<{ map: maplibregl.Map; stations: Ref<Record<string, Station>>; rts: Ref<Rts>; }>();
 
 const bounds = new maplibregl.LngLatBounds();
-const markers: maplibregl.Marker[] = [];
+const markers: Record<string, maplibregl.Marker> = {};
 
-const rtsMarkerTemplate: Record<string, any> = {};
+const rtsMarkerTemplate = ref<Record<string, any>>({});
 
-onMounted(() => {
-  for (const id in stations) {
-    const station = stations[id];
-    const marker = new maplibregl.Marker({ element: rtsMarkerTemplate[id] })
+const updateMarker = () => {
+  for (const id in stations.value) {
+    if (id in markers) continue;
+
+    const station = stations.value[id];
+
+    const marker = new maplibregl.Marker({ element: rtsMarkerTemplate.value[id] })
       .setLngLat([station.info[0].lon, station.info[0].lat])
       .addTo(map);
 
     bounds.extend(marker.getLngLat());
-    markers.push(marker);
+    markers[id] = marker;
   }
+};
+
+onMounted(() => {
+  watch(() => stations.value, () => {
+    nextTick(() => updateMarker());
+  });
+});
+
+onUpdated(() => {
 });
 
 onUnmounted(() => {
-  for (const marker of markers) {
-    marker.remove();
+  for (const id in markers) {
+    markers[id].remove();
   }
 });
 </script>
 
 <template lang="pug">
-.rts-marker(v-for="(_, id) in stations", :ref="(el) => rtsMarkerTemplate[id] = el" :style="{ zIndex: (rts.value.station[id]?.i ??-10) + 10 * 10}")
-  .rts-marker-color(:style="rts.value.station[id] ? `background-color: ${pga(rts.value.station[id].i)}`: ''")
+template(v-for="(_, id) in stations.value")
+  .rts-marker(:ref="(el) => rtsMarkerTemplate[id] = el" :style="{ zIndex: (rts.value.station[id]?.i ?? -5) + 5 * 10}")
+    .rts-marker-color(:style="rts.value.station[id] ? `background-color: ${pga(rts.value.station[id].i)}`: ''")
 </template>
 
 <style scoped>

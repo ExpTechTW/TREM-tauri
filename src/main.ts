@@ -5,24 +5,22 @@ import App from "./App.vue";
 import { ExpTechApi, WebSocketEvent } from "./scripts/class/api";
 import type { Station, PartialReport, Rts } from "./scripts/class/api";
 
-import stationJsonData from "./assets/json/station.json";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
 
 const props = {
+  stations: ref<Record<string, Station>>({}),
   reports: reactive<PartialReport[]>([]),
   rts: ref<Rts>({ station: {}, box: {}, time: Date.now() }),
 };
 
 const settings = new SettingsManager({ apikey: "" });
 const api = new ExpTechApi();
-const stations = ref<Record<string, Station>>(stationJsonData);
 
 const app = createApp(App, props);
 
 app.provide("settings", settings);
 app.provide("api", api);
-app.provide("stations", stations);
 
 app.mount("#app");
 
@@ -39,5 +37,5 @@ app.mount("#app");
   api.on(WebSocketEvent.Close, console.debug);
 
   props.reports.push(...(await api.getReports(20)));
-  stations.value = await api.getStations();
+  props.stations.value = await api.getStations();
 })();
