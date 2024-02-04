@@ -36,14 +36,15 @@ onMounted(() => {
   markers.push(epicenter);
   bounds.extend(epicenter.getLngLat());
 
-  map.fitBounds(bounds, { padding: { top: 48, left: 48, bottom: 48, right: 382 }, maxZoom: 9 });
+  map.fitBounds(bounds, { padding: { top: 48, right: 382, bottom: 48, left: 64 }, maxZoom: 9 });
 });
 
 onUnmounted(() => {
   for (const marker of markers) {
     marker.remove();
   }
-  map.fitBounds(TaiwanBounds, { padding: { top: 16, left: 16, bottom: 16, right: 316 } });
+
+  map.fitBounds(TaiwanBounds, { padding: { top: 16, right: 316, bottom: 16, left: 32 } });
 });
 </script>
 

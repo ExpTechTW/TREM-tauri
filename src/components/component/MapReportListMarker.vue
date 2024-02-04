@@ -26,7 +26,7 @@ onMounted(() => {
     markers.push(marker);
   }
   map.fitBounds(TaiwanBounds, {
-    padding: { top: 16, left: 16, bottom: 16, right: 316 },
+    padding: { top: 16, right: 316, bottom: 16, left: 32 },
     duration: 200,
   });
 });

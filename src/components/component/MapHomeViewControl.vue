@@ -10,7 +10,7 @@ const { map } = defineProps<{
 
 onMounted(() => {
   map.fitBounds(TaiwanBounds, {
-    padding: 16,
+    padding: { top: 16, right: 16, bottom: 16, left: 32, },
     duration: 300,
   });
 });

@@ -4,16 +4,43 @@ import Route from "./route.js";
 
 import Code from "../../assets/json/code.json";
 
+/**
+ * 測站資訊
+ */
 export interface StationInfo {
+  /**
+   * 測站郵遞區號 (地區編號)
+   */
   code: keyof typeof Code;
+  /**
+   * 測站緯度
+   */
   lat: number;
+  /**
+   * 測站經度
+   */
   lon: number;
+  /**
+   * 測站安裝時間
+   */
   time: string;
 }
 
+/**
+ * TREM 測站
+ */
 export interface Station {
+  /**
+   * 測站種類
+   */
   net: string;
+  /**
+   * 測站資訊
+   */
   info: StationInfo[];
+  /**
+   * 測站是否運作
+   */
   work: boolean;
 }
 
