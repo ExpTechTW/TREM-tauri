@@ -3,9 +3,13 @@
 # Taiwan Real-time Earthquake Monitoring
 臺灣即時地震監測
 
-<div style="display: grid; grid-template-columns: 1fr 1fr;">
+<br />
+
+<div align="center" style="display: grid; grid-template-columns: 1fr 1fr;">
 <img alt="地震報告" title="地震報告" src="https://github.com/ExpTechTW/TREM-tauri/assets/58339640/55d288e2-020e-4e70-9195-e86f6cce0b20" style="width: 49%; height: auto;" />
 </div>
+
+<br />
 
 <div align="center">
   
@@ -13,7 +17,6 @@
   <a href="https://github.com/ExpTechTW/TREM-tauri/actions/workflows/build.yml">![GitHub Workflow Status](https://github.com/ExpTechTW/TREM-tauri/actions/workflows/build.yml/badge.svg)</a>
   <a href="https://discord.gg/exptech-studio">![TREM Discord](https://img.shields.io/discord/926545182407688273?color=%237289DA&logo=discord&logoColor=white)</a>
 </div>
-
 
 ## 關於 TREM
 TREM 是一款開源地震速報軟體，提供給您即時的地震資訊，利用自製的測站，顯示各地的即時震度，在地震發生的第一時間取得各管道發布的強震即時警報訊息
