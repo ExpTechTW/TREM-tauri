@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CircleMarker from "../component/CircleMarker.vue";
+import MapEew from "../component/MapEew.vue";
 import MapHomeViewControl from "../component/MapHomeViewControl.vue";
 import MapReportListMarker from "../component/MapReportListMarker.vue";
 import MapReportMarker from "../component/MapReportMarker.vue";
@@ -15,6 +15,7 @@ import type {
   Report,
   Rts,
   PartialReport,
+  Eew,
 } from "../../scripts/class/api";
 
 defineProps<{
@@ -23,15 +24,12 @@ defineProps<{
   activeReport?: Report;
   stations: Ref<Record<string, Station>>;
   rts: Ref<Rts>;
+  eew: Ref<Record<string, Eew>>;
 }>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
 
-const radius = shallowRef(10);
-
 onMounted(() => {
-  setInterval(() => (radius.value += 1), 500);
-
   const initialState = { lng: 120.5, lat: 23.6, zoom: 6.75 };
 
   map.value = markRaw(
@@ -142,8 +140,6 @@ onUnmounted(() => {
 <template lang="pug">
 #map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': currentView.startsWith('report'), 'hide-report-list-markers': currentView != 'report-list' }")
 .map-layers(v-if="map")
-  .circle
-    CircleMarker(:map="map", type="s", :radius="radius", :lng="121.53697824593353", :lat="25.29965458828072", :alert="true", :z-index="1000")
   .home(v-if="currentView == 'home'")
     MapHomeViewControl(:map="map")
   .report-list(v-if="currentView == 'report-list'")
@@ -154,6 +150,8 @@ onUnmounted(() => {
     MapRtsMarker(:map="map", :stations="stations", :rts="rts")
   .rts-box(v-if="Object.keys(rts.value.box).length")
     MapRtsBox(:map="map", :box="rts.value.box")
+  .eew(v-if="eew.value")
+    MapEew(:map="map", :eew="eew")
 </template>
 
 <style>

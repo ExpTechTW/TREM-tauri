@@ -312,6 +312,9 @@ export interface Eew {
      */
     max: number;
   };
+  timestamp: number;
+  data_unit: "websocket";
+  delay: number;
 }
 
 /**

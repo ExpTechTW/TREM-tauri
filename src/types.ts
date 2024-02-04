@@ -11,3 +11,8 @@ export interface DefaultSettingSchema {
     openExternal: boolean;
   };
 }
+
+export interface NtpTime {
+  server: number;
+  client: number;
+}

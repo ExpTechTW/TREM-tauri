@@ -27,7 +27,6 @@ let updateLock = false;
 const updateCircle = () => {
   if (updateLock) return;
   updateLock = true;
-  console.log("a");
   const zoom = props.map.getZoom();
   lnglatInPixel.value = props.map.project([props.lng, props.lat]);
   radiusInPixel.value =

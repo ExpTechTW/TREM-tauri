@@ -25,3 +25,17 @@ export const toReportUrl = (id: string) => {
   arr.splice(1, 1);
   return `https://www.cwa.gov.tw/V8/C/E/EQ/EQ${arr.join("-")}.html` as const;
 };
+
+export const findClosestDepthIndex = (
+  arr: Array<string>,
+  target: number
+): number => {
+  return arr
+    .map(Number)
+    .reduce((prev, curr) =>
+      Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev
+    );
+};
+
+export const sideDistance = (a: number, b: number) =>
+  (a ** 2 - b ** 2) ** (1 / 2);
