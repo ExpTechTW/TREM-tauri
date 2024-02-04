@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Time from "./components/component/Time.vue";
+import TimeDisplay from "./components/component/TimeDisplay.vue";
 import MapView from "./components/view/MapView.vue";
 import NavigationBar from "./components/component/NavigationBar.vue";
 import ReportBox from "./components/view/ReportBox.vue";
@@ -43,7 +43,7 @@ const changeReport = async (report: PartialReport) => {
 
 <template lang="pug">
 NavigationBar(:current-view="currentView", :change-view="changeView")
-Time(:timestamp="rts.value.time")
+TimeDisplay(:timestamp="rts.value.time")
 MapView(:current-view="currentView", :reports="reports", :active-report="activeReport", :stations="stations", :rts="rts")
 ReportBox(:current-view="currentView", :report="activeReport", :handle-hide-report-box="handleHideReportBox")
 ReportListBox(:current-view="currentView", :reports="reports", :change-report="changeReport")

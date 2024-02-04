@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import EventEmitter from "events";
 
 import Route from "./route.js";
@@ -348,36 +349,6 @@ export enum WebSocketEvent {
   Close = "close",
 };
 
-export declare interface ExpTechApi {
-  /**
-   * 地動資料
-   * @param {WebSocketEvent.Rts} event rts
-   * @param {(rts: Rts) => void} listener 
-   */
-  on(event: WebSocketEvent.Rts, listener: (rts: Rts) => void): this;
-
-  /**
-   * 地震速報資料
-   * @param {WebSocketEvent.Eew} event eew
-   * @param {(eew: Eew) => void} listener 
-   */
-  on(event: WebSocketEvent.Eew, listener: (eew: Eew) => void): this;
-
-  /**
-   * 地震速報資料
-   * @param {WebSocketEvent.Ntp} event ntp
-   * @param {(ntp: Ntp) => void} listener 
-   */
-  on(event: WebSocketEvent.Ntp, listener: (ntp: Ntp) => void): this;
-
-  /**
-   * 地震速報資料
-   * @param {WebSocketEvent.Close} event close
-   * @param {(ev: CloseEvent) => void} listener 
-   */
-  on(event: WebSocketEvent.Close, listener: (ev: CloseEvent) => void): this;
-}
-
 export class ExpTechApi extends EventEmitter {
   key: string;
   route: Route;
@@ -596,4 +567,34 @@ export class ExpTechApi extends EventEmitter {
       throw new Error(`Failed to fetch rts data. ${error}`);
     }
   }
+}
+
+export declare interface ExpTechApi extends EventEmitter {
+  /**
+   * 地動資料
+   * @param {WebSocketEvent.Rts} event rts
+   * @param {(rts: Rts) => void} listener 
+   */
+  on(event: WebSocketEvent.Rts, listener: (rts: Rts) => void): this;
+
+  /**
+   * 地震速報資料
+   * @param {WebSocketEvent.Eew} event eew
+   * @param {(eew: Eew) => void} listener 
+   */
+  on(event: WebSocketEvent.Eew, listener: (eew: Eew) => void): this;
+
+  /**
+   * 地震速報資料
+   * @param {WebSocketEvent.Ntp} event ntp
+   * @param {(ntp: Ntp) => void} listener 
+   */
+  on(event: WebSocketEvent.Ntp, listener: (ntp: Ntp) => void): this;
+
+  /**
+   * 地震速報資料
+   * @param {WebSocketEvent.Close} event close
+   * @param {(ev: CloseEvent) => void} listener 
+   */
+  on(event: WebSocketEvent.Close, listener: (ev: CloseEvent) => void): this;
 }

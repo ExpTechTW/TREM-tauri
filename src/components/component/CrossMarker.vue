@@ -1,5 +1,8 @@
 <script setup lang="ts">
-defineProps<{ int?: number; size: number; }>();
+defineProps<{
+  int?: number;
+  size: number;
+}>();
 </script>
 
 <template lang="pug">

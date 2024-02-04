@@ -2,3 +2,4 @@
 /_terraform/.terraform/
 dist
 coverage
+*.json

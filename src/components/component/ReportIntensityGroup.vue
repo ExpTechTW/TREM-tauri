@@ -10,7 +10,7 @@ defineProps<{ area: AreaIntensity; }>();
 .report-intensity-group.expanded
   ReportIntensityItem(:station="{ station: area.area, int: area.int }")
   .report-intensity-member
-    ReportIntensityItem(v-for="station in area.stations" :station="station")
+    ReportIntensityItem(v-for="station in area.stations" :key="station.station" :station="station")
 </template>
 
 <style scoped>

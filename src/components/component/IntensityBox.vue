@@ -1,6 +1,9 @@
 <script setup lang="ts">
-const { int } = defineProps<{ int: number; }>();
+defineProps<{
+  int: number;
+}>();
 </script>
+
 <template lang="pug">
 .intensity-box(:class="`intensity-${int}`")
 </template>

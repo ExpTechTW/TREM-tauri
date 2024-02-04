@@ -23,6 +23,6 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-template(v-for="(station, id) in stations.value")
+template(v-for="(station, id) in stations.value" :key="id")
   RtsMarker(:map="map", :station-id="id" , :station="station", :rts="rts.value.station[id]")
 </template>

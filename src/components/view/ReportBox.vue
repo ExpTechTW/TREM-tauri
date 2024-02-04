@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Chip from "../component/Chip.vue";
+import ChipButton from "../component/ChipButton.vue";
 import FieldValueUnitPair from "../component/FieldValueUnitPair.vue";
 import FilledButton from "../component/FilledButton.vue";
 import ReportDetailField from "../component/ReportDetailField.vue";
@@ -49,13 +49,13 @@ const openUrl = async (id?: string) => {
         #report-max-intensity.report-max-intensity(:class="`intensity-${report?.int ?? 'unknow'}`")
 
       .report-action-container
-        Chip.report-action-chip
+        ChipButton.report-action-chip
           template(#icon) replay
           template(#label) 重播
-        Chip.report-action-chip(:disabled="!report?.id", @click="openUrl(report?.id)")
+        ChipButton.report-action-chip(:disabled="!report?.id", @click="openUrl(report?.id)")
           template(#icon) captive_portal
           template(#label) 報告頁面
-        Chip.report-action-chip
+        ChipButton.report-action-chip
           template(#icon) content_copy
           template(#label) 複製
 
@@ -65,15 +65,15 @@ const openUrl = async (id?: string) => {
         ReportDetailField(:style="report?.time ? '' : 'max-width: 70%'")
           template(#icon) schedule
           template(#name) 發震時間
-          template(#value, v-if="report?.time") {{ toFormattedTimeString(report.time) }}
+          template(v-if="report?.time", #value) {{ toFormattedTimeString(report.time) }}
         ReportDetailField(:style="report?.loc ? '' : 'max-width: 85%'")
           template(#icon) pin_drop
           template(#name) 震央位置
-          template(#value, v-if="report?.loc") {{ report.loc.substring(0, report.loc.indexOf("(")).trim() }}
+          template(v-if="report?.loc", #value) {{ report.loc.substring(0, report.loc.indexOf("(")).trim() }}
         ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 55%'")
           template(#icon) point_scan
           template(#name) 震央座標
-          template(#value, v-if="report?.lat != undefined && report?.lon != undefined")
+          template(v-if="report?.lat != undefined && report?.lon != undefined", #value)
             FieldValueUnitPair
               template(#value) {{ report.lon }}
               template(#trailing-unit) {{ report.lon ? report.lon > 0 ? "°E" : "°W" : "°" }}
@@ -84,14 +84,14 @@ const openUrl = async (id?: string) => {
           ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 60%'")
             template(#icon) speed
             template(#name) 規模
-            template(#value, v-if="report?.mag != undefined")
+            template(v-if="report?.mag != undefined", #value)
               FieldValueUnitPair
                 template(#leading-unit) M#[sub L]
                 template(#value) {{ report.mag }}
           ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 40%'")
             template(#icon) keyboard_double_arrow_down
             template(#name) 深度
-            template(#value, v-if="report?.depth != undefined")
+            template(v-if="report?.depth != undefined", #value)
               FieldValueUnitPair
                 template(#value) {{ report.depth }}
                 template(#trailing-unit) ㎞
@@ -113,9 +113,10 @@ const openUrl = async (id?: string) => {
         .report-intensity-list-scrollview
           .report-intensity-list-scroller
             #report-intensity-grouped.report-intensity-container
-              ReportIntensityGroup(v-for="area in report?.list" :area="area")
+              ReportIntensityGroup(v-for="area in report?.list" :key="area.area" :area="area")
             #report-intensity-all.report-intensity-container
-              ReportIntensityItem(v-if="report?.list" v-for="station in report.list.flatMap(v=>v.stations.map(s=>({...s,area: v.area }))).sort((a, b) => b.int - a.int)" :station="station")
+              template(v-if="report?.list")
+                ReportIntensityItem(v-for="station in report.list.flatMap(v=>v.stations.map(s=>({...s,area: v.area }))).sort((a, b) => b.int - a.int)" :key="station.station" :station="station")
 </template>
 
 <style scoped>

@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { int } = defineProps<{ int: number; }>();
+defineProps<{
+  int: number;
+}>();
 </script>
 <template lang="pug">
 .report-intensity-item-intensity(:class="`intensity-${int}`")

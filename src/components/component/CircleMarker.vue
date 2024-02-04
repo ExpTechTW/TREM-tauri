@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from "vue";
-import type { Ref } from "vue";
 import maplibregl from "maplibre-gl";
 
 import { ScreenPixelRatio } from "../../scripts/helper/constant";

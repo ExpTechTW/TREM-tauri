@@ -1,12 +1,17 @@
 <script setup lang="ts">
+import IntensityBox from './IntensityBox.vue';
+
 import type { PartialReport } from '../../scripts/class/api';
 import { extractLocationFromString, toFormattedTimeString } from '../../scripts/helper/utils';
-import IntensityBox from './IntensityBox.vue';
-defineProps<{ report: PartialReport; changeReport: Function; }>();
+
+defineProps<{
+  report: PartialReport;
+  changeReport(report: PartialReport): void;
+}>();
 </script>
 
 <template lang="pug">
-.report-list-item(@click="changeReport(report)", :class="{numbered: report.no % 1000}")
+.report-list-item(:class="{numbered: report.no % 1000}", @click="changeReport(report)")
   IntensityBox(:int="report.int")
   .report-list-item-content
     span.report-list-item-location {{ extractLocationFromString(report.loc) }}

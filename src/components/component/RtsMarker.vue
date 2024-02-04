@@ -6,7 +6,7 @@ import type { RtsStation, Station } from "../../scripts/class/api";
 import { pga } from '../../scripts/helper/color';
 import code from "../../assets/json/code.json";
 
-const { map, stationId, station, rts } = defineProps<{
+const props = defineProps<{
   map: maplibregl.Map;
   stationId: string;
   station: Station;
@@ -18,8 +18,8 @@ const markerTemplate = ref<HTMLDivElement>();
 
 onMounted(() => {
   marker = new maplibregl.Marker({ element: markerTemplate.value })
-    .setLngLat([station.info[0].lon, station.info[0].lat])
-    .addTo(map);
+    .setLngLat([props.station.info[0].lon, props.station.info[0].lat])
+    .addTo(props.map);
 });
 
 onUnmounted(() => {

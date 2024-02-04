@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Circle from "../component/Circle.vue";
+import CircleMarker from "../component/CircleMarker.vue";
 import MapHomeViewControl from "../component/MapHomeViewControl.vue";
 import MapReportListMarker from '../component/MapReportListMarker.vue';
 import MapReportMarker from '../component/MapReportMarker.vue';
@@ -140,7 +140,7 @@ onUnmounted(() => {
 #map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': currentView.startsWith('report'), 'hide-report-list-markers': currentView != 'report-list' }")
 .map-layers(v-if="map")
   .circle
-    Circle(:map="map", type="s", :radius="radius", :lng="121.53697824593353", :lat="25.29965458828072", :alert="true", :z-index="1000")
+    CircleMarker(:map="map", type="s", :radius="radius", :lng="121.53697824593353", :lat="25.29965458828072", :alert="true", :z-index="1000")
   .home(v-if="currentView == 'home'")
     MapHomeViewControl(:map="map")
   .report-list(v-if="currentView == 'report-list'")

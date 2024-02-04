@@ -16,7 +16,13 @@
     "plugin:vue-pug/vue3-recommended",
     "prettier"
   ],
+  "globals": {
+    "NodeJS": true
+  },
   "rules": {
-    "no-unused-vars": ["warn", { "vars": "local" }]
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", {"vars":"local"}],
+    "vue/valid-template-root": "off",
+    "no-unused-vars": ["off"]
   }
 }
