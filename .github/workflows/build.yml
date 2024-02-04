@@ -5,7 +5,7 @@ on:
     branches: main
 
 jobs:
-  test-tauri:
+  build-tauri:
     strategy:
       fail-fast: false
       matrix:
@@ -33,3 +33,5 @@ jobs:
         run: npm install
 
       - uses: tauri-apps/tauri-action@v0
+
+  upload-artifacts:
