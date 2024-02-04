@@ -13,13 +13,13 @@ export interface StationInfo {
    */
   code: keyof typeof Code;
   /**
-   * 測站緯度
-   */
-  lat: number;
-  /**
    * 測站經度
    */
   lon: number;
+  /**
+   * 測站緯度
+   */
+  lat: number;
   /**
    * 測站安裝時間
    */
@@ -50,88 +50,274 @@ export interface WebSocketConnectionConfig {
   service?: ("trem.rts" | "websocket.eew" | "websocket.report" | "websocket.tsunami" | "trem.intensity" | "cwa.intensity")[],
 };
 
+/**
+ * 部分地震報告
+ */
 export interface PartialReport {
+  /**
+   * 地震報告 ID
+   */
   id: string;
+  /**
+   * 地震震央經度
+   */
   lon: number;
+  /**
+   * 地震震央緯度
+   */
   lat: number;
+  /**
+   * 地震位置敘述
+   */
   loc: string;
+  /**
+   * 地震深度
+   */
   depth: number;
+  /**
+   * 地震芮氏規模
+   */
   mag: number;
+  /**
+   * 地震觀測最大震度
+   */
   int: number;
+  /**
+   * 地震發生時間
+   */
   time: number;
+  /**
+   * TREM 觀測網 ID
+   */
   trem: number;
+  /**
+   * 地震報告編號
+   */
   no: number;
+  /**
+   * 地震報告完整性
+   */
   md5: string;
 };
 
+/**
+ * 測站觀測資料
+ */
 export interface StationIntensity {
+  /**
+   * 測站名稱
+   */
   station: string;
-  lat: number;
+  /**
+   * 測站經度
+   */
   lon: number;
+  /**
+   * 測站緯度
+   */
+  lat: number;
+  /**
+   * 測站最大觀測震度
+   */
   int: number;
 };
 
+/**
+ * 區域觀測資料
+ */
 export interface AreaIntensity {
+  /**
+   * 區域名稱
+   */
   area: string;
+  /**
+   * 區域最大觀測震度
+   */
   int: number;
+  /**
+   * 區域內測站觀測資料
+   */
   stations: StationIntensity[];
 };
 
+/**
+ * 地震報告
+ */
 export interface Report extends Omit<PartialReport, "md5"> {
+  /**
+   * 各地觀測最大震度
+   */
   list: AreaIntensity[];
 };
 
+/**
+ * 測站地動資料
+ */
 export interface RtsStation {
+  /**
+   * 地動加速度
+   */
   pga: number;
+  /**
+   * 地動速度
+   */
   pgv: number;
+  /**
+   * 即時震度
+   */
   i: number;
+  /**
+   * 衰減震度
+   */
   I: number;
+  /**
+   * 測站是否觸發
+   */
   alert: boolean;
 };
 
 export type Box = Record<string, number>;
 
+/**
+ * 地動資料
+ */
 export interface Rts {
+  /**
+   * 測站地動資料
+   */
   station: Record<string, RtsStation>;
+  /**
+   * 地動區塊
+   */
   box: Box;
+  /**
+   * 資料時間
+   */
   time: number;
 };
 
+/**
+ * 地震速報來源機關
+ */
 export enum EewOrigin {
+  /**
+   * 交通部中央氣象署
+   * @link https://www.cwa.gov.tw
+   */
   Cwa = "cwa",
+  /**
+   * 기상청 날씨누리
+   * @link https://www.kma.go.kr
+   */
   Kma = "kma",
+  /**
+   * 気象庁
+   * @link https://www.jma.go.jp
+   */
   Jma = "jma",
+  /**
+   * 防災科研
+   * @link https://www.bosai.go.jp
+   */
   Nied = "nied",
+  /**
+   * 四川省地震局
+   * @link https://www.scdzj.gov.cn
+   */
+  Scdzj = "scdzj",
 }
 
+/**
+ * 地震速報狀態
+ */
 export enum EewStatus {
+  /**
+   * 注意報
+   */
   Warn = 0,
+  /**
+   * 警報
+   */
   Alert = 1,
+  /**
+   * 取消報
+   */
   Cancel = 2,
+  /**
+   * 測試報
+   */
   Test = 3,
 }
 
 export interface Eew {
   type: "eew";
+  /**
+   * 地震速報來源機關
+   */
   author: EewOrigin;
+  /**
+   * 地震速報 ID
+   */
   id: string,
+  /**
+   * 地震速報報號
+   */
   serial: number,
+  /**
+   * 地震速報狀態
+   */
   status: EewStatus,
-  final: 1,
+  /**
+   * 地震速報是否為最終報
+   */
+  final: 1 | 0,
+  /**
+   * 地震速報參數
+   */
   eq: {
+    /**
+     * 地震速報時間
+     */
     time: number,
+    /**
+     * 地震震央預估經度
+     */
     lon: number,
+    /**
+     * 地震震央預估緯度
+     */
     lat: number,
+    /**
+     * 地震預估深度
+     */
     depth: number,
+    /**
+     * 地震預估芮氏規模
+     */
     mag: number,
+    /**
+     * 地震預估位置
+     */
     loc: string,
+    /**
+     * 地震預估最大震度
+     */
     max: number,
   };
 }
 
+/**
+ * 校時
+ */
 export interface Ntp {
   type: "ntp";
+  /**
+   * 伺服器時間
+   */
   time: number;
+  /**
+   * 校時板本
+   */
   version: number;
 }
 
@@ -163,9 +349,32 @@ export enum WebSocketEvent {
 };
 
 export declare interface ExpTechApi {
+  /**
+   * 地動資料
+   * @param {WebSocketEvent.Rts} event rts
+   * @param {(rts: Rts) => void} listener 
+   */
   on(event: WebSocketEvent.Rts, listener: (rts: Rts) => void): this;
+
+  /**
+   * 地震速報資料
+   * @param {WebSocketEvent.Eew} event eew
+   * @param {(eew: Eew) => void} listener 
+   */
   on(event: WebSocketEvent.Eew, listener: (eew: Eew) => void): this;
+
+  /**
+   * 地震速報資料
+   * @param {WebSocketEvent.Ntp} event ntp
+   * @param {(ntp: Ntp) => void} listener 
+   */
   on(event: WebSocketEvent.Ntp, listener: (ntp: Ntp) => void): this;
+
+  /**
+   * 地震速報資料
+   * @param {WebSocketEvent.Close} event close
+   * @param {(ev: CloseEvent) => void} listener 
+   */
   on(event: WebSocketEvent.Close, listener: (ev: CloseEvent) => void): this;
 }
 
@@ -322,7 +531,7 @@ export class ExpTechApi extends EventEmitter {
   }
 
   /**
-   * Get list of earthquake reports.
+   * 獲取地震報告列表
    * @param {number} [limit]
    * @returns {Promise<PartialReport[]>}
    */
@@ -342,8 +551,8 @@ export class ExpTechApi extends EventEmitter {
   }
 
   /**
-   * Get a specific earthquake report.
-   * @param {string} id Report identifier
+   * 獲取指定地震報告
+   * @param {string} id 地震報告 ID
    * @returns {Promise<Report>}
    */
   async getReport(id: string): Promise<Report> {
@@ -374,8 +583,8 @@ export class ExpTechApi extends EventEmitter {
   }
 
   /**
-   * Get realtime station data.
-   * @param {number} [time=Date.now()] Specify ime
+   * 獲取即時地動資料
+   * @param {number} [time=Date.now()] 時間
    * @returns {Promise<Rts>}
    */
   async getRts(time: number = Date.now()): Promise<Rts> {
