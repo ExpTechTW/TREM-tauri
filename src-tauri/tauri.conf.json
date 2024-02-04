@@ -25,6 +25,15 @@
       },
       "path": {
         "all": true
+      },
+      "window": {
+        "all": false,
+        "requestUserAttention": true,
+        "setAlwaysOnTop": true,
+        "setFocus": true,
+        "setSkipTaskbar": true,
+        "setTitle": true,
+        "show": true
       }
     },
     "bundle": {
@@ -55,7 +64,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "trem-tauri",
+        "title": "TREM Tauri | 臺灣即時地震監測",
         "width": 1200,
         "height": 720
       }

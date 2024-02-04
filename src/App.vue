@@ -5,8 +5,8 @@ import NavigationBar from "./components/component/NavigationBar.vue";
 import ReportBox from "./components/view/ReportBox.vue";
 import ReportListBox from "./components/view/ReportListBox.vue";
 
-import { inject, ref } from "vue";
 import type { Ref } from "vue";
+import { inject, ref } from "vue";
 
 import type { ExpTechApi, Report, PartialReport, Rts, Station } from "./scripts/class/api";
 
@@ -39,7 +39,6 @@ const changeReport = async (report: PartialReport) => {
   const fullReport = await api?.getReport(report.id);
   activeReport.value = fullReport;
 };
-
 </script>
 
 <template lang="pug">
