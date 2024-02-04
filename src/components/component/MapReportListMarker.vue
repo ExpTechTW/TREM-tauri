@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import maplibregl from "maplibre-gl";
 
 import type { PartialReport } from '../../scripts/class/api';
-import MapCrossMarker from './MapCrossMarker.vue';
+import CrossMarker from './CrossMarker.vue';
 
 const { map, reports } = defineProps<{
   map: maplibregl.Map;
@@ -35,5 +35,5 @@ onUnmounted(() => {
 
 <template lang="pug">
 template(v-for="report in reports")
-  MapCrossMarker.report-list-marker(:int="report.int", :size="16 + 4 * report.mag", :ref="(el) => reportMarkerTemplate[report.id] = el")
+  CrossMarker.report-list-marker(:int="report.int", :size="16 + 4 * report.mag", :ref="(el) => reportMarkerTemplate[report.id] = el")
 </template>

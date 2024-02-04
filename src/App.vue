@@ -22,7 +22,10 @@ const activeReport = ref<Report>();
 const currentView = ref<string>("home");
 
 const changeView = (view: string) => {
-  currentView.value = view;
+  if (currentView.value == view)
+    currentView.value = "home";
+  else
+    currentView.value = view;
 };
 
 const handleHideReportBox = () => {

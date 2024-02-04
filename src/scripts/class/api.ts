@@ -1,8 +1,11 @@
 import EventEmitter from "events";
+
 import Route from "./route.js";
 
+import Code from "../../assets/json/code.json";
+
 export interface StationInfo {
-  code: number;
+  code: keyof typeof Code;
   lat: number;
   lon: number;
   time: string;

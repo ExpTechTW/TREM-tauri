@@ -25,6 +25,7 @@
     "@types/events": "^3.0.3",
     "@types/ws": "^8.5.10",
     "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/devtools": "^7.0.14",
     "@vue/language-plugin-pug": "^1.8.27",
     "pug": "^3.0.2",
     "typescript": "^5.0.2",

@@ -32,6 +32,7 @@ app.mount("#app");
 
   api.on(WebSocketEvent.Rts, (raw) => {
     props.rts.value = raw;
+    console.debug(raw);
   });
 
   api.on(WebSocketEvent.Close, console.debug);

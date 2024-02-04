@@ -18,6 +18,7 @@ defineProps<{
 <style scoped>
 .nav-item {
   display: flex;
+  pointer-events: none;
 
   >.nav-btn {
     all: unset;
@@ -36,6 +37,8 @@ defineProps<{
     white-space: nowrap;
     flex: 16px 0;
     opacity: .6;
+    cursor: pointer;
+    pointer-events: all;
     transition: flex .2s cubic-bezier(0.2, 0, 0, 1),
       opacity .2s cubic-bezier(0.2, 0, 0, 1);
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MapCrossMarker from './MapCrossMarker.vue';
+import CrossMarker from './CrossMarker.vue';
 
 import type { ComponentPublicInstance } from 'vue';
 import { onMounted, onUnmounted, ref } from 'vue';
@@ -14,7 +14,7 @@ const bounds = new maplibregl.LngLatBounds();
 const markers: maplibregl.Marker[] = [];
 
 const intensityMarkerTemplate = ref<HTMLDivElement[]>([]);
-const epicenterMarkerTemplate = ref<ComponentPublicInstance<typeof MapCrossMarker>>();
+const epicenterMarkerTemplate = ref<ComponentPublicInstance<typeof CrossMarker>>();
 
 const stations = report.list.flatMap(v => v.stations.map(s => ({ ...s, area: v.area })));
 
@@ -48,7 +48,7 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-MapCrossMarker(ref="epicenterMarkerTemplate", :size="32")
+CrossMarker(ref="epicenterMarkerTemplate", :size="32")
 template(v-for="station in stations")
   .report-intensity-marker(ref="intensityMarkerTemplate", :class="`intensity-${station.int}`", :style="`z-index:${station.int}`")
 </template>
