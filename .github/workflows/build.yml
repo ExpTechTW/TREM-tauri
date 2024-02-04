@@ -32,4 +32,12 @@ jobs:
       - name: install frontend dependencies
         run: npm install
 
-      - uses: tauri-apps/tauri-action@v0
+      - name: Build Application
+        uses: JonasKruckenberg/tauri-build@v1
+        id: tauri_build
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: "${{ join(fromJSON(steps.tauri_build.outputs.artifacts), '\n') }}"
