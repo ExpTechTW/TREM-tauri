@@ -2,11 +2,7 @@ import { createApp, reactive, ref } from "vue";
 import { SettingsManager } from "tauri-settings";
 import App from "./App.vue";
 
-import {
-  EewOrigin,
-  ExpTechApi,
-  WebSocketEvent,
-} from "./scripts/class/api";
+import { EewOrigin, ExpTechApi, WebSocketEvent } from "./scripts/class/api";
 import type { Station, PartialReport, Rts, Eew } from "./scripts/class/api";
 
 import "maplibre-gl/dist/maplibre-gl.css";
