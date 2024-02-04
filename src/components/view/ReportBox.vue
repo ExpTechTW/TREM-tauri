@@ -4,16 +4,32 @@ import FieldValueUnitPair from "../component/FieldValueUnitPair.vue";
 import FilledButton from "../component/FilledButton.vue";
 import ReportDetailField from "../component/ReportDetailField.vue";
 import ReportIntensityGroup from "../component/ReportIntensityGroup.vue";
+import ReportIntensityItem from "../component/ReportIntensityItem.vue";
+
+import { shell } from "@tauri-apps/api";
+import { inject } from "vue";
+import { SettingsManager } from "tauri-settings";
 
 import type { Report } from "../../scripts/class/api";
-import { extractLocationFromString, toFormattedTimeString } from "../../scripts/helper/utils";
-import ReportIntensityItem from "../component/ReportIntensityItem.vue";
+import type { DefaultSettingSchema } from "../../types";
+import { extractLocationFromString, toFormattedTimeString, toReportUrl } from "../../scripts/helper/utils";
 
 defineProps<{
   currentView: string;
   report?: Report,
   handleHideReportBox: () => void;
 }>();
+
+const setting = inject<SettingsManager<DefaultSettingSchema>>("settings");
+
+const openUrl = async (id?: string) => {
+  await setting!.get("behavior.openExternal");
+  if (id) {
+    window.open(toReportUrl(id));
+    shell.open(toReportUrl(id));
+  }
+};
+
 </script>
 
 <template lang="pug">
@@ -36,7 +52,7 @@ defineProps<{
         Chip.report-action-chip
           template(#icon) replay
           template(#label) 重播
-        Chip.report-action-chip
+        Chip.report-action-chip(:disabled="!report?.id", @click="openUrl(report?.id)")
           template(#icon) captive_portal
           template(#label) 報告頁面
         Chip.report-action-chip

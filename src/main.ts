@@ -7,6 +7,7 @@ import type { Station, PartialReport, Rts } from "./scripts/class/api";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
+import type { DefaultSettingSchema } from "./types";
 
 const props = {
   stations: ref<Record<string, Station>>({}),
@@ -14,7 +15,7 @@ const props = {
   rts: ref<Rts>({ station: {}, box: {}, time: Date.now() }),
 };
 
-const settings = new SettingsManager({ apikey: "" });
+const settings = new SettingsManager<DefaultSettingSchema>({ api: { key: "" }, behavior: { openExternal: false } });
 const api = new ExpTechApi();
 
 const app = createApp(App, props);
@@ -28,7 +29,7 @@ app.mount("#app");
   await settings.initialize();
   await settings.syncCache();
 
-  api.setApiKey(await settings.get("apikey"));
+  api.setApiKey(await settings.get("api.key"));
 
   api.on(WebSocketEvent.Rts, (raw) => {
     props.rts.value = raw;

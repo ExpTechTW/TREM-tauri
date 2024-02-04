@@ -21,3 +21,9 @@ export const toFormattedTimeString = (ts: number) => {
     ].join(":"),
   ].join("");
 };
+
+export const toReportUrl = (id: string) => {
+  const arr = id.split("-");
+  arr.splice(1, 1);
+  return `https://www.cwa.gov.tw/V8/C/E/EQ/EQ${arr.join("-")}.html` as const;
+};
