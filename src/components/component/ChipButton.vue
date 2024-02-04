@@ -26,22 +26,22 @@ button.chip
   background-color: hsl(var(--chip-background-hsl));
   color: hsl(var(--chip-label-hsl));
   transition-property: background-color, color, outline, opacity;
-  transition-duration: .1s;
+  transition-duration: 0.1s;
   transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
   outline: 1px solid hsl(var(--chip-outline-hsl));
 
   &:disabled {
     cursor: not-allowed;
-    opacity: .4;
+    opacity: 0.4;
   }
 
-  >.chip-leading-icon {
+  > .chip-leading-icon {
     height: 16px;
     aspect-ratio: 1;
     font-size: 16px;
   }
 
-  >.chip-label {
+  > .chip-label {
     line-height: 12px;
     font-size: 12px;
   }

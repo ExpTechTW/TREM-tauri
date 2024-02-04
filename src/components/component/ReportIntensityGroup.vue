@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import ReportIntensityItem from './ReportIntensityItem.vue';
+import ReportIntensityItem from "./ReportIntensityItem.vue";
 
-import type { AreaIntensity } from '../../scripts/class/api';
+import type { AreaIntensity } from "../../scripts/class/api";
 
-defineProps<{ area: AreaIntensity; }>();
+defineProps<{ area: AreaIntensity }>();
 </script>
 
 <template lang="pug">
@@ -21,38 +21,38 @@ defineProps<{ area: AreaIntensity; }>();
   gap: 4px;
   height: 24px;
   overflow: hidden;
-  transition: height .2s cubic-bezier(0.2, 0, 0, 1);
+  transition: height 0.2s cubic-bezier(0.2, 0, 0, 1);
 
   &.expanded {
     height: auto;
-    transition-duration: .4s;
+    transition-duration: 0.4s;
     transition-timing-function: cubic-bezier(0.05, 0.7, 0.1, 1);
 
-    >.report-intensity-item>.report-intensity-group-collapse {
+    > .report-intensity-item > .report-intensity-group-collapse {
       scale: 1 -1;
     }
   }
 
-  >.report-intensity-item {
+  > .report-intensity-item {
     cursor: pointer;
 
-    >.report-intensity-item-location {
+    > .report-intensity-item-location {
       font-weight: 700;
     }
 
-    >.report-intensity-group-collapse {
-      opacity: .6;
-      transition: scale .1s cubic-bezier(0.2, 0, 0, 1);
+    > .report-intensity-group-collapse {
+      opacity: 0.6;
+      transition: scale 0.1s cubic-bezier(0.2, 0, 0, 1);
     }
   }
 
-  >.report-intensity-member {
+  > .report-intensity-member {
     display: flex;
     flex-direction: column;
     gap: 4px;
     padding-left: 24px;
 
-    >.report-intensity-item {
+    > .report-intensity-item {
       background-color: hsl(var(--background-hsl));
     }
   }

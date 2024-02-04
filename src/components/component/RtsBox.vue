@@ -10,13 +10,19 @@ const props = defineProps<{
 
 onMounted(() => {
   console.log("mount", { box: props.box, int: props.int });
-  props.map.setFeatureState({ source: "box", id: props.box }, { int: props.int });
+  props.map.setFeatureState(
+    { source: "box", id: props.box },
+    { int: props.int }
+  );
 });
 
 onUpdated(() => {
   console.log("update", { box: props.box, int: props.int });
 
-  props.map.setFeatureState({ source: "box", id: props.box }, { int: props.int });
+  props.map.setFeatureState(
+    { source: "box", id: props.box },
+    { int: props.int }
+  );
 });
 
 onUnmounted(() => {

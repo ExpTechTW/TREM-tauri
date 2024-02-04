@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toFormattedTimeString } from '../../scripts/helper/utils';
+import { toFormattedTimeString } from "../../scripts/helper/utils";
 
 defineProps<{
   timestamp: number;

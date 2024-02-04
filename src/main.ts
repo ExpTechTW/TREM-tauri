@@ -15,7 +15,10 @@ const props = {
   rts: ref<Rts>({ station: {}, box: {}, time: Date.now() }),
 };
 
-const settings = new SettingsManager<DefaultSettingSchema>({ api: { key: "" }, behavior: { openExternal: false } });
+const settings = new SettingsManager<DefaultSettingSchema>({
+  api: { key: "" },
+  behavior: { openExternal: false },
+});
 const api = new ExpTechApi();
 
 const app = createApp(App, props);

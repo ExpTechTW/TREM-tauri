@@ -2,6 +2,7 @@
   "semi": true,
   "singleQuote": false,
   "trailingComma": "es5",
+  "arrowParens": "always",
   "overrides": [
     {
       "files": ["*.yaml", "*.yml"],

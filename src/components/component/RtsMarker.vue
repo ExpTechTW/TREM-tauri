@@ -3,7 +3,7 @@ import maplibregl from "maplibre-gl";
 import { onMounted, onUnmounted, ref } from "vue";
 
 import type { RtsStation, Station } from "../../scripts/class/api";
-import { pga } from '../../scripts/helper/color';
+import { pga } from "../../scripts/helper/color";
 import code from "../../assets/json/code.json";
 
 const props = defineProps<{
@@ -51,13 +51,13 @@ onUnmounted(() => {
 <style scoped>
 .rts-marker {
   opacity: 1;
-  transition: opacity .1s cubic-bezier(0.2, 0, 0, 1);
+  transition: opacity 0.1s cubic-bezier(0.2, 0, 0, 1);
 
   &:hover {
     z-index: 1000 !important;
   }
 
-  >.rts-marker-body {
+  > .rts-marker-body {
     position: relative;
     display: grid;
     align-items: center;
@@ -67,9 +67,10 @@ onUnmounted(() => {
     border-radius: 8px;
     outline: 1px solid #aaa;
     cursor: pointer;
-    transition: height .1s cubic-bezier(0.2, 0, 0, 1),
-      width .1s cubic-bezier(0.2, 0, 0, 1),
-      background-color .1s cubic-bezier(0.2, 0, 0, 1);
+    transition:
+      height 0.1s cubic-bezier(0.2, 0, 0, 1),
+      width 0.1s cubic-bezier(0.2, 0, 0, 1),
+      background-color 0.1s cubic-bezier(0.2, 0, 0, 1);
 
     &.has-intensity {
       height: 16px;
@@ -90,7 +91,7 @@ onUnmounted(() => {
       transform: rotate(45deg);
     }
 
-    >.rts-marker-detail {
+    > .rts-marker-detail {
       all: unset;
       position: absolute;
       top: 100%;
@@ -103,33 +104,33 @@ onUnmounted(() => {
       border-radius: 8px;
       white-space: nowrap;
       text-rendering: optimizeLegibility;
-      box-shadow: 0 0 8px 0 hsl(var(--background-hsl) / .6);
+      box-shadow: 0 0 8px 0 hsl(var(--background-hsl) / 0.6);
       cursor: default;
 
-      >.rts-marker-detail-title {
+      > .rts-marker-detail-title {
         display: flex;
         gap: 4px;
         font-size: 16px;
         font-weight: 700;
 
-        >.station-identifier {
+        > .station-identifier {
           display: flex;
           flex-direction: column;
           font-weight: 400;
 
-          >.station-net {
+          > .station-net {
             line-height: 8px;
             font-size: 8px;
           }
 
-          >.station-id {
+          > .station-id {
             line-height: 10px;
             font-size: 10px;
           }
         }
       }
 
-      >.rts-data {
+      > .rts-data {
         display: grid;
         grid-template-rows: 1fr 1fr;
         grid-template-columns: 1fr 1fr;
@@ -140,9 +141,8 @@ onUnmounted(() => {
       content: "";
     }
 
-    &:hover>.rts-marker-detail {
+    &:hover > .rts-marker-detail {
       display: flex;
-
     }
   }
 }

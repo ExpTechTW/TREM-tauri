@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NavigationButton from './NavigationButton.vue';
+import NavigationButton from "./NavigationButton.vue";
 
 defineProps<{
   currentView: string;

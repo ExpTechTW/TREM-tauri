@@ -13,35 +13,35 @@
   align-items: center;
   gap: 8px;
 
-  >.report-detail-field-icon {
+  > .report-detail-field-icon {
     width: 24px;
     aspect-ratio: 1;
-    opacity: .8;
+    opacity: 0.8;
     font-size: 24px;
   }
 
-  >.report-detail-field-divider {
+  > .report-detail-field-divider {
     width: 2px;
     height: 90%;
-    background-color: rgb(255 255 255 / .6);
+    background-color: rgb(255 255 255 / 0.6);
     border-radius: 2px;
   }
 
-  >.report-detail-field-content-container {
+  > .report-detail-field-content-container {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 4px;
 
-    >.report-detail-field-name {
+    > .report-detail-field-name {
       position: relative;
       line-height: 12px;
       font-size: 12px;
       font-weight: 300;
-      opacity: .8;
+      opacity: 0.8;
     }
 
-    >.report-detail-field-value {
+    > .report-detail-field-value {
       display: flex;
       gap: 16px;
       height: 16px;

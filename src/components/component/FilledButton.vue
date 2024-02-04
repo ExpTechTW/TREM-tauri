@@ -15,16 +15,17 @@ button#report-back-btn.filled-button.button
   border-radius: 32px;
   font-family: "Noto Sans TC", sans-serif;
   cursor: pointer;
-  transition: background-color .1s cubic-bezier(0.2, 0, 0, 1),
-    opacity .1s cubic-bezier(0.2, 0, 0, 1);
+  transition:
+    background-color 0.1s cubic-bezier(0.2, 0, 0, 1),
+    opacity 0.1s cubic-bezier(0.2, 0, 0, 1);
 
-  >.button-leading-icon {
+  > .button-leading-icon {
     width: 20px;
     aspect-ratio: 1;
     font-size: 20px;
   }
 
-  >.button-label {
+  > .button-label {
     line-height: 16px;
     font-size: 12px;
     font-weight: 500;
@@ -32,7 +33,7 @@ button#report-back-btn.filled-button.button
 
   &.filled-button {
     color: #000;
-    background-color: #D9D9D9;
+    background-color: #d9d9d9;
   }
 
   &.filled-button:hover {
@@ -40,7 +41,7 @@ button#report-back-btn.filled-button.button
   }
 
   &.filled-button:active {
-    opacity: .6;
+    opacity: 0.6;
   }
 
   &:disabled {

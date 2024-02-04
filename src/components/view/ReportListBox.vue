@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { PartialReport } from '../../scripts/class/api';
-import ReportItem from '../component/ReportItem.vue';
+import type { PartialReport } from "../../scripts/class/api";
+import ReportItem from "../component/ReportItem.vue";
 defineProps<{
   currentView: string;
   reports: PartialReport[];
@@ -33,7 +33,7 @@ defineProps<{
   /* dim when report is open */
   filter: none;
   transition-property: filter;
-  transition-duration: .2s;
+  transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.3, 0, 0.8, 0.15);
 }
 
@@ -41,7 +41,7 @@ body:has(#report-box.show) .report-list-wrapper {
   filter: brightness(60%);
   transition-timing-function: cubic-bezier(0.05, 0.7, 0.1, 1);
 
-  >.report-list-scrollview {
+  > .report-list-scrollview {
     pointer-events: none;
   }
 }
@@ -59,7 +59,7 @@ body:has(#report-box.show) .report-list-wrapper {
   opacity: 0;
   translate: 100%;
   transition-property: opacity, translate;
-  transition-duration: .2s;
+  transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.3, 0, 0.8, 0.15);
 
   &.show {
@@ -72,12 +72,12 @@ body:has(#report-box.show) .report-list-wrapper {
     padding-right: 4px;
   }
 
-  &:hover>.report-list-scroller {
+  &:hover > .report-list-scroller {
     overflow-y: auto;
     padding-right: 4px;
   }
 
-  >.report-list-scroller {
+  > .report-list-scroller {
     min-height: 0;
     overflow-y: hidden;
 

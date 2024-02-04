@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from "vue";
 import maplibregl from "maplibre-gl";
 
-import type { PartialReport } from '../../scripts/class/api';
-import CrossMarker from './CrossMarker.vue';
+import type { PartialReport } from "../../scripts/class/api";
+import CrossMarker from "./CrossMarker.vue";
 import { TaiwanBounds } from "../../scripts/helper/constant";
 
 const props = defineProps<{
@@ -18,7 +18,9 @@ onMounted(() => {
   for (const i in props.reports) {
     const report = props.reports[i];
 
-    const marker = new maplibregl.Marker({ element: reportMarkerTemplate.value[report.id].$el })
+    const marker = new maplibregl.Marker({
+      element: reportMarkerTemplate.value[report.id].$el,
+    })
       .setLngLat([report.lon, report.lat])
       .setOpacity(`${1 * (+i / props.reports.length)}`)
       .addTo(props.map);

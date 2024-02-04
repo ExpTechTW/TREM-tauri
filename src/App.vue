@@ -8,7 +8,13 @@ import ReportListBox from "./components/view/ReportListBox.vue";
 import type { Ref } from "vue";
 import { inject, ref } from "vue";
 
-import type { ExpTechApi, Report, PartialReport, Rts, Station } from "./scripts/class/api";
+import type {
+  ExpTechApi,
+  Report,
+  PartialReport,
+  Rts,
+  Station,
+} from "./scripts/class/api";
 
 defineProps<{
   reports: PartialReport[];
@@ -22,10 +28,8 @@ const activeReport = ref<Report>();
 const currentView = ref<string>("home");
 
 const changeView = (view: string) => {
-  if (currentView.value == view)
-    currentView.value = "home";
-  else
-    currentView.value = view;
+  if (currentView.value == view) currentView.value = "home";
+  else currentView.value = view;
 };
 
 const handleHideReportBox = () => {

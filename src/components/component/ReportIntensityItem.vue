@@ -3,7 +3,9 @@ import IntensityCapsule from "./IntensityCapsule.vue";
 
 import type { StationIntensity } from "../../scripts/class/api";
 
-defineProps<{ station: Omit<StationIntensity, "lat" | "lon"> & { area?: string; }; }>();
+defineProps<{
+  station: Omit<StationIntensity, "lat" | "lon"> & { area?: string };
+}>();
 </script>
 
 <template lang="pug">
@@ -22,7 +24,7 @@ defineProps<{ station: Omit<StationIntensity, "lat" | "lon"> & { area?: string; 
   border-radius: 24px;
   background-color: hsl(var(--background-variant-hsl));
 
-  >.report-intensity-item-intensity {
+  > .report-intensity-item-intensity {
     height: 24px;
     width: 44px;
     border-radius: 24px;
@@ -33,23 +35,23 @@ defineProps<{ station: Omit<StationIntensity, "lat" | "lon"> & { area?: string; 
     text-align: center;
   }
 
-  &.collapsible>.area {
+  &.collapsible > .area {
     flex: 1;
   }
 
-  &:has(> .area + .station)>.area {
+  &:has(> .area + .station) > .area {
     font-weight: 700;
   }
 
-  >.location {
+  > .location {
     font-size: 13px;
   }
 
-  >.collapse-icon {
+  > .collapse-icon {
     width: 16px;
     aspect-ratio: 1;
     font-size: 16px;
-    opacity: .6;
+    opacity: 0.6;
   }
 }
 </style>

@@ -20,6 +20,6 @@ span.value-unit-pair(v-if="$slots['value']")
 .field-unit {
   line-height: 10px;
   font-size: 10px;
-  opacity: .6;
+  opacity: 0.6;
 }
 </style>

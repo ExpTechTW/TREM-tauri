@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "lint": "eslint ./src --ext .ts,.vue --fix",
-    "prettier": "prettier ./src"
+    "prettier": "prettier --write ./src"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.3",

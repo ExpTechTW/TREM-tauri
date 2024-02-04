@@ -20,7 +20,7 @@ defineProps<{
   display: flex;
   pointer-events: none;
 
-  >.nav-btn {
+  > .nav-btn {
     all: unset;
     display: flex;
     align-items: center;
@@ -36,26 +36,27 @@ defineProps<{
     height: 24px;
     white-space: nowrap;
     flex: 16px 0;
-    opacity: .6;
+    opacity: 0.6;
     cursor: pointer;
     pointer-events: all;
-    transition: flex .2s cubic-bezier(0.2, 0, 0, 1),
-      opacity .2s cubic-bezier(0.2, 0, 0, 1);
+    transition:
+      flex 0.2s cubic-bezier(0.2, 0, 0, 1),
+      opacity 0.2s cubic-bezier(0.2, 0, 0, 1);
 
-    >.nav-item-icon {
+    > .nav-item-icon {
       height: 24px;
       aspect-ratio: 1;
       font-size: 24px;
     }
 
-    >.nav-item-label {
+    > .nav-item-label {
       font-weight: 400;
       opacity: 0;
-      transition: opacity .1s cubic-bezier(0.2, 0, 0, 1);
+      transition: opacity 0.1s cubic-bezier(0.2, 0, 0, 1);
     }
 
     &:hover {
-      opacity: .8;
+      opacity: 0.8;
     }
 
     &.active {
@@ -66,7 +67,7 @@ defineProps<{
     &:hover {
       flex: 1;
 
-      >.nav-item-label {
+      > .nav-item-label {
         opacity: 1;
       }
     }

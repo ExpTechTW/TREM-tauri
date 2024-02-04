@@ -12,11 +12,15 @@ import { SettingsManager } from "tauri-settings";
 
 import type { Report } from "../../scripts/class/api";
 import type { DefaultSettingSchema } from "../../types";
-import { extractLocationFromString, toFormattedTimeString, toReportUrl } from "../../scripts/helper/utils";
+import {
+  extractLocationFromString,
+  toFormattedTimeString,
+  toReportUrl,
+} from "../../scripts/helper/utils";
 
 defineProps<{
   currentView: string;
-  report?: Report,
+  report?: Report;
   handleHideReportBox: () => void;
 }>();
 
@@ -29,7 +33,6 @@ const openUrl = async (id?: string) => {
     shell.open(toReportUrl(id));
   }
 };
-
 </script>
 
 <template lang="pug">
@@ -149,7 +152,7 @@ const openUrl = async (id?: string) => {
     opacity: 0;
     translate: 100%;
     transition-property: opacity, translate;
-    transition-duration: .2s;
+    transition-duration: 0.2s;
     transition-timing-function: cubic-bezier(0.3, 0, 0.8, 0.15);
 
     &.show {
@@ -158,7 +161,7 @@ const openUrl = async (id?: string) => {
       transition-timing-function: cubic-bezier(0.05, 0.7, 0.1, 1);
     }
 
-    >.report-box-header {
+    > .report-box-header {
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -166,12 +169,12 @@ const openUrl = async (id?: string) => {
       border-radius: 12px;
       background-color: hsl(var(--background-variant-hsl));
 
-      >.report-box-header {
+      > .report-box-header {
         display: flex;
 
-        >.report-source {
+        > .report-source {
           flex: 1;
-          opacity: .6;
+          opacity: 0.6;
           line-height: 32px;
           font-size: 14px;
           font-weight: 300;
@@ -179,27 +182,27 @@ const openUrl = async (id?: string) => {
         }
       }
 
-      >.report-title {
+      > .report-title {
         display: flex;
         align-items: center;
         padding-left: 4px;
         border-radius: 12px;
 
-        >.report-title-container {
+        > .report-title-container {
           flex: 1;
           display: flex;
           flex-direction: column;
           gap: 4px;
           font-family: "Lato", "Noto Sans TC", sans-serif;
 
-          >.report-subtitle {
+          > .report-subtitle {
             height: 16px;
-            opacity: .86;
+            opacity: 0.86;
             line-height: 16px;
             font-size: 14px;
           }
 
-          >.report-title {
+          > .report-title {
             height: 32px;
             line-height: 32px;
             font-size: 28px;
@@ -207,7 +210,7 @@ const openUrl = async (id?: string) => {
           }
         }
 
-        >.report-max-intensity {
+        > .report-max-intensity {
           width: 64px;
           aspect-ratio: 1;
           border-radius: 12px;
@@ -219,32 +222,32 @@ const openUrl = async (id?: string) => {
         }
       }
 
-      >.report-action-container {
+      > .report-action-container {
         display: flex;
         gap: 8px;
       }
     }
 
-    >.report-box-body {
+    > .report-box-body {
       display: flex;
       flex-direction: column;
       gap: 12px;
       min-height: 0;
       padding: 8px;
 
-      >.report-detail {
+      > .report-detail {
         display: flex;
         flex-direction: column;
         gap: 8px;
         padding: 0 8px;
 
-        >.report-detail-field-row {
+        > .report-detail-field-row {
           display: grid;
           grid-auto-flow: column;
         }
       }
 
-      >.report-intensity-list {
+      > .report-intensity-list {
         display: flex;
         flex-direction: column;
         gap: 6px;
@@ -257,24 +260,24 @@ const openUrl = async (id?: string) => {
           pointer-events: none;
         }
 
-        >.report-intensity-list-header {
+        > .report-intensity-list-header {
           display: flex;
           align-items: center;
           padding: 0 8px;
 
-          >.report-intensity-list-title {
+          > .report-intensity-list-title {
             flex: 1;
             font-size: 12px;
           }
 
-          >.report-intensity-sort-btn-container {
+          > .report-intensity-sort-btn-container {
             display: flex;
             gap: 4px;
             padding: 2px;
             border-radius: 8px;
             background-color: hsl(var(--background-variant-hsl));
 
-            >.report-intensity-sort-btn {
+            > .report-intensity-sort-btn {
               display: flex;
               align-items: center;
               justify-content: center;
@@ -284,35 +287,36 @@ const openUrl = async (id?: string) => {
               border-radius: 4px;
               background-color: transparent;
               cursor: pointer;
-              transition: background-color .1s cubic-bezier(0.2, 0, 0, 1),
-                opacity .1s cubic-bezier(0.2, 0, 0, 1);
+              transition:
+                background-color 0.1s cubic-bezier(0.2, 0, 0, 1),
+                opacity 0.1s cubic-bezier(0.2, 0, 0, 1);
 
-              >input {
+              > input {
                 display: none;
               }
 
-              >.report-intensity-sort-btn-icon {
-                color: hsl(0deg 0% 100% / .5);
+              > .report-intensity-sort-btn-icon {
+                color: hsl(0deg 0% 100% / 0.5);
                 font-size: 14px;
-                transition: color .1s cubic-bezier(0.2, 0, 0, 1);
+                transition: color 0.1s cubic-bezier(0.2, 0, 0, 1);
               }
 
               &:has(input:checked) {
-                background-color: #D9D9D9;
+                background-color: #d9d9d9;
 
-                >.report-intensity-sort-btn-icon {
+                > .report-intensity-sort-btn-icon {
                   color: hsl(var(--surface-variant-hsl));
                 }
               }
 
               &:active {
-                opacity: .6;
+                opacity: 0.6;
               }
             }
           }
         }
 
-        >.report-intensity-list-scrollview {
+        > .report-intensity-list-scrollview {
           display: flex;
           flex-direction: column;
           min-height: 0;
@@ -320,12 +324,12 @@ const openUrl = async (id?: string) => {
           border-radius: 16px;
           background-color: hsl(var(--surface-variant-hsl));
 
-          &:hover>.report-intensity-list-scroller {
+          &:hover > .report-intensity-list-scroller {
             overflow-y: auto;
             padding-right: 4px;
           }
 
-          >.report-intensity-list-scroller {
+          > .report-intensity-list-scroller {
             position: relative;
             min-height: 0;
             overflow: hidden;
@@ -339,7 +343,7 @@ const openUrl = async (id?: string) => {
               height: 4px;
             }
 
-            >.report-intensity-container {
+            > .report-intensity-container {
               display: flex;
               flex-direction: column;
               position: absolute;
@@ -352,7 +356,7 @@ const openUrl = async (id?: string) => {
               overflow: hidden;
               pointer-events: none;
               transition-property: opacity, translate;
-              transition-duration: .2s;
+              transition-duration: 0.2s;
               transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 
               &#report-intensity-grouped {
@@ -365,7 +369,7 @@ const openUrl = async (id?: string) => {
                 translate: 10%;
               }
 
-              >.report-intensity-item {
+              > .report-intensity-item {
                 background-color: hsl(var(--background-hsl));
               }
             }
@@ -380,7 +384,7 @@ const openUrl = async (id?: string) => {
           max-height: unset;
           overflow: visible;
           translate: 0;
-          transition-delay: .05s, 0s;
+          transition-delay: 0.05s, 0s;
         }
       }
     }

@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import CircleMarker from "../component/CircleMarker.vue";
 import MapHomeViewControl from "../component/MapHomeViewControl.vue";
-import MapReportListMarker from '../component/MapReportListMarker.vue';
-import MapReportMarker from '../component/MapReportMarker.vue';
-import MapRtsBox from '../component/MapRtsBox.vue';
-import MapRtsMarker from '../component/MapRtsMarker.vue';
+import MapReportListMarker from "../component/MapReportListMarker.vue";
+import MapReportMarker from "../component/MapReportMarker.vue";
+import MapRtsBox from "../component/MapRtsBox.vue";
+import MapRtsMarker from "../component/MapRtsMarker.vue";
 
-import { markRaw, onMounted, onUnmounted, shallowRef } from 'vue';
-import type { Ref } from 'vue';
+import { markRaw, onMounted, onUnmounted, shallowRef } from "vue";
+import type { Ref } from "vue";
 import maplibregl from "maplibre-gl";
 
-import type { Station, Report, Rts, PartialReport } from '../../scripts/class/api';
+import type {
+  Station,
+  Report,
+  Rts,
+  PartialReport,
+} from "../../scripts/class/api";
 
 defineProps<{
   currentView: string;
@@ -25,39 +30,40 @@ const map = shallowRef<maplibregl.Map | null>(null);
 const radius = shallowRef(10);
 
 onMounted(() => {
-
-  setInterval(() => radius.value += 1, 500);
+  setInterval(() => (radius.value += 1), 500);
 
   const initialState = { lng: 120.5, lat: 23.6, zoom: 6.75 };
 
-  map.value = markRaw(new maplibregl.Map({
-    container: "map",
-    style: {
-      version: 8,
-      name: "TREM Map",
-      sources: {
-        tw_county: {
-          type: "geojson",
-          data: "./tw_county.json",
-          tolerance: 1
+  map.value = markRaw(
+    new maplibregl.Map({
+      container: "map",
+      style: {
+        version: 8,
+        name: "TREM Map",
+        sources: {
+          tw_county: {
+            type: "geojson",
+            data: "./tw_county.json",
+            tolerance: 1,
+          },
+          tw_town: {
+            type: "geojson",
+            data: "./tw_town.json",
+          },
+          box: {
+            type: "geojson",
+            data: "./box.json",
+          },
         },
-        tw_town: {
-          type: "geojson",
-          data: "./tw_town.json"
-        },
-        box: {
-          type: "geojson",
-          data: "./box.json"
-        }
+        layers: [],
       },
-      layers: []
-    },
-    center: [initialState.lng, initialState.lat],
-    zoom: initialState.zoom,
-    keyboard: false,
-    dragRotate: false,
-    touchPitch: false,
-  }));
+      center: [initialState.lng, initialState.lat],
+      zoom: initialState.zoom,
+      keyboard: false,
+      dragRotate: false,
+      touchPitch: false,
+    })
+  );
 
   map.value.on("load", () => {
     if (!map.value) return;
@@ -70,8 +76,8 @@ onMounted(() => {
         layout: {},
         paint: {
           "fill-color": "#43474e",
-          "fill-opacity": 1
-        }
+          "fill-opacity": 1,
+        },
       })
       .addLayer({
         id: "county_outline",
@@ -81,8 +87,8 @@ onMounted(() => {
         paint: {
           "line-color": "#bcc7db",
           "line-opacity": 1,
-          "line-width": 0.6
-        }
+          "line-width": 0.6,
+        },
       })
       .addLayer({
         id: "box",
@@ -91,35 +97,32 @@ onMounted(() => {
         paint: {
           "line-color": [
             "match",
-            [
-              "coalesce",
-              ["feature-state", "int"],
-              0,
-            ],
-            9, "#f22",
-            8, "#f22",
-            7, "#f22",
-            6, "#f22",
-            5, "#f22",
-            4, "#f22",
-            3, "#ff2",
-            2, "#ff2",
-            1, "#2f2",
+            ["coalesce", ["feature-state", "int"], 0],
+            9,
+            "#f22",
+            8,
+            "#f22",
+            7,
+            "#f22",
+            6,
+            "#f22",
+            5,
+            "#f22",
+            4,
+            "#f22",
+            3,
+            "#ff2",
+            2,
+            "#ff2",
+            1,
+            "#2f2",
             "#2f2",
           ],
           "line-offset": 1.5,
           "line-width": 3,
           "line-opacity": [
             "case",
-            [
-              ">=",
-              [
-                "coalesce",
-                ["feature-state", "int"],
-                -1,
-              ],
-              0,
-            ],
+            [">=", ["coalesce", ["feature-state", "int"], -1], 0],
             1,
             0,
           ],

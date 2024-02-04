@@ -46,10 +46,17 @@ export interface Station {
 }
 
 export interface WebSocketConnectionConfig {
-  type?: string,
-  key?: string,
-  service?: ("trem.rts" | "websocket.eew" | "websocket.report" | "websocket.tsunami" | "trem.intensity" | "cwa.intensity")[],
-};
+  type?: string;
+  key?: string;
+  service?: (
+    | "trem.rts"
+    | "websocket.eew"
+    | "websocket.report"
+    | "websocket.tsunami"
+    | "trem.intensity"
+    | "cwa.intensity"
+  )[];
+}
 
 /**
  * 部分地震報告
@@ -99,7 +106,7 @@ export interface PartialReport {
    * 地震報告完整性
    */
   md5: string;
-};
+}
 
 /**
  * 測站觀測資料
@@ -121,7 +128,7 @@ export interface StationIntensity {
    * 測站最大觀測震度
    */
   int: number;
-};
+}
 
 /**
  * 區域觀測資料
@@ -139,7 +146,7 @@ export interface AreaIntensity {
    * 區域內測站觀測資料
    */
   stations: StationIntensity[];
-};
+}
 
 /**
  * 地震報告
@@ -149,7 +156,7 @@ export interface Report extends Omit<PartialReport, "md5"> {
    * 各地觀測最大震度
    */
   list: AreaIntensity[];
-};
+}
 
 /**
  * 測站地動資料
@@ -175,7 +182,7 @@ export interface RtsStation {
    * 測站是否觸發
    */
   alert: boolean;
-};
+}
 
 export type Box = Record<string, number>;
 
@@ -195,7 +202,7 @@ export interface Rts {
    * 資料時間
    */
   time: number;
-};
+}
 
 /**
  * 地震速報來源機關
@@ -259,19 +266,19 @@ export interface Eew {
   /**
    * 地震速報 ID
    */
-  id: string,
+  id: string;
   /**
    * 地震速報報號
    */
-  serial: number,
+  serial: number;
   /**
    * 地震速報狀態
    */
-  status: EewStatus,
+  status: EewStatus;
   /**
    * 地震速報是否為最終報
    */
-  final: 1 | 0,
+  final: 1 | 0;
   /**
    * 地震速報參數
    */
@@ -279,31 +286,31 @@ export interface Eew {
     /**
      * 地震速報時間
      */
-    time: number,
+    time: number;
     /**
      * 地震震央預估經度
      */
-    lon: number,
+    lon: number;
     /**
      * 地震震央預估緯度
      */
-    lat: number,
+    lat: number;
     /**
      * 地震預估深度
      */
-    depth: number,
+    depth: number;
     /**
      * 地震預估芮氏規模
      */
-    mag: number,
+    mag: number;
     /**
      * 地震預估位置
      */
-    loc: string,
+    loc: string;
     /**
      * 地震預估最大震度
      */
-    max: number,
+    max: number;
   };
 }
 
@@ -324,7 +331,7 @@ export interface Ntp {
 
 export enum WebSocketCloseCode {
   InsufficientPermission = 4000,
-};
+}
 
 export const Intensity = [
   { value: 0, label: "0", text: "０級" },
@@ -336,7 +343,7 @@ export const Intensity = [
   { value: 6, label: "5+", text: "５強" },
   { value: 7, label: "6-", text: "６弱" },
   { value: 8, label: "6+", text: "６強" },
-  { value: 9, label: "7", text: "７級" }
+  { value: 9, label: "7", text: "７級" },
 ] as const;
 
 export enum WebSocketEvent {
@@ -347,7 +354,7 @@ export enum WebSocketEvent {
   Rts = "rts",
   Verify = "verify",
   Close = "close",
-};
+}
 
 export class ExpTechApi extends EventEmitter {
   key: string;
@@ -362,7 +369,14 @@ export class ExpTechApi extends EventEmitter {
     this.wsConfig = {
       type: "start",
       key,
-      service: ["trem.rts", "websocket.eew", "websocket.report", "websocket.tsunami", "trem.intensity", "cwa.intensity"],
+      service: [
+        "trem.rts",
+        "websocket.eew",
+        "websocket.report",
+        "websocket.tsunami",
+        "trem.intensity",
+        "cwa.intensity",
+      ],
     };
 
     if (key) {
@@ -419,7 +433,10 @@ export class ExpTechApi extends EventEmitter {
 
                   break;
                 case 503:
-                  setTimeout(() => this.ws.send(JSON.stringify(this.wsConfig)), 5_000);
+                  setTimeout(
+                    () => this.ws.send(JSON.stringify(this.wsConfig)),
+                    5_000
+                  );
                   break;
               }
               break;
@@ -451,7 +468,8 @@ export class ExpTechApi extends EventEmitter {
       console.log("[WebSocket] Socket closed");
       this.emit(WebSocketEvent.Close, ev);
 
-      if (ev.code != WebSocketCloseCode.InsufficientPermission) setTimeout(this.#initWebSocket.bind(this), 5_000);
+      if (ev.code != WebSocketCloseCode.InsufficientPermission)
+        setTimeout(this.#initWebSocket.bind(this), 5_000);
     });
 
     this.ws.addEventListener("error", (err) => {
@@ -474,7 +492,7 @@ export class ExpTechApi extends EventEmitter {
         headers: {
           // TODO: Replace User-Agent with a variable
           "User-Agent": "TREM-Lite/v2.0.0",
-          "Accept": "application/json",
+          Accept: "application/json",
         },
       });
 
@@ -482,8 +500,7 @@ export class ExpTechApi extends EventEmitter {
       const res = await fetch(request);
       clearTimeout(abortTimer);
 
-      if (!res.ok)
-        throw new Error(`Server returned ${res.status}`);
+      if (!res.ok) throw new Error(`Server returned ${res.status}`);
 
       return await res.json();
     } catch (error) {
@@ -512,8 +529,7 @@ export class ExpTechApi extends EventEmitter {
     try {
       const data = await this.#get(url);
 
-      for (const report of data)
-        report.no = +report.id.split("-")[0];
+      for (const report of data) report.no = +report.id.split("-")[0];
 
       return data;
     } catch (error) {
@@ -532,18 +548,20 @@ export class ExpTechApi extends EventEmitter {
     try {
       const data = await this.#get(url);
       data.no = +data.id.split("-")[0];
-      data.int = Object.keys(data.list)
-        .reduce((acc, key) => data.list[key].int > acc ? data.list[key].int : acc, 0);
+      data.int = Object.keys(data.list).reduce(
+        (acc, key) => (data.list[key].int > acc ? data.list[key].int : acc),
+        0
+      );
       data.list = Object.keys(data.list)
-        .map(key => ({
+        .map((key) => ({
           area: key,
           int: data.list[key].int,
           stations: Object.keys(data.list[key].town)
-            .map(k => ({
+            .map((k) => ({
               ...data.list[key].town[k],
-              station: k
+              station: k,
             }))
-            .sort((a, b) => b.int - a.int)
+            .sort((a, b) => b.int - a.int),
         }))
         .sort((a, b) => b.int - a.int);
 
@@ -573,28 +591,28 @@ export declare interface ExpTechApi extends EventEmitter {
   /**
    * 地動資料
    * @param {WebSocketEvent.Rts} event rts
-   * @param {(rts: Rts) => void} listener 
+   * @param {(rts: Rts) => void} listener
    */
   on(event: WebSocketEvent.Rts, listener: (rts: Rts) => void): this;
 
   /**
    * 地震速報資料
    * @param {WebSocketEvent.Eew} event eew
-   * @param {(eew: Eew) => void} listener 
+   * @param {(eew: Eew) => void} listener
    */
   on(event: WebSocketEvent.Eew, listener: (eew: Eew) => void): this;
 
   /**
    * 地震速報資料
    * @param {WebSocketEvent.Ntp} event ntp
-   * @param {(ntp: Ntp) => void} listener 
+   * @param {(ntp: Ntp) => void} listener
    */
   on(event: WebSocketEvent.Ntp, listener: (ntp: Ntp) => void): this;
 
   /**
    * 地震速報資料
    * @param {WebSocketEvent.Close} event close
-   * @param {(ev: CloseEvent) => void} listener 
+   * @param {(ev: CloseEvent) => void} listener
    */
   on(event: WebSocketEvent.Close, listener: (ev: CloseEvent) => void): this;
 }

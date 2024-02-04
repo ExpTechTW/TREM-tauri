@@ -1,8 +1,6 @@
 export const extractLocationFromString = (str: string) => {
-  if (str.indexOf("(") < 0)
-    return str.substring(0, str.indexOf("方") + 1);
-  else
-    return str.substring(str.indexOf("(") + 3, str.indexOf(")"));
+  if (str.indexOf("(") < 0) return str.substring(0, str.indexOf("方") + 1);
+  else return str.substring(str.indexOf("(") + 3, str.indexOf(")"));
 };
 
 export const toFormattedTimeString = (ts: number) => {
