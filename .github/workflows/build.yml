@@ -33,5 +33,3 @@ jobs:
         run: npm install
 
       - uses: tauri-apps/tauri-action@v0
-
-  upload-artifacts:
