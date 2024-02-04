@@ -11,6 +11,7 @@ defineProps<{
 .nav-bar
   NavigationButton(icon="home", label="主頁", value="home",:current-view="currentView", :change-view="changeView")
   NavigationButton(icon="earthquake", label="地震報告", value="report-list",:current-view="currentView", :change-view="changeView")
+  NavigationButton(icon="settings", label="設定", value="setting",:current-view="currentView", :change-view="changeView")
 </template>
 
 <style>

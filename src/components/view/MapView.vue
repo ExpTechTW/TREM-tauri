@@ -9,6 +9,7 @@ import maplibregl from "maplibre-gl";
 import type { Station, Report, Rts, PartialReport } from '../../scripts/class/api';
 import MapReportListMarker from '../component/MapReportListMarker.vue';
 import MapRtsBox from '../component/MapRtsBox.vue';
+import HomeViewMapControl from "../component/HomeViewMapControl.vue";
 
 defineProps<{
   currentView: string;
@@ -132,6 +133,8 @@ onUnmounted(() => {
 <template lang="pug">
 #map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': currentView.startsWith('report'), 'hide-report-list-markers': currentView != 'report-list' }")
 .map-layers(v-if="map")
+  .home(v-if="currentView == 'home'")
+    HomeViewMapControl(:map="map")
   .report-list(v-if="currentView == 'report-list'")
     MapReportListMarker(:map="map", :reports="reports")
   .active-report(v-if="activeReport && currentView == 'report'")

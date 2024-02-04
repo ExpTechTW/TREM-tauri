@@ -4,6 +4,7 @@ import maplibregl from "maplibre-gl";
 
 import type { PartialReport } from '../../scripts/class/api';
 import CrossMarker from './CrossMarker.vue';
+import { TaiwanBounds } from "../../scripts/helper/constant";
 
 const { map, reports } = defineProps<{
   map: maplibregl.Map;
@@ -24,6 +25,10 @@ onMounted(() => {
 
     markers.push(marker);
   }
+  map.fitBounds(TaiwanBounds, {
+    padding: { top: 16, left: 16, bottom: 16, right: 316 },
+    duration: 200,
+  });
 });
 
 onUnmounted(() => {
