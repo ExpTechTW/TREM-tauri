@@ -8,7 +8,7 @@ import maplibregl from "maplibre-gl";
 import type { Report } from "../../scripts/class/api";
 import { TaiwanBounds } from "../../scripts/helper/constant";
 
-const props = defineProps<{ map: maplibregl.Map; report: Report }>();
+const props = defineProps<{ map: maplibregl.Map; report: Report; }>();
 
 const bounds = new maplibregl.LngLatBounds();
 const markers: maplibregl.Marker[] = [];
@@ -61,7 +61,7 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-CrossMarker(ref="epicenterMarkerTemplate", :size="32")
+CrossMarker(ref="epicenterMarkerTemplate", :size="32", :z-index="50")
 template(v-for="station in stations" :key="station.station")
   .report-intensity-marker(ref="intensityMarkerTemplate", :class="`intensity-${station.int}`", :style="`z-index:${station.int}`")
 </template>

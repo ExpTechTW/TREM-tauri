@@ -15,14 +15,14 @@ const markers: maplibregl.Marker[] = [];
 const reportMarkerTemplate = ref<Record<string, any>>({});
 
 onMounted(() => {
-  for (const i in props.reports) {
+  for (let i = 0, n = props.reports.length; i < n; i++) {
     const report = props.reports[i];
 
     const marker = new maplibregl.Marker({
       element: reportMarkerTemplate.value[report.id].$el,
     })
       .setLngLat([report.lon, report.lat])
-      .setOpacity(`${1 * (+i / props.reports.length)}`)
+      .setOpacity(`${((n - i) / n) * 0.5 + 0.5}`)
       .addTo(props.map);
 
     markers.push(marker);
@@ -41,6 +41,6 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-template(v-for="report in reports" :key="report.id")
-  CrossMarker.report-list-marker(:ref="(el) => reportMarkerTemplate[report.id] = el", :int="report.int", :size="16 + 4 * report.mag")
+template(v-for="(report, i) in reports" :key="report.id")
+  CrossMarker.report-list-marker(:ref="(el) => reportMarkerTemplate[report.id] = el", :int="report.int", :size="4 + 4 * report.mag", :z-index="props.reports.length - i")
 </template>

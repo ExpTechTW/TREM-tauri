@@ -23,7 +23,7 @@ const props = {
       status: 0,
       final: 0,
       eq: {
-        time: Date.now() - 10000,
+        time: Date.now(),
         lon: 120.27,
         lat: 23.46,
         depth: 10,
@@ -31,7 +31,7 @@ const props = {
         loc: "",
         max: 0,
       },
-      timestamp: Date.now() - 1000,
+      timestamp: Date.now(),
       data_unit: "websocket",
       delay: 3349,
     },

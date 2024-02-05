@@ -3,7 +3,7 @@ import CircleMarker from "./CircleMarker.vue";
 import CrossMarker from "./CrossMarker.vue";
 
 import type { ComponentPublicInstance, Ref } from "vue";
-import { inject, onMounted, onUnmounted, reactive, ref } from "vue";
+import { inject, onMounted, onUnmounted, ref } from "vue";
 import maplibregl from "maplibre-gl";
 
 import { EewStatus, type Eew } from "../../scripts/class/api";
@@ -20,7 +20,7 @@ const props = defineProps<{
 }>();
 
 const depthIndexList = Object.keys(times);
-const waveRadius = reactive({ p: 0, s: 0 });
+const waveRadius = ref({ p: 0, s: 0 });
 
 let marker: maplibregl.Marker;
 const crossTemplate = ref<ComponentPublicInstance<typeof CrossMarker>>();
@@ -30,63 +30,79 @@ const getAccurateTime = () => {
   return time!.value.server + (Date.now() - time!.value.client);
 };
 
-onMounted(() => {
+const updateWave = () => {
   const accurateTime = getAccurateTime();
-
+  const newRadius = { p: 0, s: 0 };
   const index =
     `${findClosestDepthIndex(depthIndexList, props.eew.eq.depth)}` as keyof typeof times;
 
-  console.log(index);
-
   const time_table = times[index];
   let prev_table = null;
+
   for (const table of time_table) {
-    if (!waveRadius.p && table.P > (accurateTime - props.eew.eq.time) / 1000) {
+    if (!newRadius.p && table.P > (accurateTime - props.eew.eq.time) / 1000) {
       if (prev_table) {
         const t_diff = table.P - prev_table.P;
         const r_diff = table.R - prev_table.R;
         const t_offset =
           (accurateTime - props.eew.eq.time) / 1000 - prev_table.P;
         const r_offset = (t_offset / t_diff) * r_diff;
-        waveRadius.p = prev_table.R + r_offset;
+        newRadius.p = prev_table.R + r_offset;
       } else {
-        waveRadius.p = table.R;
+        newRadius.p = table.R;
       }
     }
-    if (!waveRadius.s && table.S > (accurateTime - props.eew.eq.time) / 1000) {
+    if (!newRadius.s && table.S > (accurateTime - props.eew.eq.time) / 1000) {
       if (prev_table) {
         const t_diff = table.S - prev_table.S;
         const r_diff = table.R - prev_table.R;
         const t_offset =
           (accurateTime - props.eew.eq.time) / 1000 - prev_table.S;
         const r_offset = (t_offset / t_diff) * r_diff;
-        waveRadius.s = prev_table.R + r_offset;
+        newRadius.s = prev_table.R + r_offset;
       } else {
-        waveRadius.s = table.R;
+        newRadius.s = table.R;
       }
     }
-    if (waveRadius.p && waveRadius.s) {
+    if (newRadius.p && newRadius.s) {
       break;
     }
     prev_table = table;
   }
 
-  console.log(waveRadius);
-
-  if (!waveRadius.p) {
-    waveRadius.p = sideDistance(
+  if (!newRadius.p) {
+    newRadius.p = sideDistance(
       ((accurateTime - props.eew.eq.time) / 1000) * 7,
       props.eew.eq.depth
     );
   }
-  if (!waveRadius.s) {
-    waveRadius.s = sideDistance(
+  if (!newRadius.s) {
+    newRadius.s = sideDistance(
       ((accurateTime - props.eew.eq.time) / 1000) * 4,
       props.eew.eq.depth
     );
   }
 
-  console.log(waveRadius);
+  waveRadius.value = newRadius;
+  console.log(waveRadius.value);
+
+};
+
+const updateCrossFlash = (state: boolean) => {
+  marker.setOpacity(state ? "1" : "0");
+};
+
+defineExpose({
+  redrawWave() {
+    updateWave();
+  },
+  redrawCross(crossState: boolean) {
+    updateCrossFlash(crossState);
+  }
+});
+
+onMounted(() => {
+  updateWave();
 
   marker = new maplibregl.Marker({
     element: crossTemplate.value?.$el,
@@ -101,7 +117,7 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-CrossMarker(ref="crossTemplate", :map="map", :size="28")
+CrossMarker(ref="crossTemplate", :map="map", :size="28", :z-index="1000")
 CircleMarker(:map="map", type="s", :radius="waveRadius.s", :lng="props.eew.eq.lon", :lat="props.eew.eq.lat", :alert="props.eew.status == EewStatus.Alert", :z-index="1000")
 CircleMarker(:map="map", type="p", :radius="waveRadius.p", :lng="props.eew.eq.lon", :lat="props.eew.eq.lat", :alert="props.eew.status == EewStatus.Alert", :z-index="1000")
 </template>

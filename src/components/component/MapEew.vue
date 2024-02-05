@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from "vue";
-import type { Ref } from "vue";
+import { onMounted, onUnmounted, ref, type Ref } from "vue";
 import maplibregl from "maplibre-gl";
 
 import type { Eew } from "../../scripts/class/api";
@@ -11,12 +10,33 @@ defineProps<{
   eew: Ref<Record<string, Eew>>;
 }>();
 
-onMounted(() => {});
+const eewTemplate = ref<InstanceType<typeof EEW>[]>([]);
+let intervals: Record<string, NodeJS.Timeout> = {};
 
-onUnmounted(() => {});
+onMounted(() => {
+  let crossState = true;
+
+  intervals.wave = setInterval(() => {
+    for (const eew of eewTemplate.value) {
+      eew.redrawWave();
+    }
+  }, 100);
+
+  intervals.cross = setInterval(() => {
+    crossState = !crossState;
+    for (const eew of eewTemplate.value) {
+      eew.redrawCross(crossState);
+    }
+  }, 500);
+});
+
+onUnmounted(() => {
+  clearInterval(intervals.wave);
+  clearInterval(intervals.cross);
+});
 </script>
 
 <template lang="pug">
 template(v-for="e in eew.value" :key="e.id")
-  EEW(:map="map",:eew="e")
+  EEW(ref="eewTemplate" :map="map",:eew="e")
 </template>
