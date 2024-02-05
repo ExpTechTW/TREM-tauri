@@ -39,7 +39,7 @@ onMounted(() => {});
       .header-title(v-if="currentEewIndex") 地震速報 ｜ {{ eew[currentEewIndex].source.toUpperCase() }}{{ InfoBoxStatusText[eew[currentEewIndex].status] }}
       .header-title(v-else) 目前無發布地震預警
       .header-subtitle(v-if="currentEewIndex && !eew[currentEewIndex].final") 第{{ toFullWidthNumber(`${eew[currentEewIndex].serial}`) }}報
-      .header-subtitle(v-else) 最終報
+      .header-subtitle(v-else-if="currentEewIndex") 最終報
     .body(v-if="currentEewIndex")
       .detail-container
         IntensityBox(:int="props.eew[currentEewIndex].max")
@@ -66,19 +66,16 @@ onMounted(() => {});
   position: fixed;
   top: 8px;
   right: 8px;
-  min-width: 320px;
+  min-width: 300px;
   width: 20vw;
   z-index: 5000;
 
   > .info-box {
-    position: absolute;
     top: 0;
     right: 0;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    width: 20vw;
-    min-width: 277px;
     padding: 8px;
     border-radius: 20px;
     background-color: #505050;

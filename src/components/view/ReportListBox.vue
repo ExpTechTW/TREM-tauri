@@ -24,7 +24,7 @@ defineProps<{
   top: 8px;
   bottom: 8px;
   right: 8px;
-  min-width: 320px;
+  min-width: 300px;
   width: 20vw;
   z-index: 1000;
   overflow: hidden;
