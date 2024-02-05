@@ -15,8 +15,8 @@ import type {
   Report,
   Rts,
   PartialReport,
-  Eew,
 } from "../../scripts/class/api";
+import type { EewEvent } from "../../types";
 
 defineProps<{
   currentView: string;
@@ -24,7 +24,7 @@ defineProps<{
   activeReport?: Report;
   stations: Ref<Record<string, Station>>;
   rts: Ref<Rts>;
-  eew: Ref<Record<string, Eew>>;
+  eew: Record<string, EewEvent>;
 }>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
@@ -150,7 +150,7 @@ onUnmounted(() => {
     MapRtsMarker(:map="map", :stations="stations", :rts="rts")
   .rts-box(v-if="Object.keys(rts.value.box).length")
     MapRtsBox(:map="map", :box="rts.value.box")
-  .eew(v-if="eew.value")
+  .eew(v-if="eew")
     MapEew(:map="map", :eew="eew")
 </template>
 

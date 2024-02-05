@@ -66,7 +66,7 @@ template(v-for="station in stations" :key="station.station")
   .report-intensity-marker(ref="intensityMarkerTemplate", :class="`intensity-${station.int}`", :style="`z-index:${station.int}`")
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .report-intensity-marker {
   display: grid;
   align-items: center;

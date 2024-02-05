@@ -8,7 +8,7 @@ defineProps<{
 .intensity-box(:class="`intensity-${int}`")
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .intensity-box {
   display: grid;
   align-items: center;

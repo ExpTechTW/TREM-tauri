@@ -9,8 +9,3 @@ declare module "*.vue" {
   >;
   export default component;
 }
-
-declare module "./assets/json/time.json" {
-  type data = Record<string, { P: number; S: number; D: number; R: number }>;
-  export default data;
-}

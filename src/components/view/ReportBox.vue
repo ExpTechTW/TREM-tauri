@@ -123,7 +123,7 @@ const openUrl = async (id?: string) => {
                 ReportIntensityItem(v-for="station in report.list.flatMap(v=>v.stations.map(s=>({...s,area: v.area }))).sort((a, b) => b.int - a.int)" :key="station.station" :station="station")
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .report-box-wrapper {
   position: absolute;
   top: 8px;

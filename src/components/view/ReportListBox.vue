@@ -16,7 +16,7 @@ defineProps<{
         ReportItem(v-for="report in reports", :key="report.id" :report='report', :change-report="changeReport")
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .report-list-wrapper {
   display: flex;
   flex-direction: column;

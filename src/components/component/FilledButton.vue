@@ -3,7 +3,7 @@ button#report-back-btn.filled-button.button
   span.button-leading-icon.material-symbols-rounded arrow_back
   span.button-label 返回列表
 </template>
-<style scoped>
+<style lang="scss" scoped>
 .button {
   all: unset;
   display: flex;

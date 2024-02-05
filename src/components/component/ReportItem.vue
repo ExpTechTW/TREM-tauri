@@ -22,7 +22,7 @@ defineProps<{
   .report-list-item-magnitude {{ report.mag.toFixed(1) }}
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .report-list-item {
   display: flex;
   align-items: center;

@@ -10,7 +10,7 @@ defineProps<{
 .time {{ toFormattedTimeString(timestamp) }}
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .time {
   position: fixed;
   bottom: 8px;

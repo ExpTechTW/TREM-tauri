@@ -15,7 +15,7 @@ defineProps<{
     span.nav-item-label {{ label }}
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .nav-item {
   display: flex;
   pointer-events: none;

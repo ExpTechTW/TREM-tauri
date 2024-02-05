@@ -7,7 +7,7 @@
     #report-time.report-detail-field-value.skeleton: slot(name="value")
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .report-detail-field {
   display: flex;
   align-items: center;

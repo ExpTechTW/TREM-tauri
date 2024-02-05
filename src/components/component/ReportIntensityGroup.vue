@@ -13,7 +13,7 @@ defineProps<{ area: AreaIntensity }>();
     ReportIntensityItem(v-for="station in area.stations" :key="station.station" :station="station")
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .report-intensity-group {
   flex-shrink: 0;
   display: flex;

@@ -48,7 +48,7 @@ onUnmounted(() => {
           span.rts-value I: {{ rts?.I ?? "無資料" }}
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .rts-marker {
   opacity: 1;
   transition: opacity 0.1s cubic-bezier(0.2, 0, 0, 1);

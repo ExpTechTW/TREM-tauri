@@ -207,7 +207,7 @@ export interface Rts {
 /**
  * 地震速報來源機關
  */
-export enum EewOrigin {
+export enum EewSource {
   /**
    * 交通部中央氣象署
    * @link https://www.cwa.gov.tw
@@ -262,7 +262,7 @@ export interface Eew {
   /**
    * 地震速報來源機關
    */
-  author: EewOrigin;
+  author: EewSource;
   /**
    * 地震速報 ID
    */

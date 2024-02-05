@@ -15,7 +15,7 @@ defineProps<{
   span.location.station(v-if="station.station") {{ station.station }}
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .report-intensity-item {
   display: flex;
   align-items: center;

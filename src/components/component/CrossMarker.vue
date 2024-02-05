@@ -13,7 +13,7 @@ defineProps<{
     path.cross-outer(d="m59 6 11 11-21 21 21 21-11 11-21-21-21 21L6 59l21-21L6 17 17 6l21 21L59 6m0-6a6 6 0 0 0-4 2L38 19 21 2a6 6 0 0 0-4-2 6 6 0 0 0-5 2L2 12a6 6 0 0 0 0 9l17 17L2 55a6 6 0 0 0 0 9l10 10a6 6 0 0 0 9 0l17-17 17 17a6 6 0 0 0 9 0l10-10a6 6 0 0 0 0-9L57 38l17-17a6 6 0 0 0 0-9L64 2a6 6 0 0 0-5-2Z")/
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .cross {
   z-index: 100;
 

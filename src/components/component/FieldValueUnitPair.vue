@@ -5,7 +5,7 @@ span.value-unit-pair(v-if="$slots['value']")
   span.field-unit(v-if="$slots['trailing-unit']"): slot(name="trailing-unit")
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .value-unit-pair {
   display: inline-flex;
   align-items: baseline;

@@ -4,7 +4,7 @@ button.chip
   span.chip-label: slot(name="label")
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .chip {
   --chip-label-hsl: 0deg 0% 90%;
   --chip-label-hover-hsl: 0deg 0% 94%;
