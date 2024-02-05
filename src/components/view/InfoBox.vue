@@ -11,6 +11,7 @@ import {
 } from "../../scripts/helper/utils";
 
 const props = defineProps<{
+  currentView: string;
   eew: Record<string, EewEvent>;
   currentEewIndex?: string;
 }>();
@@ -34,7 +35,7 @@ onMounted(() => {});
 
 <template lang="pug">
 .info-box-wrapper
-  .info-box(:class="currentEewIndex ? InfoBoxStatusClass[eew[currentEewIndex].status] : ''")
+  .info-box(:class="{[currentEewIndex ? InfoBoxStatusClass[eew[currentEewIndex].status] : '']: true, show: currentView == 'home'}")
     .header
       .header-title(v-if="currentEewIndex") 地震速報 ｜ {{ eew[currentEewIndex].source.toUpperCase() }}{{ InfoBoxStatusText[eew[currentEewIndex].status] }}
       .header-title(v-else) 目前無發布地震預警
@@ -81,6 +82,18 @@ onMounted(() => {});
     background-color: #505050;
     color: white;
     white-space: nowrap;
+
+    opacity: 0;
+    translate: 100%;
+    transition-property: opacity, translate;
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+    &.show {
+      opacity: 1;
+      translate: 0;
+      transition-timing-function: cubic-bezier(0.05, 0.7, 0.1, 1);
+    }
 
     &.warn {
       color: #000;

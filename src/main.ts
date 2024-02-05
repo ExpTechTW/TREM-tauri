@@ -51,7 +51,7 @@ app.provide("settings", settingRepository);
 app.provide("api", api);
 app.provide("ntp", ntp);
 
-app.mount("#app");
+const instance = app.mount("#app") as InstanceType<typeof App>;
 
 (async () => {
   await settingRepository.initialize();
@@ -127,6 +127,8 @@ api.on(WebSocketEvent.Eew, (eew) => {
     data.i = localExpectedIntensity;
   }
 
+  instance.changeView("home");
+
   if (settingRepository.settings.behavior.showWindowWhenEew)
     browserWindow.setFocus();
 
@@ -180,7 +182,7 @@ api.on(WebSocketEvent.Close, console.debug);
 const getAccurateTime = () => {
   return ntp.value.server + (Date.now() - ntp.value.client);
 };
-
+/* 
 setTimeout(() => {
   const eew = {
     type: "eew",
@@ -205,3 +207,4 @@ setTimeout(() => {
 
   api.emit(WebSocketEvent.Eew, eew);
 }, 10000);
+ */

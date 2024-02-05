@@ -31,6 +31,13 @@ const api = inject<ExpTechApi>("api");
 const activeReport = ref<Report>();
 const currentView = ref<string>("home");
 
+defineExpose({
+  changeView(view: string) {
+    if (currentView.value == view) currentView.value = "home";
+    else currentView.value = view;
+  },
+});
+
 const changeView = (view: string) => {
   if (currentView.value == view) currentView.value = "home";
   else currentView.value = view;
@@ -53,7 +60,7 @@ const changeReport = async (report: PartialReport) => {
 NavigationBar(:current-view="currentView", :change-view="changeView")
 TimeDisplay(:timestamp="rts.value.time")
 MapView(:current-view="currentView", :reports="reports", :active-report="activeReport", :stations="stations", :rts="rts", :eew="eew", :current-eew-index="currentEewIndex")
-InfoBox(:eew="eew", :current-eew-index="currentEewIndex.value")
+InfoBox(:current-view="currentView", :eew="eew", :current-eew-index="currentEewIndex.value")
 ReportBox(:current-view="currentView", :report="activeReport", :handle-hide-report-box="handleHideReportBox")
 ReportListBox(:current-view="currentView", :reports="reports", :change-report="changeReport")
 </template>
