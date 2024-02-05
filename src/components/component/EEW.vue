@@ -3,7 +3,7 @@ import CircleMarker from "./CircleMarker.vue";
 import CrossMarker from "./CrossMarker.vue";
 
 import type { ComponentPublicInstance, Ref } from "vue";
-import { inject, onMounted, onUnmounted, ref } from "vue";
+import { inject, onMounted, onUnmounted, ref, watch } from "vue";
 import maplibregl from "maplibre-gl";
 
 import { EewStatus, type Eew } from "../../scripts/class/api";
@@ -98,6 +98,13 @@ defineExpose({
     updateCrossFlash(crossState);
   },
 });
+
+watch(
+  () => [props.eew.eq.lon, props.eew.eq.lat],
+  () => {
+    marker.setLngLat([props.eew.eq.lon, props.eew.eq.lat]);
+  }
+);
 
 onMounted(() => {
   updateWave();
