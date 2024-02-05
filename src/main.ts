@@ -85,7 +85,6 @@ api.on(WebSocketEvent.Eew, (eew) => {
 
   console.log(intensity);
 
-
   const data: EewEvent = {
     r: waveRadius,
     lng: eew.eq.lon,
@@ -136,11 +135,17 @@ api.on(WebSocketEvent.Eew, (eew) => {
   if (settingRepository.settings.audio.enabled)
     if (props.eew[eew.id]) {
       if (eew.serial > props.eew[eew.id].serial) {
-        getAudio(settingRepository.settings.audio.theme, AudioType.Update).play();
+        getAudio(
+          settingRepository.settings.audio.theme,
+          AudioType.Update
+        ).play();
       }
     } else {
       if (eew.author == EewSource.Cwa) {
-        getAudio(settingRepository.settings.audio.theme, AudioType.CwaEew).play();
+        getAudio(
+          settingRepository.settings.audio.theme,
+          AudioType.CwaEew
+        ).play();
       } else {
         getAudio(settingRepository.settings.audio.theme, AudioType.Eew).play();
       }

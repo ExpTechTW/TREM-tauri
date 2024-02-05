@@ -73,10 +73,10 @@ export const degreeToRadian = (degree: number) => (degree * Math.PI) / 180;
 export const calculateDistance = (p1: LngLatObject) => (p2: LngLatObject) =>
   Math.acos(
     Math.sin(Math.atan(Math.tan(degreeToRadian(p1.lat)))) *
-    Math.sin(Math.atan(Math.tan(degreeToRadian(p2.lat)))) +
-    Math.cos(Math.atan(Math.tan(degreeToRadian(p1.lat)))) *
-    Math.cos(Math.atan(Math.tan(degreeToRadian(p2.lat)))) *
-    Math.cos(degreeToRadian(p1.lng) - degreeToRadian(p2.lng))
+      Math.sin(Math.atan(Math.tan(degreeToRadian(p2.lat)))) +
+      Math.cos(Math.atan(Math.tan(degreeToRadian(p1.lat)))) *
+        Math.cos(Math.atan(Math.tan(degreeToRadian(p2.lat)))) *
+        Math.cos(degreeToRadian(p1.lng) - degreeToRadian(p2.lng))
   ) * 6371.008;
 
 export const sideDistance = (a: number, b: number) =>
@@ -178,19 +178,19 @@ export const calculateWaveRadius = (
 
 export const calculateEpicenterDistance =
   (event: LngLatObject) =>
-    (local: LngLatObject) =>
-      (
-        depth: number
-      ): {
-        surfaceDistance: SurfaceDistanceToEpicenter;
-        distance: DistanceToEpicenter;
-      } => {
-        const surfaceDistance = calculateDistance(event)(local);
-        return {
-          surfaceDistance: surfaceDistance,
-          distance: (surfaceDistance ** 2 + depth ** 2) ** (1 / 2),
-        };
-      };
+  (local: LngLatObject) =>
+  (
+    depth: number
+  ): {
+    surfaceDistance: SurfaceDistanceToEpicenter;
+    distance: DistanceToEpicenter;
+  } => {
+    const surfaceDistance = calculateDistance(event)(local);
+    return {
+      surfaceDistance: surfaceDistance,
+      distance: (surfaceDistance ** 2 + depth ** 2) ** (1 / 2),
+    };
+  };
 
 export const calculateIntensity = (
   surfaceDistance: SurfaceDistanceToEpicenter,
