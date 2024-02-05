@@ -451,7 +451,7 @@ export class ExpTechApi extends EventEmitter {
                   this.emit(WebSocketEvent.Rts, data.data.data);
                   break;
                 case WebSocketEvent.Eew:
-                  this.emit(WebSocketEvent.Eew, data.data.data);
+                  this.emit(WebSocketEvent.Eew, data.data);
                   break;
               }
               break;
