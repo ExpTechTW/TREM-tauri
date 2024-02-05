@@ -30,6 +30,7 @@ const updateCircle = () => {
 
   if (props.radius <= 0) {
     radiusInPixel.value = 0;
+    updateLock = false;
     return;
   }
 
@@ -80,29 +81,29 @@ svg.circle(v-if="type != 'p'", ref="backgroundTemplate", xmlns="http://www.w3.or
     stroke-width: 2px;
   }
 
-  &.wave-p > .stroke {
+  &.wave-p>.stroke {
     fill: transparent;
     stroke: #6bf;
   }
 
   &.wave-s:not(.alert) {
-    > .stroke {
+    >.stroke {
       fill: transparent;
       stroke: #ffa500;
     }
 
-    > .background {
+    >.background {
       fill: url(#warn-gradient);
     }
   }
 
   &.wave-s.alert {
-    > .stroke {
+    >.stroke {
       fill: transparent;
       stroke: #f22;
     }
 
-    > .background {
+    >.background {
       fill: url(#alert-gradient);
     }
   }
