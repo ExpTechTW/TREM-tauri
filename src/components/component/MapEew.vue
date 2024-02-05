@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import EEW from "./EEW.vue";
+
 import { onMounted, onUnmounted, ref } from "vue";
 import maplibregl from "maplibre-gl";
 
-import EEW from "./EEW.vue";
 import type { EewEvent } from "../../types";
 
-defineProps<{
+const props = defineProps<{
   map: maplibregl.Map;
   eew: Record<string, EewEvent>;
 }>();
@@ -22,11 +23,17 @@ onMounted(() => {
       eew.redrawCross(crossState);
     }
   }, 500);
+
+  props.map.setLayoutProperty("town", "visibility", "visible");
+  props.map.setLayoutProperty("county", "visibility", "none");
 });
 
 onUnmounted(() => {
   clearInterval(intervals.wave);
   clearInterval(intervals.cross);
+
+  props.map.setLayoutProperty("county", "visibility", "visible");
+  props.map.setLayoutProperty("town", "visibility", "none");
 });
 </script>
 

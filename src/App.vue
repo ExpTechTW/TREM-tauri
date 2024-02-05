@@ -52,7 +52,7 @@ const changeReport = async (report: PartialReport) => {
 <template lang="pug">
 NavigationBar(:current-view="currentView", :change-view="changeView")
 TimeDisplay(:timestamp="rts.value.time")
-MapView(:current-view="currentView", :reports="reports", :active-report="activeReport", :stations="stations", :rts="rts", :eew="eew")
+MapView(:current-view="currentView", :reports="reports", :active-report="activeReport", :stations="stations", :rts="rts", :eew="eew", :current-eew-index="currentEewIndex")
 InfoBox(:eew="eew", :current-eew-index="currentEewIndex.value")
 ReportBox(:current-view="currentView", :report="activeReport", :handle-hide-report-box="handleHideReportBox")
 ReportListBox(:current-view="currentView", :reports="reports", :change-report="changeReport")

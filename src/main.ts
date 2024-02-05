@@ -8,7 +8,7 @@ import {
   ExpTechApi,
   WebSocketEvent,
 } from "./scripts/class/api";
-import type { Station, PartialReport, Rts, Eew } from "./scripts/class/api";
+import type { Station, PartialReport, Rts } from "./scripts/class/api";
 
 import { AudioType, type DefaultSettingSchema, type EewEvent } from "./types";
 import {
@@ -79,6 +79,9 @@ api.on(WebSocketEvent.Eew, (eew) => {
     eew.eq.depth
   );
 
+  console.log(intensity);
+
+
   const data: EewEvent = {
     r: waveRadius,
     lng: eew.eq.lon,
@@ -134,7 +137,6 @@ api.on(WebSocketEvent.Eew, (eew) => {
   }
 
   console.log(data);
-
 
   props.eew[eew.id] = data;
   props.currentEewIndex.value = eew.id;

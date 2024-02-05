@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MapEew from "../component/MapEew.vue";
+import MapEewIntensity from "../component/MapEewIntensity.vue";
 import MapHomeViewControl from "../component/MapHomeViewControl.vue";
 import MapReportListMarker from "../component/MapReportListMarker.vue";
 import MapReportMarker from "../component/MapReportMarker.vue";
@@ -25,6 +26,7 @@ defineProps<{
   stations: Ref<Record<string, Station>>;
   rts: Ref<Rts>;
   eew: Record<string, EewEvent>;
+  currentEewIndex: Ref<string>;
 }>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
@@ -41,16 +43,36 @@ onMounted(() => {
         sources: {
           tw_county: {
             type: "geojson",
-            data: "./tw_county.json",
+            data: "./map/tw_county.json",
             tolerance: 1,
           },
           tw_town: {
             type: "geojson",
-            data: "./tw_town.json",
+            data: "./map/tw_town.json",
+          },
+          cn: {
+            type: "geojson",
+            data: "./map/cn.json",
+            tolerance: 1,
+          },
+          jp: {
+            type: "geojson",
+            data: "./map/jp.json",
+            tolerance: 1,
+          },
+          kp: {
+            type: "geojson",
+            data: "./map/kp.json",
+            tolerance: 1,
+          },
+          kr: {
+            type: "geojson",
+            data: "./map/kr.json",
+            tolerance: 1,
           },
           box: {
             type: "geojson",
-            data: "./box.json",
+            data: "./map/box.json",
           },
         },
         layers: [],
@@ -68,6 +90,50 @@ onMounted(() => {
 
     map.value
       .addLayer({
+        id: "cn",
+        type: "fill",
+        source: "cn",
+        layout: {},
+        paint: {
+          "fill-color": "#383c43",
+          "fill-opacity": 1,
+          "fill-outline-color": "#545f70",
+        },
+      })
+      .addLayer({
+        id: "jp",
+        type: "fill",
+        source: "jp",
+        layout: {},
+        paint: {
+          "fill-color": "#383c43",
+          "fill-opacity": 1,
+          "fill-outline-color": "#545f70",
+        },
+      })
+      .addLayer({
+        id: "kp",
+        type: "fill",
+        source: "kp",
+        layout: {},
+        paint: {
+          "fill-color": "#383c43",
+          "fill-opacity": 1,
+          "fill-outline-color": "#545f70",
+        },
+      })
+      .addLayer({
+        id: "kr",
+        type: "fill",
+        source: "kr",
+        layout: {},
+        paint: {
+          "fill-color": "#383c43",
+          "fill-opacity": 1,
+          "fill-outline-color": "#545f70",
+        },
+      })
+      .addLayer({
         id: "county",
         type: "fill",
         source: "tw_county",
@@ -75,6 +141,46 @@ onMounted(() => {
         paint: {
           "fill-color": "#43474e",
           "fill-opacity": 1,
+        },
+      })
+      .addLayer({
+        id: "town",
+        type: "fill",
+        source: "tw_town",
+        layout: {
+          visibility: "none",
+        },
+        paint: {
+          "fill-color": [
+            "match",
+            ["coalesce", ["feature-state", "int"], 0],
+            9,
+            "#9600c8",
+            8,
+            "#c00000",
+            7,
+            "#ff0000",
+            6,
+            "#ff6400",
+            5,
+            "#ff9600",
+            4,
+            "#ffc800",
+            3,
+            "#1e9632",
+            2,
+            "#0070e0",
+            1,
+            "#004080",
+            "#43474e",
+          ],
+          "fill-opacity": [
+            "case",
+            [">=", ["coalesce", ["feature-state", "int"], -1], 0],
+            1,
+            0,
+          ],
+          "fill-outline-color": "#8691a4",
         },
       })
       .addLayer({
@@ -150,8 +256,10 @@ onUnmounted(() => {
     MapRtsMarker(:map="map", :stations="stations", :rts="rts")
   .rts-box(v-if="Object.keys(rts.value.box).length")
     MapRtsBox(:map="map", :box="rts.value.box")
-  .eew(v-if="eew")
+  .eew(v-if="Object.keys(eew).length")
     MapEew(:map="map", :eew="eew")
+  .eew-town-intensity(v-if="currentEewIndex.value")
+    MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int")
 </template>
 
 <style>

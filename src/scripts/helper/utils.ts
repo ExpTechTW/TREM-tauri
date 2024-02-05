@@ -53,7 +53,20 @@ export const toFullWidthNumber = (numberString: string) =>
 
 export const pgaToFloat = (pga: number) => 2 * Math.log10(pga) + 0.7;
 
-export const roundIntensity = (float: number) => (float < 0) ? 0 : (float < 4.5) ? Math.round(float) : (float < 5) ? 5 : (float < 5.5) ? 6 : (float < 6) ? 7 : (float < 6.5) ? 8 : 9;
+export const roundIntensity = (float: number) =>
+  float < 0
+    ? 0
+    : float < 4.5
+      ? Math.round(float)
+      : float < 5
+        ? 5
+        : float < 5.5
+          ? 6
+          : float < 6
+            ? 7
+            : float < 6.5
+              ? 8
+              : 9;
 
 export const degreeToRadian = (degree: number) => (degree * Math.PI) / 180;
 
@@ -166,7 +179,9 @@ export const calculateWaveRadius = (
 export const calculateEpicenterDistance =
   (event: LngLatObject) =>
     (local: LngLatObject) =>
-      (depth: number): {
+      (
+        depth: number
+      ): {
         surfaceDistance: SurfaceDistanceToEpicenter;
         distance: DistanceToEpicenter;
       } => {

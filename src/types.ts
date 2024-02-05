@@ -32,8 +32,8 @@ export interface NtpTime {
 }
 
 export interface EewEvent {
-  r: { p: number; s: number };
-  t?: { p: number; s: number };
+  r: { p: number; s: number; };
+  t?: { p: number; s: number; };
   i?: number;
   lng: number;
   lat: number;
