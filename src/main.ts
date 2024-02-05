@@ -192,7 +192,7 @@ setTimeout(() => {
     status: 0,
     final: 0,
     eq: {
-      time: Date.now() - 15000,
+      time: Date.now() - 10000,
       lon: 120.27,
       lat: 23.46,
       depth: 10,
@@ -200,10 +200,10 @@ setTimeout(() => {
       loc: "嘉義縣 太保市",
       max: 4,
     },
-    timestamp: Date.now() - 15000,
+    timestamp: Date.now() - 10000,
     data_unit: "websocket",
     delay: 3349,
   };
 
   api.emit(WebSocketEvent.Eew, eew);
-}, 10000);
+}, 6000);

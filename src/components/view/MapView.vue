@@ -82,6 +82,7 @@ onMounted(() => {
       keyboard: false,
       dragRotate: false,
       touchPitch: false,
+      renderWorldCopies: false,
     })
   );
 
@@ -246,7 +247,7 @@ onUnmounted(() => {
 <template lang="pug">
 #map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': currentView.startsWith('report'), 'hide-report-list-markers': currentView != 'report-list' }")
 .map-layers(v-if="map")
-  .home(v-if="currentView == 'home'")
+  .home(v-if="!Object.keys(eew).length && currentView == 'home'")
     MapHomeViewControl(:map="map")
   .report-list(v-if="currentView == 'report-list'")
     MapReportListMarker(:map="map", :reports="reports")
@@ -256,7 +257,7 @@ onUnmounted(() => {
     MapRtsMarker(:map="map", :stations="stations", :rts="rts")
   .rts-box(v-if="Object.keys(rts.value.box).length")
     MapRtsBox(:map="map", :box="rts.value.box")
-  .eew(v-if="Object.keys(eew).length&& currentView == 'home'")
+  .eew(v-if="Object.keys(eew).length && currentView == 'home'")
     MapEew(:map="map", :eew="eew")
   .eew-town-intensity(v-if="currentEewIndex.value&& currentView == 'home'")
     MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int")
