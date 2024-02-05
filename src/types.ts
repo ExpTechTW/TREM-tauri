@@ -10,6 +10,7 @@ export interface DefaultSettingSchema {
     key: string;
   };
   behavior: {
+    showWindowWhenEew: boolean;
     openExternal: boolean;
   };
   location: {
@@ -17,6 +18,7 @@ export interface DefaultSettingSchema {
     lat: number;
   };
   audio: {
+    enabled: boolean;
     theme: string;
   };
 }

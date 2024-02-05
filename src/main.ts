@@ -1,6 +1,8 @@
+import App from "./App.vue";
+
 import { createApp, reactive, ref } from "vue";
 import { SettingsManager } from "tauri-settings";
-import App from "./App.vue";
+import { window } from "@tauri-apps/api";
 
 import {
   EewSource,
@@ -9,8 +11,6 @@ import {
   WebSocketEvent,
 } from "./scripts/class/api";
 import type { Station, PartialReport, Rts } from "./scripts/class/api";
-
-import { AudioType, type DefaultSettingSchema, type EewEvent } from "./types";
 import {
   calculateWaveRadius,
   calculateEpicenterDistance,
@@ -18,10 +18,14 @@ import {
   calculateLocalExpectedWaveTime,
   calculateExpectedIntensity,
 } from "./scripts/helper/utils";
+import { AudioType, type DefaultSettingSchema, type EewEvent } from "./types";
+import { getAudio } from "./scripts/helper/audio";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
-import { getAudio } from "./scripts/helper/audio";
+import { UserAttentionType } from "@tauri-apps/api/window";
+
+const browserWindow = window.getCurrent();
 
 const props = {
   stations: ref<Record<string, Station>>({}),
@@ -33,9 +37,9 @@ const props = {
 
 const settingRepository = new SettingsManager<DefaultSettingSchema>({
   api: { key: "" },
-  behavior: { openExternal: false },
+  behavior: { showWindowWhenEew: true, openExternal: false },
   location: { lat: 0, lng: 0 },
-  audio: { theme: "trem_default" },
+  audio: { enabled: true, theme: "trem_default" },
 });
 
 const api = new ExpTechApi();
@@ -124,19 +128,23 @@ api.on(WebSocketEvent.Eew, (eew) => {
     data.i = localExpectedIntensity;
   }
 
-  if (props.eew[eew.id]) {
-    if (eew.serial > props.eew[eew.id].serial) {
-      getAudio(settingRepository.settings.audio.theme, AudioType.Update).play();
-    }
-  } else {
-    if (eew.author == EewSource.Cwa) {
-      getAudio(settingRepository.settings.audio.theme, AudioType.CwaEew).play();
-    } else {
-      getAudio(settingRepository.settings.audio.theme, AudioType.Eew).play();
-    }
-  }
+  if (settingRepository.settings.behavior.showWindowWhenEew)
+    browserWindow.setFocus();
 
-  console.log(data);
+  browserWindow.requestUserAttention(UserAttentionType.Critical);
+
+  if (settingRepository.settings.audio.enabled)
+    if (props.eew[eew.id]) {
+      if (eew.serial > props.eew[eew.id].serial) {
+        getAudio(settingRepository.settings.audio.theme, AudioType.Update).play();
+      }
+    } else {
+      if (eew.author == EewSource.Cwa) {
+        getAudio(settingRepository.settings.audio.theme, AudioType.CwaEew).play();
+      } else {
+        getAudio(settingRepository.settings.audio.theme, AudioType.Eew).play();
+      }
+    }
 
   props.eew[eew.id] = data;
   props.currentEewIndex.value = eew.id;
