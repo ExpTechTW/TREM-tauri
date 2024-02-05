@@ -133,7 +133,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  map.value?.remove();
+  if (map.value) map.value.remove();
 });
 </script>
 

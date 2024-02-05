@@ -26,7 +26,6 @@ onUpdated(() => {
 });
 
 onUnmounted(() => {
-  console.log("unmount", { box: props.box, int: props.int });
   props.map.removeFeatureState({ source: "box", id: props.box }, "int");
 });
 </script>

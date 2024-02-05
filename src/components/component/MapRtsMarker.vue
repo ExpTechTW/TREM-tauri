@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, onUpdated } from "vue";
 import type { Ref } from "vue";
 import maplibregl from "maplibre-gl";
 
@@ -11,12 +10,6 @@ defineProps<{
   stations: Ref<Record<string, Station>>;
   rts: Ref<Rts>;
 }>();
-
-onMounted(() => {});
-
-onUpdated(() => {});
-
-onUnmounted(() => {});
 </script>
 
 <template lang="pug">
