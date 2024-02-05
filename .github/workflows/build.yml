@@ -1,15 +1,13 @@
 name: "build"
 
-on:
-  push:
-    branches: main
+on: [push, pull_request]
 
 jobs:
   build-tauri:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-20.04, windows-latest]
+        platform: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -33,11 +31,11 @@ jobs:
         run: npm install
 
       - name: Build Application
-        uses: JonasKruckenberg/tauri-build@v1
+        uses: tauri-apps/tauri-action@v0
         id: tauri_build
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: artifacts
-          path: "${{ join(fromJSON(steps.tauri_build.outputs.artifacts), '\n') }}"
+          name: ${{ matrix.platform }}
+          path: "${{ join(fromJSON(steps.tauri_build.outputs.artifactPaths), '\n') }}"
