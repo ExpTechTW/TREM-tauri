@@ -182,7 +182,7 @@ api.on(WebSocketEvent.Close, console.debug);
 const getAccurateTime = () => {
   return ntp.value.server + (Date.now() - ntp.value.client);
 };
-/* 
+
 setTimeout(() => {
   const eew = {
     type: "eew",
@@ -207,4 +207,3 @@ setTimeout(() => {
 
   api.emit(WebSocketEvent.Eew, eew);
 }, 10000);
- */

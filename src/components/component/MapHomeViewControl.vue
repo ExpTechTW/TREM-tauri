@@ -10,8 +10,8 @@ const props = defineProps<{
 
 onMounted(() => {
   props.map.fitBounds(TaiwanBounds, {
-    padding: { top: 16, right: 16, bottom: 16, left: 32 },
-    duration: 300,
+    padding: { top: 16, right: 316, bottom: 16, left: 32 },
+    duration: 200,
   });
 });
 </script>

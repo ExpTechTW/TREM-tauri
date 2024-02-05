@@ -252,13 +252,13 @@ onUnmounted(() => {
     MapReportListMarker(:map="map", :reports="reports")
   .active-report(v-if="activeReport && currentView == 'report'")
     MapReportMarker(:map="map", :report="activeReport")
-  .rts(v-if="stations")
+  .rts(v-if="stations && currentView == 'home'")
     MapRtsMarker(:map="map", :stations="stations", :rts="rts")
   .rts-box(v-if="Object.keys(rts.value.box).length")
     MapRtsBox(:map="map", :box="rts.value.box")
-  .eew(v-if="Object.keys(eew).length")
+  .eew(v-if="Object.keys(eew).length&& currentView == 'home'")
     MapEew(:map="map", :eew="eew")
-  .eew-town-intensity(v-if="currentEewIndex.value")
+  .eew-town-intensity(v-if="currentEewIndex.value&& currentView == 'home'")
     MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int")
 </template>
 
