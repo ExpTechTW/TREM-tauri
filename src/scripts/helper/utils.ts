@@ -53,16 +53,17 @@ export const toFullWidthNumber = (numberString: string) =>
 
 export const pgaToFloat = (pga: number) => 2 * Math.log10(pga) + 0.7;
 
+export const roundIntensity = (float: number) => (float < 0) ? 0 : (float < 4.5) ? Math.round(float) : (float < 5) ? 5 : (float < 5.5) ? 6 : (float < 6) ? 7 : (float < 6.5) ? 8 : 9;
+
 export const degreeToRadian = (degree: number) => (degree * Math.PI) / 180;
 
 export const calculateDistance = (p1: LngLatObject) => (p2: LngLatObject) =>
   Math.acos(
-    1 *
-      Math.sin(Math.atan(Math.tan(degreeToRadian(p1.lat)))) *
-      Math.sin(Math.atan(Math.tan(degreeToRadian(p2.lng)))) *
-      Math.cos(Math.atan(Math.tan(degreeToRadian(p1.lat)))) *
-      Math.cos(Math.atan(Math.tan(degreeToRadian(p2.lng)))) *
-      Math.cos(degreeToRadian(p1.lng) - degreeToRadian(p2.lng))
+    Math.sin(Math.atan(Math.tan(degreeToRadian(p1.lat)))) *
+    Math.sin(Math.atan(Math.tan(degreeToRadian(p2.lat)))) +
+    Math.cos(Math.atan(Math.tan(degreeToRadian(p1.lat)))) *
+    Math.cos(Math.atan(Math.tan(degreeToRadian(p2.lat)))) *
+    Math.cos(degreeToRadian(p1.lng) - degreeToRadian(p2.lng))
   ) * 6371.008;
 
 export const sideDistance = (a: number, b: number) =>
@@ -164,19 +165,17 @@ export const calculateWaveRadius = (
 
 export const calculateEpicenterDistance =
   (event: LngLatObject) =>
-  (local: LngLatObject) =>
-  (
-    depth: number
-  ): {
-    surfaceDistance: SurfaceDistanceToEpicenter;
-    distance: DistanceToEpicenter;
-  } => {
-    const surfaceDistance = calculateDistance(event)(local);
-    return {
-      surfaceDistance: surfaceDistance,
-      distance: (surfaceDistance ** 2 + depth ** 2) ** (1 / 2),
-    };
-  };
+    (local: LngLatObject) =>
+      (depth: number): {
+        surfaceDistance: SurfaceDistanceToEpicenter;
+        distance: DistanceToEpicenter;
+      } => {
+        const surfaceDistance = calculateDistance(event)(local);
+        return {
+          surfaceDistance: surfaceDistance,
+          distance: (surfaceDistance ** 2 + depth ** 2) ** (1 / 2),
+        };
+      };
 
 export const calculateIntensity = (
   surfaceDistance: SurfaceDistanceToEpicenter,
@@ -187,6 +186,7 @@ export const calculateIntensity = (
 ) => {
   const pga =
     1.657 * Math.exp(1.533 * magnitude) * distance ** -1.607 * siteEffect;
+
   let i = pgaToFloat(pga);
 
   if (i > 3) {
@@ -237,18 +237,19 @@ export const calculateExpectedIntensity = (
         lat: town.lat,
         lng: town.lon,
       })(depth);
+
       const int = calculateIntensity(
         surfaceDistance,
         distance,
         magnitude,
-        depth,
-        town.site_d
+        depth
       );
+
       if (int > maxIntensity) {
         maxIntensity = int;
       }
 
-      intensity[town.code] = int;
+      intensity[town.code] = roundIntensity(int);
     }
   }
   return { intensity, maxIntensity };

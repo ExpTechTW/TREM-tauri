@@ -18,9 +18,7 @@ const strokeTemplate = ref<SVGElement>();
 const backgroundTemplate = ref<SVGElement>();
 const lnglatInPixel = ref(props.map.project([props.lng, props.lat]));
 const initialZoom = props.map.getZoom();
-const radiusInPixel = ref(
-  (props.radius * 2000) / (initialZoom * ScreenPixelRatio)
-);
+const radiusInPixel = ref(0);
 
 let updateLock = false;
 
@@ -37,10 +35,18 @@ const updateCircle = () => {
   const zoom = props.map.getZoom();
 
   lnglatInPixel.value = props.map.project([props.lng, props.lat]);
-  radiusInPixel.value =
+
+  const newValue =
     (props.radius * 2000) /
     (initialZoom * ScreenPixelRatio * 2 ** (initialZoom - zoom));
 
+  if (newValue <= 0) {
+    radiusInPixel.value = 0;
+    updateLock = false;
+    return;
+  }
+
+  radiusInPixel.value = newValue;
   updateLock = false;
 };
 

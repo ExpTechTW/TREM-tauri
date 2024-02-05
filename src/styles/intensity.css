@@ -13,11 +13,8 @@
 
 .intensity-0 {
   color: #fff;
-
-  &:not(> .report-epicenter-marker) {
-    outline: 1px solid #808080;
-    background-color: #202020;
-  }
+  outline: 1px solid #808080;
+  background-color: #202020;
 
   &::after {
     content: "0";

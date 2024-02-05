@@ -8,7 +8,7 @@ import {
   ExpTechApi,
   WebSocketEvent,
 } from "./scripts/class/api";
-import type { Station, PartialReport, Rts } from "./scripts/class/api";
+import type { Station, PartialReport, Rts, Eew } from "./scripts/class/api";
 
 import { AudioType, type DefaultSettingSchema, type EewEvent } from "./types";
 import {
@@ -66,6 +66,8 @@ api.on(WebSocketEvent.Rts, (raw) => {
 });
 
 api.on(WebSocketEvent.Eew, (eew) => {
+  console.debug(eew);
+
   const waveRadius = calculateWaveRadius(
     getAccurateTime(),
     eew.eq.depth,
@@ -131,6 +133,9 @@ api.on(WebSocketEvent.Eew, (eew) => {
     }
   }
 
+  console.log(data);
+
+
   props.eew[eew.id] = data;
   props.currentEewIndex.value = eew.id;
 
@@ -170,15 +175,15 @@ setTimeout(() => {
     status: 0,
     final: 0,
     eq: {
-      time: Date.now(),
+      time: Date.now() - 15000,
       lon: 120.27,
       lat: 23.46,
       depth: 10,
       mag: 4.7,
-      loc: "",
-      max: 0,
+      loc: "嘉義縣 太保市",
+      max: 4,
     },
-    timestamp: Date.now(),
+    timestamp: Date.now() - 15000,
     data_unit: "websocket",
     delay: 3349,
   };
