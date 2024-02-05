@@ -8,7 +8,7 @@ import maplibregl from "maplibre-gl";
 import type { Report } from "../../scripts/class/api";
 import { TaiwanBounds } from "../../scripts/helper/constant";
 
-const props = defineProps<{ map: maplibregl.Map; report: Report; }>();
+const props = defineProps<{ map: maplibregl.Map; report: Report }>();
 
 const bounds = new maplibregl.LngLatBounds();
 const markers: maplibregl.Marker[] = [];

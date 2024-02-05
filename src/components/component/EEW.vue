@@ -96,7 +96,7 @@ defineExpose({
   },
   redrawCross(crossState: boolean) {
     updateCrossFlash(crossState);
-  }
+  },
 });
 
 onMounted(() => {

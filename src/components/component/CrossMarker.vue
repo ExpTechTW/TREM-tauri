@@ -25,7 +25,7 @@ defineProps<{
     fill: #fff;
   }
 
-  >svg {
+  > svg {
     background-color: transparent;
   }
 }
