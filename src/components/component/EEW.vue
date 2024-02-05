@@ -84,8 +84,6 @@ const updateWave = () => {
   }
 
   waveRadius.value = newRadius;
-  console.log(waveRadius.value);
-
 };
 
 const updateCrossFlash = (state: boolean) => {

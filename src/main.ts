@@ -70,7 +70,6 @@ app.mount("#app");
 
   api.on(WebSocketEvent.Ntp, ({ time }) => {
     ntp.value = { server: time, client: Date.now() };
-    console.log("ntp");
   });
 
   api.on(WebSocketEvent.Close, console.debug);

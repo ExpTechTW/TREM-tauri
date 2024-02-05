@@ -6,7 +6,6 @@ import ReportDetailField from "../component/ReportDetailField.vue";
 import ReportIntensityGroup from "../component/ReportIntensityGroup.vue";
 import ReportIntensityItem from "../component/ReportIntensityItem.vue";
 
-import { shell } from "@tauri-apps/api";
 import { inject } from "vue";
 import { SettingsManager } from "tauri-settings";
 
@@ -27,10 +26,12 @@ defineProps<{
 const setting = inject<SettingsManager<DefaultSettingSchema>>("settings");
 
 const openUrl = async (id?: string) => {
-  await setting!.get("behavior.openExternal");
   if (id) {
-    window.open(toReportUrl(id));
-    shell.open(toReportUrl(id));
+    if (await setting!.get("behavior.openExternal")) {
+      window.open(toReportUrl(id), "_blank");
+    } else {
+      window.open(toReportUrl(id));
+    }
   }
 };
 </script>
@@ -161,7 +162,7 @@ const openUrl = async (id?: string) => {
       transition-timing-function: cubic-bezier(0.05, 0.7, 0.1, 1);
     }
 
-    > .report-box-header {
+    >.report-box-header {
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -169,10 +170,10 @@ const openUrl = async (id?: string) => {
       border-radius: 12px;
       background-color: hsl(var(--background-variant-hsl));
 
-      > .report-box-header {
+      >.report-box-header {
         display: flex;
 
-        > .report-source {
+        >.report-source {
           flex: 1;
           opacity: 0.6;
           line-height: 32px;
@@ -182,27 +183,27 @@ const openUrl = async (id?: string) => {
         }
       }
 
-      > .report-title {
+      >.report-title {
         display: flex;
         align-items: center;
         padding-left: 4px;
         border-radius: 12px;
 
-        > .report-title-container {
+        >.report-title-container {
           flex: 1;
           display: flex;
           flex-direction: column;
           gap: 4px;
           font-family: "Lato", "Noto Sans TC", sans-serif;
 
-          > .report-subtitle {
+          >.report-subtitle {
             height: 16px;
             opacity: 0.86;
             line-height: 16px;
             font-size: 14px;
           }
 
-          > .report-title {
+          >.report-title {
             height: 32px;
             line-height: 32px;
             font-size: 28px;
@@ -210,7 +211,7 @@ const openUrl = async (id?: string) => {
           }
         }
 
-        > .report-max-intensity {
+        >.report-max-intensity {
           width: 64px;
           aspect-ratio: 1;
           border-radius: 12px;
@@ -222,32 +223,32 @@ const openUrl = async (id?: string) => {
         }
       }
 
-      > .report-action-container {
+      >.report-action-container {
         display: flex;
         gap: 8px;
       }
     }
 
-    > .report-box-body {
+    >.report-box-body {
       display: flex;
       flex-direction: column;
       gap: 12px;
       min-height: 0;
       padding: 8px;
 
-      > .report-detail {
+      >.report-detail {
         display: flex;
         flex-direction: column;
         gap: 8px;
         padding: 0 8px;
 
-        > .report-detail-field-row {
+        >.report-detail-field-row {
           display: grid;
           grid-auto-flow: column;
         }
       }
 
-      > .report-intensity-list {
+      >.report-intensity-list {
         display: flex;
         flex-direction: column;
         gap: 6px;
@@ -260,24 +261,24 @@ const openUrl = async (id?: string) => {
           pointer-events: none;
         }
 
-        > .report-intensity-list-header {
+        >.report-intensity-list-header {
           display: flex;
           align-items: center;
           padding: 0 8px;
 
-          > .report-intensity-list-title {
+          >.report-intensity-list-title {
             flex: 1;
             font-size: 12px;
           }
 
-          > .report-intensity-sort-btn-container {
+          >.report-intensity-sort-btn-container {
             display: flex;
             gap: 4px;
             padding: 2px;
             border-radius: 8px;
             background-color: hsl(var(--background-variant-hsl));
 
-            > .report-intensity-sort-btn {
+            >.report-intensity-sort-btn {
               display: flex;
               align-items: center;
               justify-content: center;
@@ -291,11 +292,11 @@ const openUrl = async (id?: string) => {
                 background-color 0.1s cubic-bezier(0.2, 0, 0, 1),
                 opacity 0.1s cubic-bezier(0.2, 0, 0, 1);
 
-              > input {
+              >input {
                 display: none;
               }
 
-              > .report-intensity-sort-btn-icon {
+              >.report-intensity-sort-btn-icon {
                 color: hsl(0deg 0% 100% / 0.5);
                 font-size: 14px;
                 transition: color 0.1s cubic-bezier(0.2, 0, 0, 1);
@@ -304,7 +305,7 @@ const openUrl = async (id?: string) => {
               &:has(input:checked) {
                 background-color: #d9d9d9;
 
-                > .report-intensity-sort-btn-icon {
+                >.report-intensity-sort-btn-icon {
                   color: hsl(var(--surface-variant-hsl));
                 }
               }
@@ -316,7 +317,7 @@ const openUrl = async (id?: string) => {
           }
         }
 
-        > .report-intensity-list-scrollview {
+        >.report-intensity-list-scrollview {
           display: flex;
           flex-direction: column;
           min-height: 0;
@@ -324,12 +325,12 @@ const openUrl = async (id?: string) => {
           border-radius: 16px;
           background-color: hsl(var(--surface-variant-hsl));
 
-          &:hover > .report-intensity-list-scroller {
+          &:hover>.report-intensity-list-scroller {
             overflow-y: auto;
             padding-right: 4px;
           }
 
-          > .report-intensity-list-scroller {
+          >.report-intensity-list-scroller {
             position: relative;
             min-height: 0;
             overflow: hidden;
@@ -343,7 +344,7 @@ const openUrl = async (id?: string) => {
               height: 4px;
             }
 
-            > .report-intensity-container {
+            >.report-intensity-container {
               display: flex;
               flex-direction: column;
               position: absolute;
@@ -369,7 +370,7 @@ const openUrl = async (id?: string) => {
                 translate: 10%;
               }
 
-              > .report-intensity-item {
+              >.report-intensity-item {
                 background-color: hsl(var(--background-hsl));
               }
             }
