@@ -69,6 +69,7 @@ onMounted(() => {});
   right: 8px;
   min-width: 300px;
   width: 20vw;
+  pointer-events: none;
   z-index: 5000;
 
   > .info-box {
@@ -82,6 +83,7 @@ onMounted(() => {});
     background-color: #505050;
     color: white;
     white-space: nowrap;
+    pointer-events: all;
 
     opacity: 0;
     translate: 100%;
