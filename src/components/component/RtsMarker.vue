@@ -11,6 +11,7 @@ const props = defineProps<{
   stationId: string;
   station: Station;
   rts?: RtsStation;
+  realtime: boolean;
 }>();
 
 let marker: maplibregl.Marker;
@@ -25,11 +26,49 @@ onMounted(() => {
 onUnmounted(() => {
   marker.remove();
 });
+
+const getIntensityClass = (rts?: RtsStation) => {
+  if (rts) {
+    const classes = [];
+    let value = rts.I;
+
+    if (props.realtime) {
+      value = rts.i;
+    }
+
+    if (rts.alert) {
+      classes.push("alert");
+
+      if (value >= 1) {
+        classes.push(`has-intensity`);
+        classes.push(`intensity-${~~value}`);
+      }
+    }
+
+    return classes;
+  }
+
+  return "no-data";
+};
+
+const getIntensityColor = (rts?: RtsStation) => {
+  if (rts) {
+    let value = rts.I;
+
+    if (props.realtime) {
+      value = rts.i;
+    }
+
+    if (value < 1) return { backgroundColor: pga(value).hex() };
+  }
+
+  return "";
+};
 </script>
 
 <template lang="pug">
 .rts-marker(ref="markerTemplate" :style="{ zIndex: ((rts?.i ?? -5) + 5) * 10}")
-  .rts-marker-body(:class="(rts  && rts.alert && rts.i >= 1) ? `has-intensity intensity-${~~rts.i}`:''", :style="(rts && !rts.alert && rts.i < 1 ) ? `background-color: ${pga(rts.i)}`: ''")
+  .rts-marker-body(:class="getIntensityClass(rts)", :style="getIntensityColor(rts)")
     .rts-marker-detail
       .rts-marker-detail-title
         span {{ code[station.info[0].code]?.city ?? "境外" }}

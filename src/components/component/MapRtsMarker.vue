@@ -9,10 +9,11 @@ defineProps<{
   map: maplibregl.Map;
   stations: Ref<Record<string, Station>>;
   rts: Ref<Rts>;
+  realtime: boolean;
 }>();
 </script>
 
 <template lang="pug">
 template(v-for="(station, id) in stations.value" :key="id")
-  RtsMarker(:map="map", :station-id="id" , :station="station", :rts="rts.value.station[id]")
+  RtsMarker(:map="map", :station-id="id" , :station="station", :rts="rts.value.station[id]", :realtime="realtime")
 </template>

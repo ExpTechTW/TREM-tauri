@@ -45,7 +45,7 @@ onMounted(() => {});
       .detail-container
         IntensityBox(:int="props.eew[currentEewIndex].max")
         .detail
-          .location {{ props.eew[currentEewIndex].location }}
+          .location {{ props.eew[currentEewIndex].location || "未知區域" }}
           .parameter-container
             .magnitude.magnitude-6(data-background-text="規模")
               .magnitude-value {{ props.eew[currentEewIndex].magnitude }}

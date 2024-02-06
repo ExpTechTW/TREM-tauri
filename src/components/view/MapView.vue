@@ -255,7 +255,7 @@ onUnmounted(() => {
   .active-report(v-if="activeReport && currentView == 'report'")
     MapReportMarker(:map="map", :report="activeReport")
   .rts(v-if="stations && currentView == 'home'")
-    MapRtsMarker(:map="map", :stations="stations", :rts="rts")
+    MapRtsMarker(:map="map", :stations="stations", :rts="rts", :realtime="Object.keys(eew).length == 0")
   .rts-box(v-if="Object.keys(rts.value.box).length")
     MapRtsBox(:map="map", :box="rts.value.box")
   .eew(v-if="Object.keys(eew).length && currentView == 'home'")

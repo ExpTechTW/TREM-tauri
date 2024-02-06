@@ -2,7 +2,7 @@ import App from "./App.vue";
 
 import { createApp, reactive, ref } from "vue";
 import { SettingsManager } from "tauri-settings";
-import { window } from "@tauri-apps/api";
+import { fs, window } from "@tauri-apps/api";
 
 import {
   EewSource,
@@ -10,7 +10,7 @@ import {
   ExpTechApi,
   WebSocketEvent,
 } from "./scripts/class/api";
-import type { Station, PartialReport, Rts } from "./scripts/class/api";
+import type { Station, PartialReport, Rts, Eew } from "./scripts/class/api";
 import {
   calculateWaveRadius,
   calculateEpicenterDistance,
@@ -24,6 +24,7 @@ import { getAudio } from "./scripts/helper/audio";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
 import { UserAttentionType } from "@tauri-apps/api/window";
+import JSZip from "jszip";
 
 const browserWindow = window.getCurrent();
 
@@ -43,13 +44,12 @@ const settingRepository = new SettingsManager<DefaultSettingSchema>({
 });
 
 const api = new ExpTechApi();
-const ntp = ref({ server: Date.now(), client: Date.now() });
+const ntp = { remote: Date.now(), server: Date.now(), client: Date.now() };
 
 const app = createApp(App, props);
 
 app.provide("settings", settingRepository);
 app.provide("api", api);
-app.provide("ntp", ntp);
 
 const instance = app.mount("#app") as InstanceType<typeof App>;
 
@@ -64,12 +64,15 @@ const instance = app.mount("#app") as InstanceType<typeof App>;
 })();
 
 let eewRadiusTimer: NodeJS.Timeout;
+let eewReplay: boolean = false;
 
-api.on(WebSocketEvent.Rts, (raw) => {
-  props.rts.value = raw;
+api.on(WebSocketEvent.Rts, (rts) => {
+  if (eewReplay && !rts.replay) return;
+  props.rts.value = rts;
 });
 
 api.on(WebSocketEvent.Eew, (eew) => {
+  if (eewReplay && !eew.replay) return;
   if ((props.eew[eew.id]?.serial ?? 0) >= eew.serial) return;
 
   const waveRadius = calculateWaveRadius(
@@ -77,13 +80,12 @@ api.on(WebSocketEvent.Eew, (eew) => {
     eew.eq.depth,
     eew.eq.time
   );
+
   const { intensity } = calculateExpectedIntensity(
     { lat: eew.eq.lat, lng: eew.eq.lon },
     eew.eq.mag,
     eew.eq.depth
   );
-
-  console.log(intensity);
 
   const data: EewEvent = {
     r: waveRadius,
@@ -129,7 +131,11 @@ api.on(WebSocketEvent.Eew, (eew) => {
 
   instance.changeView("home");
 
-  if (settingRepository.settings.behavior.showWindowWhenEew)
+  if (
+    Object.keys(props.eew).length == 0 &&
+    eew.serial == 1 &&
+    settingRepository.settings.behavior.showWindowWhenEew
+  )
     browserWindow.setFocus();
 
   browserWindow.requestUserAttention(UserAttentionType.Critical);
@@ -154,7 +160,7 @@ api.on(WebSocketEvent.Eew, (eew) => {
     }
 
   props.eew[eew.id] = data;
-  props.currentEewIndex.value = eew.id;
+  props.currentEewIndex.value = `${eew.id}`;
 
   if (!eewRadiusTimer)
     eewRadiusTimer = setInterval(() => {
@@ -174,36 +180,64 @@ api.on(WebSocketEvent.Eew, (eew) => {
 });
 
 api.on(WebSocketEvent.Ntp, ({ time }) => {
-  ntp.value = { server: time, client: Date.now() };
+  if (!eewReplay) {
+    ntp.server = time;
+  }
+
+  ntp.remote = time;
+  ntp.server = time;
+  ntp.client = Date.now();
 });
 
 api.on(WebSocketEvent.Close, console.debug);
 
 const getAccurateTime = () => {
-  return ntp.value.server + (Date.now() - ntp.value.client);
+  return ntp.server + (Date.now() - ntp.client);
 };
 
-setTimeout(() => {
-  const eew = {
-    type: "eew",
-    author: EewSource.Cwa,
-    id: "113044201",
-    serial: 1,
-    status: 0,
-    final: 0,
-    eq: {
-      time: Date.now() - 10000,
-      lon: 120.27,
-      lat: 23.46,
-      depth: 10,
-      mag: 4.7,
-      loc: "嘉義縣 太保市",
-      max: 4,
-    },
-    timestamp: Date.now() - 10000,
-    data_unit: "websocket",
-    delay: 3349,
-  };
+browserWindow.onFileDropEvent(async (e) => {
+  if (eewReplay) return;
+  if (e.payload.type != "drop") return;
+  if (!e.payload.paths[0].endsWith(".trply")) return;
 
-  api.emit(WebSocketEvent.Eew, eew);
-}, 6000);
+  eewReplay = true;
+
+  try {
+    const replayData: { rts: Rts; eew: Eew[]; time: number }[] = [];
+    const binary = await fs.readBinaryFile(e.payload.paths[0]);
+    const zip = await JSZip.loadAsync(binary);
+
+    for (let i = 0, k = Object.keys(zip.files), n = k.length; i < n; i++) {
+      const filename = k[i];
+      const content = await zip.files[filename].async("string");
+      const data: { rts: Rts; eew: Eew[]; time: number } = JSON.parse(content);
+      data.rts.replay = true;
+      data.eew.forEach((e) => (e.replay = true));
+      data.time = +filename;
+      replayData.push(data);
+    }
+
+    const emitEvents = () => {
+      const current = replayData.shift();
+      if (!current) {
+        eewReplay = false;
+        ntp.server = ntp.remote;
+        ntp.client = Date.now();
+        return;
+      }
+
+      ntp.server = current.time;
+      ntp.client = Date.now();
+
+      api.emit(WebSocketEvent.Rts, current.rts);
+      current.eew.forEach((e) => api.emit(WebSocketEvent.Eew, e));
+
+      setTimeout(emitEvents, replayData[0].time - current.time);
+    };
+
+    emitEvents();
+  } catch (error) {
+    console.error(error);
+    eewReplay = false;
+  }
+});

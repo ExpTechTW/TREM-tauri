@@ -15,6 +15,7 @@ defineProps<{
 
 <style lang="scss" scoped>
 .cross {
+  transition: opacity 0s;
   z-index: 100;
 
   .red-cross .cross-inner {

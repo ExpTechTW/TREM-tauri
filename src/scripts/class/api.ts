@@ -202,6 +202,7 @@ export interface Rts {
    * 資料時間
    */
   time: number;
+  replay?: boolean;
 }
 
 /**
@@ -315,6 +316,7 @@ export interface Eew {
   timestamp: number;
   data_unit: "websocket";
   delay: number;
+  replay?: boolean;
 }
 
 /**
