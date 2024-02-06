@@ -5,6 +5,7 @@ import type {
 } from "../../types";
 import region from "../../assets/json/region.json";
 import times from "../../assets/json/time.json";
+import { EarthCircumference } from "./constant";
 const depthIndexList = Object.keys(times);
 
 export const extractLocationFromString = (str: string) => {
@@ -282,3 +283,12 @@ export const calculateLocalExpectedWaveTime = (
     s: time + tr_time.Stime * 1000,
   };
 };
+
+export const kmToPixels = (
+  kilometers: number,
+  latitude: number,
+  zoomLevel: number
+) =>
+  (kilometers * 1000) /
+  ((EarthCircumference * Math.cos((latitude * Math.PI) / 180)) /
+    Math.pow(2, zoomLevel + 8));

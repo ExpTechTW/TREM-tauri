@@ -5,7 +5,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import maplibregl from "maplibre-gl";
 
 import type { EewEvent } from "../../types";
-import { ScreenPixelRatio } from "../../scripts/helper/constant";
+import { kmToPixels } from "../../scripts/helper/utils";
 
 const props = defineProps<{
   map: maplibregl.Map;
@@ -28,19 +28,14 @@ onMounted(() => {
   props.map.setLayoutProperty("town", "visibility", "visible");
   props.map.setLayoutProperty("county", "visibility", "none");
 
-  const initialZoom = props.map.getZoom();
-
   // FIXME: new algorithm for calculating zoom scale
   const focusEew = () => {
     const bounds = new maplibregl.LngLatBounds();
+    const zoom = props.map.getZoom();
 
     for (const id in props.eew) {
       const center = props.map.project([props.eew[id].lng, props.eew[id].lat]);
-      const radius =
-        (props.eew[id].r.p * 2000) /
-        (initialZoom *
-          ScreenPixelRatio *
-          2 ** (initialZoom - props.map.getZoom()));
+      const radius = kmToPixels(props.eew[id].r.p, props.eew[id].lat, zoom);
 
       bounds.extend(
         props.map.unproject([center.x - radius, center.y - radius])

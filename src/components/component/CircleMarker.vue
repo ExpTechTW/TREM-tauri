@@ -2,7 +2,7 @@
 import { onMounted, onBeforeUnmount, ref, watch } from "vue";
 import maplibregl from "maplibre-gl";
 
-import { ScreenPixelRatio } from "../../scripts/helper/constant";
+import { kmToPixels } from "../../scripts/helper/utils";
 
 const props = defineProps<{
   map: maplibregl.Map;
@@ -17,7 +17,6 @@ const props = defineProps<{
 const strokeTemplate = ref<SVGElement>();
 const backgroundTemplate = ref<SVGElement>();
 const lnglatInPixel = ref(props.map.project([props.lng, props.lat]));
-const initialZoom = props.map.getZoom();
 const radiusInPixel = ref(0);
 
 let updateLock = false;
@@ -32,13 +31,9 @@ const updateCircle = () => {
     return;
   }
 
-  const zoom = props.map.getZoom();
-
   lnglatInPixel.value = props.map.project([props.lng, props.lat]);
 
-  const newValue =
-    (props.radius * 2000) /
-    (initialZoom * ScreenPixelRatio * 2 ** (initialZoom - zoom));
+  const newValue = kmToPixels(props.radius, 23, props.map.getZoom());
 
   if (newValue <= 0) {
     radiusInPixel.value = 0;
