@@ -59,7 +59,7 @@ TREM 是一款開源地震速報軟體，提供給您即時的地震資訊，利
           libayatana-appindicator3-dev \
           librsvg2-dev
       ```
-      - 安裝 Rust `curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh`
+    - 安裝 Rust `curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh`
 - 執行 `npm i` 下載 TREM-tauri 依賴
 - 執行 `npm run tauri build` 編譯
 
