@@ -70,7 +70,7 @@ api.on(WebSocketEvent.Rts, (raw) => {
 });
 
 api.on(WebSocketEvent.Eew, (eew) => {
-  console.debug(eew);
+  if ((props.eew[eew.id]?.serial ?? 0) >= eew.serial) return;
 
   const waveRadius = calculateWaveRadius(
     getAccurateTime(),
