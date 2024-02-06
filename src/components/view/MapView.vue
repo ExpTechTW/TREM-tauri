@@ -27,6 +27,7 @@ defineProps<{
   rts: Ref<Rts>;
   eew: Record<string, EewEvent>;
   currentEewIndex: Ref<string>;
+  changeReport(report: PartialReport): void;
 }>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
@@ -250,7 +251,7 @@ onUnmounted(() => {
   .home(v-if="!Object.keys(eew).length && currentView == 'home'")
     MapHomeViewControl(:map="map")
   .report-list(v-if="currentView == 'report-list'")
-    MapReportListMarker(:map="map", :reports="reports")
+    MapReportListMarker(:map="map", :reports="reports", :change-report="changeReport")
   .active-report(v-if="activeReport && currentView == 'report'")
     MapReportMarker(:map="map", :report="activeReport")
   .rts(v-if="stations && currentView == 'home'")
