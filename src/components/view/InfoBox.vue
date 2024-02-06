@@ -34,7 +34,7 @@ onMounted(() => {});
 </script>
 
 <template lang="pug">
-.info-box-wrapper
+.info-box-wrapper(:class="{hidden: currentView == 'report' || currentView == 'report-list'}")
   .info-box(:class="{[currentEewIndex ? InfoBoxStatusClass[eew[currentEewIndex].status] : '']: true, show: currentView == 'home'}")
     .header
       .header-title(v-if="currentEewIndex") 地震速報 ｜ {{ eew[currentEewIndex].source.toUpperCase() }}{{ InfoBoxStatusText[eew[currentEewIndex].status] }}
@@ -70,6 +70,10 @@ onMounted(() => {});
   min-width: 300px;
   width: 20vw;
   z-index: 5000;
+
+  &.hidden {
+    visibility: hidden !important;
+  }
 
   > .info-box {
     top: 0;
