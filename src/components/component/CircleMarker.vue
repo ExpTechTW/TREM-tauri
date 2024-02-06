@@ -33,7 +33,7 @@ const updateCircle = () => {
 
   lnglatInPixel.value = props.map.project([props.lng, props.lat]);
 
-  const newValue = kmToPixels(props.radius, 23, props.map.getZoom());
+  const newValue = kmToPixels(props.radius, props.lat, props.map.getZoom());
 
   if (newValue <= 0) {
     radiusInPixel.value = 0;
