@@ -8,9 +8,9 @@ defineProps<{ area: AreaIntensity }>();
 
 <template lang="pug">
 .report-intensity-group.expanded
-  ReportIntensityItem(:station="{ station: area.area, int: area.int }")
+  ReportIntensityItem(:station="area.area", :int="area.int")
   .report-intensity-member
-    ReportIntensityItem(v-for="station in area.stations" :key="station.station" :station="station")
+    ReportIntensityItem(v-for="s in area.stations" :key="s.station" :station="s.station", :int="s.int")
 </template>
 
 <style lang="scss" scoped>

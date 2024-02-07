@@ -12,11 +12,11 @@ const props = defineProps<{
 }>();
 
 let show = true;
-let blink: NodeJS.Timeout;
+let blink: number;
 
 onMounted(() => {
   props.map.setLayoutProperty("box", "visibility", "visible");
-  blink = setInterval(() => {
+  blink = window.setInterval(() => {
     props.map.setLayoutProperty("box", "visibility", show ? "none" : "visible");
     show = !show;
   }, 500);
@@ -24,7 +24,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   props.map.setLayoutProperty("box", "visibility", "none");
-  clearInterval(blink);
+  window.clearInterval(blink);
 });
 </script>
 

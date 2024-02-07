@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import IntensityCapsule from "./IntensityCapsule.vue";
 
-import type { StationIntensity } from "../../scripts/class/api";
-
 defineProps<{
-  station: Omit<StationIntensity, "lat" | "lon"> & { area?: string };
+  area?: string;
+  station: string;
+  int: number;
 }>();
 </script>
 
 <template lang="pug">
 .report-intensity-item
-  IntensityCapsule(:int="station.int")
-  span.location.area(v-if="station?.area") {{ station.area }}
-  span.location.station(v-if="station.station") {{ station.station }}
+  IntensityCapsule(:int="int")
+  span.location.area(v-if="area") {{ area }}
+  span.location.station(v-if="station") {{ station }}
 </template>
 
 <style lang="scss" scoped>

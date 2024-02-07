@@ -120,7 +120,7 @@ const openUrl = async (id?: string) => {
               ReportIntensityGroup(v-for="area in report?.list" :key="area.area" :area="area")
             #report-intensity-all.report-intensity-container
               template(v-if="report?.list")
-                ReportIntensityItem(v-for="station in report.list.flatMap(v=>v.stations.map(s=>({...s,area: v.area }))).sort((a, b) => b.int - a.int)" :key="station.station" :station="station")
+                ReportIntensityItem(v-for="s in report.list.flatMap(v=>v.stations.map(s=>({...s,area: v.area }))).sort((a, b) => b.int - a.int)", :key="s.station", :area="s.area", :station="s.station", :int="s.int")
 </template>
 
 <style lang="scss" scoped>

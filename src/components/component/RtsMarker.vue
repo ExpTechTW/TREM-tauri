@@ -4,7 +4,6 @@ import { onMounted, onUnmounted, ref } from "vue";
 
 import type { RtsStation, Station } from "../../scripts/class/api";
 import { pga } from "../../scripts/helper/color";
-import code from "../../assets/json/code.json";
 
 const props = defineProps<{
   map: maplibregl.Map;
@@ -71,8 +70,8 @@ const getIntensityColor = (rts?: RtsStation) => {
   .rts-marker-body(:class="getIntensityClass(rts)", :style="getIntensityColor(rts)")
     .rts-marker-detail
       .rts-marker-detail-title
-        span {{ code[station.info[0].code]?.city ?? "境外" }}
-        span {{ code[station.info[0].code]?.town ?? "" }}
+        span {{ station.city ?? "境外" }}
+        span {{ station.town ?? "" }}
         .station-identifier 
           span.station-net {{ station.net }}
           span.station-id {{ stationId }}

@@ -39,6 +39,8 @@ export interface Station {
    * 測站資訊
    */
   info: StationInfo[];
+  city: string;
+  town: string;
   /**
    * 測站是否運作
    */
@@ -438,7 +440,7 @@ export class ExpTechApi extends EventEmitter {
 
                   break;
                 case 503:
-                  setTimeout(
+                  window.setTimeout(
                     () => this.ws.send(JSON.stringify(this.wsConfig)),
                     5_000
                   );
@@ -474,7 +476,7 @@ export class ExpTechApi extends EventEmitter {
       this.emit(WebSocketEvent.Close, ev);
 
       if (ev.code != WebSocketCloseCode.InsufficientPermission)
-        setTimeout(this.#initWebSocket.bind(this), 5_000);
+        window.setTimeout(this.#initWebSocket.bind(this), 5_000);
     });
 
     this.ws.addEventListener("error", (err) => {
@@ -501,9 +503,9 @@ export class ExpTechApi extends EventEmitter {
         },
       });
 
-      const abortTimer = setTimeout(() => ac.abort(), 2_500);
+      const abortTimer = window.setTimeout(() => ac.abort(), 2_500);
       const res = await fetch(request);
-      clearTimeout(abortTimer);
+      window.clearTimeout(abortTimer);
 
       if (!res.ok) throw new Error(`Server returned ${res.status}`);
 
@@ -517,7 +519,15 @@ export class ExpTechApi extends EventEmitter {
     const url = this.route.station();
 
     try {
-      return await this.#get(url);
+      const stations = (await this.#get(url)) as Record<string, Station>;
+      for (const id in stations) {
+        const station = stations[id];
+        const location = Code[station.info[0].code];
+        station.city = location?.city;
+        station.town = location?.town;
+      }
+
+      return stations;
     } catch (error) {
       throw new Error(`Failed to get station data. ${error}`);
     }

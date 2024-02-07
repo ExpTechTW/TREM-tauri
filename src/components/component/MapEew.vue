@@ -13,12 +13,12 @@ const props = defineProps<{
 }>();
 
 const eewTemplate = ref<InstanceType<typeof EEW>[]>([]);
-let intervals: Record<string, NodeJS.Timeout> = {};
+let intervals: Record<string, number> = {};
 
 onMounted(() => {
   let crossState = true;
 
-  intervals.cross = setInterval(() => {
+  intervals.cross = window.setInterval(() => {
     crossState = !crossState;
     for (const eew of eewTemplate.value) {
       eew.redrawCross(crossState);
@@ -53,13 +53,13 @@ onMounted(() => {
 
   focusEew();
 
-  intervals.focus = setInterval(focusEew, 5_000);
+  intervals.focus = window.setInterval(focusEew, 5_000);
 });
 
 onUnmounted(() => {
-  clearInterval(intervals.wave);
-  clearInterval(intervals.cross);
-  clearInterval(intervals.focus);
+  window.clearInterval(intervals.wave);
+  window.clearInterval(intervals.cross);
+  window.clearInterval(intervals.focus);
 
   props.map.setLayoutProperty("county", "visibility", "visible");
   props.map.setLayoutProperty("town", "visibility", "none");
