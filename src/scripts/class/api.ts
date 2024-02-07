@@ -457,6 +457,9 @@ export class ExpTechApi extends EventEmitter {
                 case WebSocketEvent.Eew:
                   this.emit(WebSocketEvent.Eew, data.data);
                   break;
+                case WebSocketEvent.Report:
+                  this.emit(WebSocketEvent.Report, data.data.data);
+                  break;
               }
               break;
             }
@@ -623,6 +626,13 @@ export declare interface ExpTechApi extends EventEmitter {
    * @param {(ntp: Ntp) => void} listener
    */
   on(event: WebSocketEvent.Ntp, listener: (ntp: Ntp) => void): this;
+
+  /**
+   * 地震報告資料
+   * @param {WebSocketEvent.Report} event ntp
+   * @param {(report: Report) => void} listener
+   */
+  on(event: WebSocketEvent.Report, listener: (report: Report) => void): this;
 
   /**
    * 地震速報資料
