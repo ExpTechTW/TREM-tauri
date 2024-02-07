@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import EventEmitter from "events";
 
-import Route from "./route.js";
+import Route from "./route";
 
 import Code from "../../assets/json/code.json";
 
@@ -188,6 +188,13 @@ export interface RtsStation {
 
 export type Box = Record<string, number>;
 
+export interface IntensityListing {
+  code: keyof typeof Code;
+  area: string;
+  station: string;
+  i: number;
+}
+
 /**
  * 地動資料
  */
@@ -204,6 +211,10 @@ export interface Rts {
    * 資料時間
    */
   time: number;
+  /**
+   * 震度列表
+   */
+  int: IntensityListing[];
   replay?: boolean;
 }
 
@@ -451,15 +462,18 @@ export class ExpTechApi extends EventEmitter {
 
             case "data": {
               switch (data.data.type) {
-                case WebSocketEvent.Rts:
+                case WebSocketEvent.Rts: {
                   this.emit(WebSocketEvent.Rts, data.data.data);
                   break;
-                case WebSocketEvent.Eew:
+                }
+                case WebSocketEvent.Eew: {
                   this.emit(WebSocketEvent.Eew, data.data);
                   break;
-                case WebSocketEvent.Report:
+                }
+                case WebSocketEvent.Report: {
                   this.emit(WebSocketEvent.Report, data.data.data);
                   break;
+                }
               }
               break;
             }

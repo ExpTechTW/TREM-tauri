@@ -33,12 +33,6 @@ export interface NtpTime {
   client: number;
 }
 
-export interface RtsIntensity {
-  area: string;
-  station: string;
-  int: number;
-}
-
 export interface EewEvent {
   r: { p: number; s: number };
   t?: { p: number; s: number };

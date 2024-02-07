@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template lang="pug">
-.intensity-box(:class="`intensity-${int}`")
+.intensity-box(:class="`intensity-${int < 0 ? 'unknow' : int}`")
 </template>
 
 <style lang="scss" scoped>

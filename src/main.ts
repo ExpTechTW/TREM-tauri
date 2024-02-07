@@ -7,14 +7,13 @@ import { UserAttentionType } from "@tauri-apps/api/window";
 import JSZip from "jszip";
 
 import type { Station, PartialReport, Rts, Eew } from "./scripts/class/api";
-import type { DefaultSettingSchema, EewEvent, RtsIntensity } from "./types";
+import type { DefaultSettingSchema, EewEvent } from "./types";
 import {
   calculateWaveRadius,
   calculateEpicenterDistance,
   calculateIntensity,
   calculateLocalExpectedWaveTime,
   calculateExpectedIntensity,
-  roundIntensity,
 } from "./scripts/helper/utils";
 import {
   EewSource,
@@ -24,6 +23,7 @@ import {
 } from "./scripts/class/api";
 import { AudioType } from "./types";
 import { getAudio } from "./scripts/helper/audio";
+import code from "./assets/json/code.json";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
@@ -33,8 +33,7 @@ const browserWindow = win.getCurrent();
 const props = {
   stations: ref<Record<string, Station>>({}),
   reports: reactive<PartialReport[]>([]),
-  rts: ref<Rts>({ station: {}, box: {}, time: Date.now() }),
-  rtsInt: ref<RtsIntensity[]>([]),
+  rts: ref<Rts>({ station: {}, box: {}, int: [], time: Date.now() }),
   currentEewIndex: ref<string>(),
   eew: reactive<Record<string, EewEvent>>({}),
 };
@@ -77,7 +76,6 @@ const instance = app.mount("#app") as InstanceType<typeof App>;
 })();
 
 let replayMode: boolean = false;
-let rtsRecords: Record<string, Record<string, number>> = {};
 
 const setEewIndex = () => {
   const keys = Object.keys(props.eew);
@@ -107,42 +105,23 @@ const resetEew = () => {
 
 api.on(WebSocketEvent.Rts, (rts) => {
   if (replayMode && !rts.replay) return;
-  props.rts.value = rts;
 
-  if (Object.keys(props.eew).length) {
-    for (const id in rts.station) {
-      const data = rts.station[id];
+  rts.int ??= [];
 
-      if (!data.alert || data.i <= 0) continue;
-
-      const station = props.stations.value[id];
-      const recordedInt = rtsRecords[station.city]?.[station.town] ?? 0;
-      const currentInt = data.i;
-
-      if (recordedInt < currentInt) {
-        rtsRecords[station.city] ??= {};
-        rtsRecords[station.city][station.town] = currentInt;
-      }
-    }
-
-    props.rtsInt.value = Object.keys(rtsRecords)
-      .flatMap((area) =>
-        Object.keys(rtsRecords[area]).map((station) => ({
-          area,
-          station,
-          int: roundIntensity(rtsRecords[area][station]),
-          raw: rtsRecords[area][station],
-        }))
-      )
-      .sort((a, b) => b.raw - a.raw);
-  } else {
-    rtsRecords = {};
+  for (const i of rts.int) {
+    const location = code[i.code];
+    i.area = location.city;
+    i.station = location.town;
   }
+
+  props.rts.value = rts;
 });
 
 api.on(WebSocketEvent.Eew, (eew) => {
   if (replayMode && !eew.replay) return;
   if ((props.eew[eew.id]?.serial ?? 0) >= eew.serial) return;
+
+  console.debug(eew);
 
   const waveRadius = calculateWaveRadius(
     getAccurateTime(),
@@ -281,14 +260,14 @@ browserWindow.onFileDropEvent(async (e) => {
       `[Replay] Loading replay ${e.payload.paths[0].split(/(\\|\/)/g).pop()}`
     );
 
-    const replayData: { rts: Rts; eew: Eew[]; time: number }[] = [];
+    const replayData: { rts: Rts; eew: Eew[]; time: number; }[] = [];
     const binary = await fs.readBinaryFile(e.payload.paths[0]);
     const zip = await JSZip.loadAsync(binary);
 
     for (let i = 0, k = Object.keys(zip.files), n = k.length; i < n; i++) {
       const filename = k[i];
       const content = await zip.files[filename].async("string");
-      const data: { rts: Rts; eew: Eew[]; time: number } = JSON.parse(content);
+      const data: { rts: Rts; eew: Eew[]; time: number; } = JSON.parse(content);
       data.rts.replay = true;
       data.eew.forEach((e) => (e.replay = true));
       data.time = +filename;
@@ -312,7 +291,9 @@ browserWindow.onFileDropEvent(async (e) => {
       api.emit(WebSocketEvent.Rts, current.rts);
       current.eew.forEach((e) => api.emit(WebSocketEvent.Eew, e));
 
-      window.setTimeout(emitEvents, replayData[0].time - current.time);
+      if (replayData[0]) {
+        window.setTimeout(emitEvents, replayData[0].time - current.time);
+      }
     };
 
     emitEvents();

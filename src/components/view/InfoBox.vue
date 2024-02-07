@@ -5,7 +5,7 @@ import ReportIntensityItem from "../component/ReportIntensityItem.vue";
 import type { Ref } from "vue";
 import { onMounted } from "vue";
 
-import type { EewEvent, RtsIntensity } from "../../types";
+import type { EewEvent } from "../../types";
 import type { Rts, Station } from "../../scripts/class/api";
 import { EewStatus } from "../../scripts/class/api";
 import {
@@ -16,7 +16,6 @@ import {
 defineProps<{
   currentView: string;
   rts: Ref<Rts>;
-  rtsInt: Ref<RtsIntensity[]>;
   stations: Ref<Record<string, Station>>;
   eew: Record<string, EewEvent>;
   currentEewIndex?: string;
@@ -44,13 +43,18 @@ onMounted(() => {});
   .info-box(:class="{[currentEewIndex ? InfoBoxStatusClass[eew[currentEewIndex].status] : '']: true, show: currentView == 'home'}")
     .header
       .title-container
-        .header-title(v-if="currentEewIndex") 地震速報 ｜ {{ eew[currentEewIndex].source.toUpperCase() }}{{ InfoBoxStatusText[eew[currentEewIndex].status] }}
+        .header-title(v-if="currentEewIndex")
+          | 地震速報
+          | #[span.current-eew-index(v-if="Object.keys(eew).length > 1") {{ Object.keys(eew).indexOf(currentEewIndex) + 1 }}]
+          | #[span.total-eew-count(v-if="Object.keys(eew).length > 1") {{ Object.keys(eew).length }}]
+          |｜
+          |{{ eew[currentEewIndex].source.toUpperCase() }}{{ InfoBoxStatusText[eew[currentEewIndex].status] }}
         .header-title(v-else) 目前無發布地震預警
         .header-subtitle(v-if="currentEewIndex && !eew[currentEewIndex].final") 第{{ toFullWidthNumber(`${eew[currentEewIndex].serial}`) }}報
         .header-subtitle(v-else-if="currentEewIndex") 最終報
       .header-body(v-if="currentEewIndex")
         .detail-container
-          IntensityBox(:int="eew[currentEewIndex].max")
+          IntensityBox(:int="eew[currentEewIndex].max == 0 ? -1 : eew[currentEewIndex].max")
           .detail
             .location {{ eew[currentEewIndex].location || "未知區域" }}
             .parameter-container
@@ -71,8 +75,8 @@ onMounted(() => {});
       .intensity-list-wrapper
         .intensity-list-scroller
           .intensity-list
-            template(v-for="r in rtsInt.value" :key="r")
-              ReportIntensityItem(:area="r.area", :station="r.station", :int="r.int")
+            template(v-for="r in rts.value.int" :key="r")
+              ReportIntensityItem(:area="r?.area", :station="r.station", :int="r.i")
 </template>
 
 <style lang="scss" scoped>
@@ -141,6 +145,10 @@ onMounted(() => {});
 
         > .header-title {
           flex: 1;
+
+          > .total-eew-count::before {
+            content: "/";
+          }
         }
       }
 

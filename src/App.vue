@@ -16,13 +16,12 @@ import type {
   Rts,
   Station,
 } from "./scripts/class/api";
-import type { EewEvent, RtsIntensity } from "./types";
+import type { EewEvent } from "./types";
 
 defineProps<{
   reports: PartialReport[];
   stations: Ref<Record<string, Station>>;
   rts: Ref<Rts>;
-  rtsInt: Ref<RtsIntensity[]>;
   currentEewIndex: Ref<string>;
   eew: Record<string, EewEvent>;
 }>();
@@ -61,7 +60,7 @@ const changeReport = async (report: PartialReport) => {
 NavigationBar(:current-view="currentView", :change-view="changeView")
 TimeDisplay(:timestamp="rts.value.time")
 MapView(:current-view="currentView", :reports="reports", :active-report="activeReport", :stations="stations", :rts="rts", :eew="eew", :current-eew-index="currentEewIndex", :change-report="changeReport")
-InfoBox(:current-view="currentView", :stations="stations", :rts="rts", :rts-int="rtsInt", :eew="eew", :current-eew-index="currentEewIndex.value")
+InfoBox(:current-view="currentView", :stations="stations", :rts="rts", :eew="eew", :current-eew-index="currentEewIndex.value")
 ReportBox(:current-view="currentView", :report="activeReport", :handle-hide-report-box="handleHideReportBox")
 ReportListBox(:current-view="currentView", :reports="reports", :change-report="changeReport")
 </template>

@@ -10,7 +10,6 @@ const props = defineProps<{
   stationId: string;
   station: Station;
   rts?: RtsStation;
-  realtime: boolean;
 }>();
 
 let marker: maplibregl.Marker;
@@ -26,16 +25,29 @@ onUnmounted(() => {
   marker.remove();
 });
 
+const getZIndex = (rts?: RtsStation) => {
+  if (rts) {
+    let value = rts.i;
+
+    if (rts.alert) {
+      value = rts.I;
+      return { zIndex: (value + 5) * 10 * 2 };
+    }
+
+    return { zIndex: (value + 5) * 10 };
+  }
+
+  return {};
+};
+
 const getIntensityClass = (rts?: RtsStation) => {
   if (rts) {
     const classes = [];
-    let value = rts.I;
-
-    if (props.realtime) {
-      value = rts.i;
-    }
+    let value = rts.i;
 
     if (rts.alert) {
+      value = rts.I;
+
       classes.push("alert");
 
       if (value >= 1) {
@@ -52,13 +64,13 @@ const getIntensityClass = (rts?: RtsStation) => {
 
 const getIntensityColor = (rts?: RtsStation) => {
   if (rts) {
-    let value = rts.I;
+    let value = rts.i;
 
-    if (props.realtime) {
-      value = rts.i;
+    if (rts.alert) {
+      value = rts.I;
     }
 
-    if (value < 1) return { backgroundColor: pga(value).hex() };
+    if (!rts.alert || value < 1) return { backgroundColor: pga(value).hex() };
   }
 
   return "";
@@ -66,7 +78,7 @@ const getIntensityColor = (rts?: RtsStation) => {
 </script>
 
 <template lang="pug">
-.rts-marker(ref="markerTemplate" :style="{ zIndex: ((rts?.i ?? -5) + 5) * 10}")
+.rts-marker(ref="markerTemplate" :style="getZIndex(rts)")
   .rts-marker-body(:class="getIntensityClass(rts)", :style="getIntensityColor(rts)")
     .rts-marker-detail
       .rts-marker-detail-title
