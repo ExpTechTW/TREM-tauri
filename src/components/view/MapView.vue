@@ -2,13 +2,15 @@
 import MapEew from "../component/MapEew.vue";
 import MapEewIntensity from "../component/MapEewIntensity.vue";
 import MapHomeViewControl from "../component/MapHomeViewControl.vue";
+import MapLocalMarker from "../component/MapLocalMarker.vue";
 import MapReportListMarker from "../component/MapReportListMarker.vue";
 import MapReportMarker from "../component/MapReportMarker.vue";
 import MapRtsBox from "../component/MapRtsBox.vue";
 import MapRtsMarker from "../component/MapRtsMarker.vue";
 
-import { markRaw, onMounted, onUnmounted, shallowRef } from "vue";
+import { markRaw, onMounted, onUnmounted, shallowRef, inject } from "vue";
 import type { Ref } from "vue";
+import { SettingsManager } from "tauri-settings";
 import maplibregl from "maplibre-gl";
 
 import type {
@@ -17,7 +19,7 @@ import type {
   Rts,
   PartialReport,
 } from "../../scripts/class/api";
-import type { EewEvent } from "../../types";
+import type { DefaultSettingSchema, EewEvent } from "../../types";
 
 defineProps<{
   currentView: string;
@@ -31,6 +33,7 @@ defineProps<{
 }>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
+const setting = inject<SettingsManager<DefaultSettingSchema>>("settings");
 
 onMounted(() => {
   const initialState = { lng: 120.5, lat: 23.6, zoom: 6.75 };
@@ -262,6 +265,8 @@ onUnmounted(() => {
     MapEew(:map="map", :eew="eew")
   .eew-town-intensity(v-if="currentEewIndex.value && currentView == 'home'")
     MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int")
+  .location(v-if="setting?.settings.location.lat && setting?.settings.location.lng")
+    MapLocalMarker(:map="map", :lat="setting.settings.location.lat", :lng="setting.settings.location.lng")
 </template>
 
 <style>

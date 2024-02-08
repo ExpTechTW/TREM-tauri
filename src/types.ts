@@ -50,6 +50,8 @@ export interface EewEvent {
   final: boolean;
   cancel: boolean;
   time: number;
+  surface?: number;
+  distance?: number;
   raw: Eew;
 }
 

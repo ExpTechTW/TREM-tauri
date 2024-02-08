@@ -14,6 +14,7 @@ import {
   calculateIntensity,
   calculateLocalExpectedWaveTime,
   calculateExpectedIntensity,
+  roundIntensity,
 } from "./scripts/helper/utils";
 import {
   EewSource,
@@ -122,12 +123,8 @@ api.on(WebSocketEvent.Eew, (eew) => {
   if ((props.eew[eew.id]?.serial ?? 0) >= eew.serial) return;
 
   console.debug(eew);
-
-  const waveRadius = calculateWaveRadius(
-    getAccurateTime(),
-    eew.eq.depth,
-    eew.eq.time
-  );
+  const time = getAccurateTime();
+  const waveRadius = calculateWaveRadius(time, eew.eq.depth, eew.eq.time);
 
   const { intensity } = calculateExpectedIntensity(
     { lat: eew.eq.lat, lng: eew.eq.lon },
@@ -164,14 +161,42 @@ api.on(WebSocketEvent.Eew, (eew) => {
       eew.eq.mag,
       eew.eq.depth
     );
-    const localExpectedWaveTime = calculateLocalExpectedWaveTime(
-      distance,
-      eew.eq.depth,
-      eew.eq.time
+
+    data.surface = surfaceDistance;
+    data.distance = distance;
+    data.i = roundIntensity(localExpectedIntensity);
+
+    let { p, s } = calculateLocalExpectedWaveTime(
+      data.distance,
+      data.depth,
+      data.time
     );
 
-    data.t = localExpectedWaveTime;
-    data.i = localExpectedIntensity;
+    p = Math.floor((p - time) / 1000);
+    s = Math.floor((s - time) / 1000);
+
+    data.t = { p, s };
+
+    if (!timer.expectedWaveTimer)
+      timer.expectedWaveTimer = window.setInterval(() => {
+        for (const id in props.eew) {
+          const e = props.eew[id];
+          if (!e.distance) continue;
+
+          let { p, s } = calculateLocalExpectedWaveTime(
+            e.distance,
+            e.depth,
+            e.time
+          );
+
+          const time = getAccurateTime();
+
+          p = Math.floor((p - time) / 1000);
+          s = Math.floor((s - time) / 1000);
+
+          e.t = { p, s };
+        }
+      }, 1_000);
   }
 
   instance.changeView("home");
@@ -260,14 +285,14 @@ browserWindow.onFileDropEvent(async (e) => {
       `[Replay] Loading replay ${e.payload.paths[0].split(/(\\|\/)/g).pop()}`
     );
 
-    const replayData: { rts: Rts; eew: Eew[]; time: number; }[] = [];
+    const replayData: { rts: Rts; eew: Eew[]; time: number }[] = [];
     const binary = await fs.readBinaryFile(e.payload.paths[0]);
     const zip = await JSZip.loadAsync(binary);
 
     for (let i = 0, k = Object.keys(zip.files), n = k.length; i < n; i++) {
       const filename = k[i];
       const content = await zip.files[filename].async("string");
-      const data: { rts: Rts; eew: Eew[]; time: number; } = JSON.parse(content);
+      const data: { rts: Rts; eew: Eew[]; time: number } = JSON.parse(content);
       data.rts.replay = true;
       data.eew.forEach((e) => (e.replay = true));
       data.time = +filename;

@@ -12,6 +12,7 @@ import {
   toFormattedTimeString,
   toFullWidthNumber,
 } from "../../scripts/helper/utils";
+import WaveTimer from "../component/WaveTimer.vue";
 
 defineProps<{
   currentView: string;
@@ -39,7 +40,7 @@ onMounted(() => {});
 </script>
 
 <template lang="pug">
-.info-box-wrapper
+.info-box-container
   .info-box(:class="{[currentEewIndex ? InfoBoxStatusClass[eew[currentEewIndex].status] : '']: true, show: currentView == 'home'}")
     .header
       .title-container
@@ -75,15 +76,21 @@ onMounted(() => {});
       .intensity-list-wrapper
         .intensity-list-scroller
           .intensity-list
-            template(v-for="r in rts.value.int" :key="r")
+            template(v-for="r in rts.value.int", :key="r.station")
               ReportIntensityItem(:area="r?.area", :station="r.station", :int="r.i")
+  template(v-for="(e, id) in eew", :key="id")
+    WaveTimer(v-if="e.t" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
 </template>
 
 <style lang="scss" scoped>
-.info-box-wrapper {
+.info-box-container {
   position: fixed;
   top: 8px;
   right: 8px;
+  bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   min-width: 300px;
   width: 20vw;
   pointer-events: none;
@@ -94,6 +101,7 @@ onMounted(() => {});
     right: 0;
     display: flex;
     flex-direction: column;
+    min-height: 0;
     border-radius: 20px;
     background-color: #505050;
     color: white;
@@ -366,6 +374,7 @@ onMounted(() => {});
       flex-direction: column;
       gap: 8px;
       padding: 8px;
+      min-height: 0;
 
       > .intensity-title {
         padding: 0 8px;
@@ -374,12 +383,17 @@ onMounted(() => {});
       }
 
       > .intensity-list-wrapper {
+        position: relative;
         border-radius: 16px;
         padding: 8px;
         background-color: hsl(var(--surface-variant-hsl));
+        min-height: 0;
+        overflow-y: hidden;
 
         > .intensity-list-scroller {
           overflow-y: auto;
+          height: 100%;
+          width: 100%;
 
           > .intensity-list {
             display: flex;
@@ -389,6 +403,10 @@ onMounted(() => {});
         }
       }
     }
+  }
+
+  > .local-box {
+    justify-self: end;
   }
 }
 </style>
