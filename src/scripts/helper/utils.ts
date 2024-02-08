@@ -47,11 +47,6 @@ export const findClosestDepthIndex = (
     );
 };
 
-export const toFullWidthNumber = (numberString: string) =>
-  numberString.replace(/[0-9]/g, (m) =>
-    String.fromCharCode(m.charCodeAt(0) + 0xfee0)
-  );
-
 export const pgaToFloat = (pga: number) => 2 * Math.log10(pga) + 0.7;
 
 export const roundIntensity = (float: number) =>

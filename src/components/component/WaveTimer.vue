@@ -92,11 +92,10 @@ defineProps<{
       width: 20px;
       aspect-ratio: 1;
       border-radius: 10px;
-      background-color: #aaa;
+      background-color: #ccc;
       color: #000;
       text-align: center;
       line-height: 20px;
-      font-family: "Open Sans", sans-serif;
       font-size: 12px;
       font-weight: 700;
     }
