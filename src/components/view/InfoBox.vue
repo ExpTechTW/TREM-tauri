@@ -27,10 +27,10 @@ const InfoBoxStatusClass = {
 };
 
 const InfoBoxStatusText = {
-  [EewStatus.Warn]: "（注意）",
-  [EewStatus.Alert]: "（警報）",
-  [EewStatus.Cancel]: "（取消）",
-  [EewStatus.Test]: "（測試）",
+  [EewStatus.Warn]: "(注意)",
+  [EewStatus.Alert]: "(警報)",
+  [EewStatus.Cancel]: "(取消)",
+  [EewStatus.Test]: "(測試)",
 };
 
 onMounted(() => {});
@@ -47,10 +47,10 @@ onMounted(() => {});
             | #[span.current-eew-index(v-if="Object.keys(eew).length > 1") {{ Object.keys(eew).indexOf(currentEewIndex) + 1 }}]
             | #[span.total-eew-count(v-if="Object.keys(eew).length > 1") {{ Object.keys(eew).length }}]
             |｜
-            |{{ eew[currentEewIndex].source.toUpperCase() }}{{ InfoBoxStatusText[eew[currentEewIndex].status] }}
+            |{{ eew[currentEewIndex].source.toUpperCase() }} {{ InfoBoxStatusText[eew[currentEewIndex].status] }}
           .header-title(v-else) 目前無發布地震預警
           .header-subtitle(v-if="currentEewIndex && !eew[currentEewIndex].final") 第{{ `${eew[currentEewIndex].serial}` }}報
-          .header-subtitle(v-else-if="currentEewIndex") 第{{ `${eew[currentEewIndex].serial}` }}報（最終）
+          .header-subtitle(v-else-if="currentEewIndex") \#{{ `${eew[currentEewIndex].serial}` }} (最終)
         .header-body(v-if="currentEewIndex")
           .detail-container
             IntensityBox(:int="eew[currentEewIndex].max == 0 ? -1 : eew[currentEewIndex].max")

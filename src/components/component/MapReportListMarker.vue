@@ -43,7 +43,7 @@ onUnmounted(() => {
 
 <template lang="pug">
 template(v-for="(report, i) in reports" :key="report.id")
-  CrossMarker.report-list-marker(:ref="(el) => reportMarkerTemplate[report.id] = el", :int="report.int", :size="4 + 4 * report.mag", :z-index="props.reports.length - i", @click="changeReport(report)")
+  CrossMarker.report-list-marker(:ref="(el) => reportMarkerTemplate[report.id] = el", :int="report.int", :size="4 + 4 * report.mag", :z-index="reports.length - i", @click="changeReport(report)")
 </template>
 
 <style lang="scss" scoped>

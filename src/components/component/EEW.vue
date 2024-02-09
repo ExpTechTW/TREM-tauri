@@ -49,6 +49,6 @@ onUnmounted(() => {
 
 <template lang="pug">
 CrossMarker(ref="crossTemplate", :map="map", :size="28", :z-index="1000")
-CircleMarker(:map="map", type="s", :radius="props.eew.r.s", :lng="props.eew.lng", :lat="props.eew.lat", :alert="props.eew.status == EewStatus.Alert", :z-index="1000")
-CircleMarker(:map="map", type="p", :radius="props.eew.r.p", :lng="props.eew.lng", :lat="props.eew.lat", :alert="props.eew.status == EewStatus.Alert", :z-index="1000")
+CircleMarker(:map="map", type="s", :radius="eew.r.s", :lng="eew.lng", :lat="eew.lat", :alert="eew.status == EewStatus.Alert", :z-index="1000")
+CircleMarker(:map="map", type="p", :radius="eew.r.p", :lng="eew.lng", :lat="eew.lat", :alert="eew.status == EewStatus.Alert", :z-index="1000")
 </template>

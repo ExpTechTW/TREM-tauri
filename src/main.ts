@@ -28,6 +28,7 @@ import code from "./assets/json/code.json";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
+import { RefreshableTimeout } from "./scripts/class/timeout";
 
 const browserWindow = win.getCurrent();
 
@@ -40,6 +41,7 @@ const props = {
 };
 
 const timer: Record<string, number> = {};
+const eewTimer: Record<string, RefreshableTimeout> = {};
 
 const setting = new SettingsManager<DefaultSettingSchema>({
   api: { key: "" },
@@ -99,10 +101,16 @@ const setEewIndex = () => {
 };
 
 const resetEew = () => {
+  console.log("[EEW] Cleaning eew states...");
+
   props.currentEewIndex.value = undefined;
-  props.eew = reactive({});
   window.clearInterval(timer.eewRadiusTimer);
   window.clearInterval(timer.eewIndexTimer);
+
+  for (const id in props.eew) {
+    eewTimer[id].clear();
+    delete props.eew[id];
+  }
 };
 
 api.on(WebSocketEvent.Rts, (rts) => {
@@ -223,11 +231,31 @@ api.on(WebSocketEvent.Eew, (eew) => {
 
   if (props.eew[eew.id]) {
     if (eew.serial > props.eew[eew.id].serial) {
+      if (time - eew.eq.time > 120_000) {
+        eewTimer[eew.id].refresh(30_000);
+      } else {
+        eewTimer[eew.id].refresh();
+      }
+
       if (setting.settings.audio.enabled) {
         getAudio(setting.settings.audio.theme, AudioType.Update).play();
       }
     }
   } else {
+    if (!eewTimer[eew.id]) {
+      eewTimer[eew.id] = new RefreshableTimeout(() => {
+        delete props.eew[eew.id];
+        delete eewTimer[eew.id];
+
+        if (
+          props.currentEewIndex.value == eew.id &&
+          Object.keys(props.eew).length
+        ) {
+          setEewIndex();
+        }
+      }, 120_000);
+    }
+
     if (eew.author == EewSource.Cwa) {
       if (setting.settings.audio.enabled) {
         getAudio(setting.settings.audio.theme, AudioType.CwaEew).play();
@@ -316,11 +344,15 @@ browserWindow.onFileDropEvent(async (e) => {
       replayData.push(data);
     }
 
-    console.log(`[Replay] Loaded ${replayData.length} frames.`);
+    const replayLength = replayData.length;
+    let replayPercentage = 0;
+    console.log(`[Replay] Loaded ${replayLength} frames.`);
 
     const emitEvents = () => {
       const current = replayData.shift();
+
       if (!current) {
+        resetEew();
         replayMode = false;
         ntp.server = ntp.remote;
         ntp.client = Date.now();
@@ -333,9 +365,23 @@ browserWindow.onFileDropEvent(async (e) => {
       api.emit(WebSocketEvent.Rts, current.rts);
       current.eew.forEach((e) => api.emit(WebSocketEvent.Eew, e));
 
-      if (replayData[0]) {
-        window.setTimeout(emitEvents, replayData[0].time - current.time);
+      const newReplayPercentage = ~~(
+        (1 - replayData.length / replayLength) *
+        10
+      );
+
+      if (newReplayPercentage > replayPercentage) {
+        console.log(
+          `[Replay] ${`${newReplayPercentage * 10}`.padStart(3, " ")}% [${"#".repeat(newReplayPercentage).padEnd(10, ".")}] | Frame ${replayLength - replayData.length}`
+        );
       }
+
+      replayPercentage = newReplayPercentage;
+
+      window.setTimeout(
+        emitEvents,
+        replayData[0] ? replayData[0].time - current.time : 1_000
+      );
     };
 
     emitEvents();
