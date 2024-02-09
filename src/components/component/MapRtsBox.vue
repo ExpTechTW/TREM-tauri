@@ -26,8 +26,12 @@ onUnmounted(() => {
   props.map.setLayoutProperty("box", "visibility", "none");
   window.clearInterval(blink);
 });
+
+function filter(box: Box) {
+  return box
+}
 </script>
 
 <template lang="pug">
-RtsBox(v-for="(int, key) in box", :key="key", :map="map", :box="key", :int="int")
+RtsBox(v-for="(int, key) in filter(box)", :key="key", :map="map", :box="key", :int="int")
 </template>
