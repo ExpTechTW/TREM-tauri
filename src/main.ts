@@ -106,6 +106,8 @@ const resetEew = () => {
   props.currentEewIndex.value = undefined;
   window.clearInterval(timer.eewRadiusTimer);
   window.clearInterval(timer.eewIndexTimer);
+  delete timer.eewRadiusTimer;
+  delete timer.eewIndexTimer;
 
   for (const id in props.eew) {
     eewTimer[id].clear();
