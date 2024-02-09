@@ -299,11 +299,10 @@ api.on(WebSocketEvent.Eew, (eew) => {
 api.on(WebSocketEvent.Ntp, ({ time }) => {
   if (!replayMode) {
     ntp.server = time;
+    ntp.client = Date.now();
   }
 
   ntp.remote = time;
-  ntp.server = time;
-  ntp.client = Date.now();
 });
 
 api.on(WebSocketEvent.Close, console.debug);
