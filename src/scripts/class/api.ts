@@ -416,7 +416,9 @@ export class ExpTechApi extends EventEmitter {
   }
 
   #initWebSocket() {
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) this.ws.close();
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.close();
+    }
 
     const url = this.route.websocket();
 
@@ -434,7 +436,7 @@ export class ExpTechApi extends EventEmitter {
       try {
         const data = JSON.parse(raw.data);
 
-        if (data)
+        if (data) {
           switch (data.type) {
             case WebSocketEvent.Verify: {
               this.ws.send(JSON.stringify(this.wsConfig));
@@ -483,6 +485,7 @@ export class ExpTechApi extends EventEmitter {
               break;
             }
           }
+        }
       } catch (error) {
         console.error("[WebSocket]", error);
       }
@@ -492,8 +495,9 @@ export class ExpTechApi extends EventEmitter {
       console.log("[WebSocket] Socket closed");
       this.emit(WebSocketEvent.Close, ev);
 
-      if (ev.code != WebSocketCloseCode.InsufficientPermission)
+      if (ev.code != WebSocketCloseCode.InsufficientPermission) {
         window.setTimeout(this.#initWebSocket.bind(this), 5_000);
+      }
     });
 
     this.ws.addEventListener("error", (err) => {
@@ -524,7 +528,9 @@ export class ExpTechApi extends EventEmitter {
       const res = await fetch(request);
       window.clearTimeout(abortTimer);
 
-      if (!res.ok) throw new Error(`Server returned ${res.status}`);
+      if (!res.ok) {
+        throw new Error(`Server returned ${res.status}`);
+      }
 
       return await res.json();
     } catch (error) {
@@ -561,7 +567,9 @@ export class ExpTechApi extends EventEmitter {
     try {
       const data = await this.#get(url);
 
-      for (const report of data) report.no = +report.id.split("-")[0];
+      for (const report of data) {
+        report.no = +report.id.split("-")[0];
+      }
 
       return data;
     } catch (error) {

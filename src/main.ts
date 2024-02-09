@@ -85,8 +85,9 @@ const setEewIndex = () => {
       const index = keys.indexOf(props.currentEewIndex.value);
 
       if (index + 1 < keys.length) {
-        if (keys.at(index + 1) != props.currentEewIndex.value)
+        if (keys.at(index + 1) != props.currentEewIndex.value) {
           props.currentEewIndex.value = keys.at(index + 1);
+        }
         return;
       }
     }
@@ -105,7 +106,9 @@ const resetEew = () => {
 };
 
 api.on(WebSocketEvent.Rts, (rts) => {
-  if (replayMode && !rts.replay) return;
+  if (replayMode && !rts.replay) {
+    return;
+  }
 
   rts.int ??= [];
 
@@ -119,8 +122,12 @@ api.on(WebSocketEvent.Rts, (rts) => {
 });
 
 api.on(WebSocketEvent.Eew, (eew) => {
-  if (replayMode && !eew.replay) return;
-  if ((props.eew[eew.id]?.serial ?? 0) >= eew.serial) return;
+  if (replayMode && !eew.replay) {
+    return;
+  }
+  if ((props.eew[eew.id]?.serial ?? 0) >= eew.serial) {
+    return;
+  }
 
   console.debug(eew);
   const time = getAccurateTime();
@@ -177,11 +184,13 @@ api.on(WebSocketEvent.Eew, (eew) => {
 
     data.t = { p, s };
 
-    if (!timer.expectedWaveTimer)
+    if (!timer.expectedWaveTimer) {
       timer.expectedWaveTimer = window.setInterval(() => {
         for (const id in props.eew) {
           const e = props.eew[id];
-          if (!e.distance) continue;
+          if (!e.distance) {
+            continue;
+          }
 
           let { p, s } = calculateLocalExpectedWaveTime(
             e.distance,
@@ -197,6 +206,7 @@ api.on(WebSocketEvent.Eew, (eew) => {
           e.t = { p, s };
         }
       }, 1_000);
+    }
   }
 
   instance.changeView("home");
@@ -205,8 +215,9 @@ api.on(WebSocketEvent.Eew, (eew) => {
     Object.keys(props.eew).length == 0 &&
     eew.serial == 1 &&
     setting.settings.behavior.showWindowWhenEew
-  )
+  ) {
     browserWindow.setFocus();
+  }
 
   browserWindow.requestUserAttention(UserAttentionType.Critical);
 
@@ -274,9 +285,15 @@ const getAccurateTime = () => {
 };
 
 browserWindow.onFileDropEvent(async (e) => {
-  if (replayMode) return;
-  if (e.payload.type != "drop") return;
-  if (!e.payload.paths[0].endsWith(".trply")) return;
+  if (replayMode) {
+    return;
+  }
+  if (e.payload.type != "drop") {
+    return;
+  }
+  if (!e.payload.paths[0].endsWith(".trply")) {
+    return;
+  }
 
   replayMode = true;
 

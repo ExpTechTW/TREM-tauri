@@ -33,14 +33,20 @@ const currentView = ref<string>("home");
 
 defineExpose({
   changeView(view: string) {
-    if (currentView.value == view) currentView.value = "home";
-    else currentView.value = view;
+    if (currentView.value == view) {
+      currentView.value = "home";
+    } else {
+      currentView.value = view;
+    }
   },
 });
 
 const changeView = (view: string) => {
-  if (currentView.value == view) currentView.value = "home";
-  else currentView.value = view;
+  if (currentView.value == view) {
+    currentView.value = "home";
+  } else {
+    currentView.value = view;
+  }
 };
 
 const handleHideReportBox = () => {
@@ -48,7 +54,9 @@ const handleHideReportBox = () => {
 };
 
 const changeReport = async (report: PartialReport) => {
-  if (!api) return;
+  if (!api) {
+    return;
+  }
   activeReport.value = undefined;
   currentView.value = "report";
   const fullReport = await api?.getReport(report.id);

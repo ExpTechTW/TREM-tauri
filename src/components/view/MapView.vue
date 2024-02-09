@@ -91,7 +91,9 @@ onMounted(() => {
   );
 
   map.value.on("load", () => {
-    if (!map.value) return;
+    if (!map.value) {
+      return;
+    }
 
     map.value
       .addLayer({
@@ -244,7 +246,9 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (map.value) map.value.remove();
+  if (map.value) {
+    map.value.remove();
+  }
 });
 </script>
 

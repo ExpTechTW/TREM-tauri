@@ -15,8 +15,13 @@ export class RefreshableTimeout {
     this.reference = window.setTimeout(callback, delay, ...args);
   }
 
-  refresh() {
+  refresh(newDelay?: number) {
     window.clearTimeout(this.reference);
+
+    if (newDelay) {
+      this.delay = newDelay;
+    }
+
     this.reference = window.setTimeout(this.callback, this.delay, ...this.args);
   }
 

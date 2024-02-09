@@ -23,6 +23,7 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": ["warn", {"vars":"local"}],
     "vue/valid-template-root": "off",
+    "curly": ["warn", "all"],
     "no-unused-vars": ["off"]
   }
 }

@@ -70,7 +70,9 @@ const getIntensityColor = (rts?: RtsStation) => {
       value = rts.I;
     }
 
-    if (!rts.alert || value < 1) return { backgroundColor: pga(value).hex() };
+    if (!rts.alert || value < 1) {
+      return { backgroundColor: pga(value).hex() };
+    }
   }
 
   return "";

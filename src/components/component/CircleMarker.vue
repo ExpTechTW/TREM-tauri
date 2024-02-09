@@ -22,7 +22,9 @@ const radiusInPixel = ref(0);
 let updateLock = false;
 
 const updateCircle = () => {
-  if (updateLock) return;
+  if (updateLock) {
+    return;
+  }
   updateLock = true;
 
   if (props.radius <= 0) {
@@ -50,15 +52,21 @@ watch(() => props.radius, updateCircle);
 props.map.on("move", updateCircle);
 
 onMounted(() => {
-  if (strokeTemplate.value)
+  if (strokeTemplate.value) {
     props.map.getCanvasContainer().append(strokeTemplate.value);
-  if (backgroundTemplate.value)
+  }
+  if (backgroundTemplate.value) {
     props.map.getCanvasContainer().prepend(backgroundTemplate.value);
+  }
 });
 
 onBeforeUnmount(() => {
-  if (strokeTemplate.value) strokeTemplate.value.remove();
-  if (backgroundTemplate.value) backgroundTemplate.value.remove();
+  if (strokeTemplate.value) {
+    strokeTemplate.value.remove();
+  }
+  if (backgroundTemplate.value) {
+    backgroundTemplate.value.remove();
+  }
 
   props.map.off("move", updateCircle);
 });
