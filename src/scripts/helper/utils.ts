@@ -291,4 +291,4 @@ export const kmToPixels = (
 ) =>
   (kilometers * 1000) /
   ((EarthCircumference * Math.cos((latitude * Math.PI) / 180)) /
-    Math.pow(2, zoomLevel + 9));
+    Math.pow(2, zoomLevel + 8.983));
