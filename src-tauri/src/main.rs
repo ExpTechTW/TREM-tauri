@@ -17,7 +17,7 @@ fn main() {
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(CustomMenuItem::new("quit".to_string(), "關閉"));
 
-    let system_tray = SystemTray::new().with_menu(tray_menu);
+    let system_tray = SystemTray::new().with_menu(tray_menu).with_tooltip("TREM Tauri | 臺灣即時地震監測");
 
     tauri::Builder::default()
         .system_tray(system_tray)
