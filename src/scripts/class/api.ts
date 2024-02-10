@@ -247,6 +247,11 @@ export enum EewSource {
    * @link https://www.scdzj.gov.cn
    */
   Scdzj = "scdzj",
+  /**
+   * TREM 臺灣即時地震監測
+   * @link https://www.exptech.com.tw
+   */
+  Trem = "trem",
 }
 
 /**
@@ -271,7 +276,41 @@ export enum EewStatus {
   Test = 3,
 }
 
-export interface Eew {
+interface BaseEewDetail {
+  /**
+   * 地震速報時間
+   */
+  time: number;
+  /**
+   * 地震震央預估經度
+   */
+  lon: number;
+  /**
+   * 地震震央預估緯度
+   */
+  lat: number;
+  /**
+   * 地震預估深度
+   */
+  depth: number;
+  /**
+   * 地震預估芮氏規模
+   */
+  mag: number;
+  /**
+   * 地震預估位置
+   */
+  loc: string;
+  /**
+   * 地震預估最大震度
+   */
+  max: number;
+}
+
+/**
+ * 基礎地震速報結構
+ */
+export interface BaseEew {
   type: "eew";
   /**
    * 地震速報來源機關
@@ -296,41 +335,46 @@ export interface Eew {
   /**
    * 地震速報參數
    */
-  eq: {
-    /**
-     * 地震速報時間
-     */
-    time: number;
-    /**
-     * 地震震央預估經度
-     */
-    lon: number;
-    /**
-     * 地震震央預估緯度
-     */
-    lat: number;
-    /**
-     * 地震預估深度
-     */
-    depth: number;
-    /**
-     * 地震預估芮氏規模
-     */
-    mag: number;
-    /**
-     * 地震預估位置
-     */
-    loc: string;
-    /**
-     * 地震預估最大震度
-     */
-    max: number;
-  };
+  eq: BaseEewDetail;
   timestamp: number;
   data_unit: "websocket";
   delay: number;
   replay?: boolean;
 }
+
+/**
+ * 交通部中央氣象署地震速報
+ */
+export interface CwaEew extends BaseEew {
+  author: EewSource.Cwa;
+}
+
+/**
+ * TREM 地震速報
+ */
+export interface TremEew extends BaseEew {
+  author: EewSource.Trem;
+  detail: 1;
+}
+
+/**
+ * Nsspe 地震預警
+ */
+export interface NsspeEew extends BaseEew {
+  author: EewSource.Trem;
+  detail: 0;
+  level: number;
+  reason: number;
+  trigger: number;
+  eq: BaseEewDetail & {
+    area: Record<string, string[]>;
+  };
+}
+
+/**
+ * 地震速報
+ */
+export type Eew = CwaEew | TremEew | NsspeEew;
 
 /**
  * 校時

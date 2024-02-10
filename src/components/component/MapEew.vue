@@ -34,6 +34,11 @@ onMounted(() => {
     const zoom = props.map.getZoom();
 
     for (const id in props.eew) {
+      if (!props.eew[id].detail) {
+        bounds.extend([props.eew[id].lng, props.eew[id].lat]);
+        continue;
+      }
+
       const center = props.map.project([props.eew[id].lng, props.eew[id].lat]);
       const radius = kmToPixels(props.eew[id].r.p, props.eew[id].lat, zoom);
 
@@ -47,7 +52,7 @@ onMounted(() => {
 
     props.map.fitBounds(bounds, {
       padding: { top: 0, right: 320, bottom: 0, left: 0 },
-      maxZoom: 8.25,
+      maxZoom: 8,
     });
   };
 

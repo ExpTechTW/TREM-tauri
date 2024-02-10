@@ -158,6 +158,7 @@ api.on(WebSocketEvent.Eew, (eew) => {
     depth: eew.eq.depth,
     serial: eew.serial,
     source: eew.author,
+    detail: eew.author == EewSource.Trem ? eew.detail : 1,
     status: eew.status,
     int: intensity,
     max: eew.eq.max,
