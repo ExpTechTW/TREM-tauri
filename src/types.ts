@@ -122,7 +122,7 @@ interface BaseEewEvent {
 /**
  * Nsspe 地震預警事件
  */
-type NsspeEvent = BaseEewEvent & {
+export interface NsspeEvent extends BaseEewEvent {
   source: EewSource.Trem;
   detail: 0;
   reason: number;

@@ -343,19 +343,27 @@ export interface BaseEew {
 }
 
 /**
+ * 交通部中央氣象署地震速報
+ */
+export interface CwaEew extends BaseEew {
+  author: EewSource.Cwa;
+};
+
+/**
  * TREM 地震速報
  */
-export type TremEew = BaseEew & {
+export interface TremEew extends BaseEew {
   author: EewSource.Trem;
+  detail: 1;
 };
 
 /**
  * Nsspe 地震預警
  */
-export type NsspeEew = BaseEew & {
+export interface NsspeEew extends BaseEew {
   author: EewSource.Trem;
-  level: number;
   detail: 0;
+  level: number;
   reason: number;
   trigger: number;
   eq: BaseEewDetail & {
@@ -366,7 +374,7 @@ export type NsspeEew = BaseEew & {
 /**
  * 地震速報
  */
-export type Eew = BaseEew | TremEew | NsspeEew;
+export type Eew = CwaEew | TremEew | NsspeEew;
 
 /**
  * 校時
