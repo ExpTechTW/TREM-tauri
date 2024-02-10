@@ -35,6 +35,21 @@ watch(
   }
 );
 
+watch(
+  () => crossTemplate.value,
+  () => {
+    if (marker) {
+      marker.remove();
+    }
+
+    marker = new maplibregl.Marker({
+      element: crossTemplate.value?.$el,
+    })
+      .setLngLat([props.eew.lng, props.eew.lat])
+      .addTo(props.map);
+  }
+);
+
 onMounted(() => {
   marker = new maplibregl.Marker({
     element: crossTemplate.value?.$el,
