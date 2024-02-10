@@ -347,7 +347,7 @@ export interface BaseEew {
  */
 export interface CwaEew extends BaseEew {
   author: EewSource.Cwa;
-};
+}
 
 /**
  * TREM 地震速報
@@ -355,7 +355,7 @@ export interface CwaEew extends BaseEew {
 export interface TremEew extends BaseEew {
   author: EewSource.Trem;
   detail: 1;
-};
+}
 
 /**
  * Nsspe 地震預警
@@ -369,7 +369,7 @@ export interface NsspeEew extends BaseEew {
   eq: BaseEewDetail & {
     area: Record<string, string[]>;
   };
-};
+}
 
 /**
  * 地震速報

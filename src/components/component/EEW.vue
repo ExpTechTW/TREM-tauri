@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CircleMarker from "./CircleMarker.vue";
 import CrossMarker from "./CrossMarker.vue";
+import DotMarker from "./DotMarker.vue";
 
 import type { ComponentPublicInstance } from "vue";
 import { onMounted, onUnmounted, ref, watch } from "vue";
@@ -48,7 +49,8 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-CrossMarker(ref="crossTemplate", :map="map", :size="28", :z-index="1000")
-CircleMarker(:map="map", type="s", :radius="eew.r.s", :lng="eew.lng", :lat="eew.lat", :alert="eew.status == EewStatus.Alert", :z-index="1000")
-CircleMarker(:map="map", type="p", :radius="eew.r.p", :lng="eew.lng", :lat="eew.lat", :alert="eew.status == EewStatus.Alert", :z-index="1000")
+CrossMarker(v-if="eew.detail", ref="crossTemplate", :map="map", :size="28", :z-index="1000")
+DotMarker(v-else, ref="crossTemplate", :map="map", :size="28", :int="eew.max", :z-index="1000")
+CircleMarker(v-if="eew.detail" ,:map="map", type="s", :radius="eew.r.s", :lng="eew.lng", :lat="eew.lat", :alert="eew.status == EewStatus.Alert", :z-index="1000")
+CircleMarker(v-if="eew.detail" :map="map", type="p", :radius="eew.r.p", :lng="eew.lng", :lat="eew.lat", :alert="eew.status == EewStatus.Alert", :z-index="1000")
 </template>

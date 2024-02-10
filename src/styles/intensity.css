@@ -25,11 +25,11 @@
   color: #fff;
   background-color: var(--intensity-1);
 
-  .cross-inner {
+  .inner {
     fill: var(--intensity-1);
   }
 
-  .cross-outer {
+  .outer {
     fill: #fff;
   }
 
@@ -42,11 +42,11 @@
   color: #fff;
   background-color: var(--intensity-2);
 
-  .cross-inner {
+  .inner {
     fill: var(--intensity-2);
   }
 
-  .cross-outer {
+  .outer {
     fill: #fff;
   }
 
@@ -59,11 +59,11 @@
   color: #fff;
   background-color: var(--intensity-3);
 
-  .cross-inner {
+  .inner {
     fill: var(--intensity-3);
   }
 
-  .cross-outer {
+  .outer {
     fill: #fff;
   }
 
@@ -76,11 +76,11 @@
   color: #000;
   background-color: var(--intensity-4);
 
-  .cross-inner {
+  .inner {
     fill: var(--intensity-4);
   }
 
-  .cross-outer {
+  .outer {
     fill: #fff;
   }
 
@@ -93,11 +93,11 @@
   color: #000;
   background-color: var(--intensity-5);
 
-  .cross-inner {
+  .inner {
     fill: var(--intensity-5);
   }
 
-  .cross-outer {
+  .outer {
     fill: #fff;
   }
 
@@ -111,11 +111,11 @@
   color: #fff;
   background-color: var(--intensity-6);
 
-  .cross-inner {
+  .inner {
     fill: var(--intensity-6);
   }
 
-  .cross-outer {
+  .outer {
     fill: #fff;
   }
 
@@ -129,11 +129,11 @@
   color: #fff;
   background-color: var(--intensity-7);
 
-  .cross-inner {
+  .inner {
     fill: var(--intensity-7);
   }
 
-  .cross-outer {
+  .outer {
     fill: #fff;
   }
 
@@ -147,11 +147,11 @@
   color: #fff;
   background-color: var(--intensity-8);
 
-  .cross-inner {
+  .inner {
     fill: var(--intensity-8);
   }
 
-  .cross-outer {
+  .outer {
     fill: #fff;
   }
 
@@ -165,11 +165,11 @@
   color: #fff;
   background-color: var(--intensity-9);
 
-  .cross-inner {
+  .inner {
     fill: var(--intensity-9);
   }
 
-  .cross-outer {
+  .outer {
     fill: #fff;
   }
 

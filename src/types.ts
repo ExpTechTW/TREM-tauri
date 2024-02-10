@@ -81,6 +81,7 @@ interface BaseEewEvent {
    * 地震速報來源機關
    */
   source: EewSource;
+  detail: 0 | 1;
   /**
    * 地震速報狀態
    */
@@ -125,16 +126,7 @@ interface BaseEewEvent {
 export interface NsspeEvent extends BaseEewEvent {
   source: EewSource.Trem;
   detail: 0;
-  reason: number;
-  /**
-   * 觸發測戰數
-   */
-  trigger: number;
-  /**
-   * 預估震度覆蓋
-   */
-  area: Record<string, string[]>;
-};
+}
 
 /**
  * 地震速報事件
