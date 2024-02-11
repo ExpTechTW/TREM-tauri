@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted, onUpdated } from "vue";
 import maplibregl from "maplibre-gl";
 
 const props = defineProps<{
@@ -9,6 +9,13 @@ const props = defineProps<{
 }>();
 
 onMounted(() => {
+  props.map.setFeatureState(
+    { source: "tw_town", id: props.code },
+    { int: props.int }
+  );
+});
+
+onUpdated(() => {
   props.map.setFeatureState(
     { source: "tw_town", id: props.code },
     { int: props.int }
