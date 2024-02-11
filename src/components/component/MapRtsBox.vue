@@ -28,7 +28,7 @@ onUnmounted(() => {
 });
 
 function filter(box: Box) {
-  return box
+  return box;
 }
 </script>
 
