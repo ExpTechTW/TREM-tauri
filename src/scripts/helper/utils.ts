@@ -3,9 +3,11 @@ import type {
   LngLatObject,
   SurfaceDistanceToEpicenter,
 } from "../../types";
+import { BaseMapZoom, BaseMarkerSize, EarthCircumference } from "./constant";
+
 import region from "../../assets/json/region.json";
 import times from "../../assets/json/time.json";
-import { EarthCircumference } from "./constant";
+
 const depthIndexList = Object.keys(times);
 
 export const extractLocationFromString = (str: string) => {
@@ -39,6 +41,9 @@ export const toReportUrl = (id: string) => {
   return `https://www.cwa.gov.tw/V8/C/E/EQ/EQ${arr.join("-")}.html` as const;
 };
 
+export const getMarkerSizeOnZoom = (zoom: number) =>
+  BaseMarkerSize - (BaseMapZoom - zoom) * 2;
+
 export const findClosestDepthIndex = (
   arr: Array<string>,
   target: number
@@ -49,7 +54,6 @@ export const findClosestDepthIndex = (
       Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev
     );
 };
-
 export const pgaToFloat = (pga: number) => 2 * Math.log10(pga) + 0.7;
 
 export const roundIntensity = (float: number) =>

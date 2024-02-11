@@ -7,8 +7,9 @@ import type { ComponentPublicInstance } from "vue";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import maplibregl from "maplibre-gl";
 
-import { EewStatus } from "../../scripts/class/api";
 import type { EewEvent } from "../../types";
+import { EewStatus } from "../../scripts/class/api";
+import { getMarkerSizeOnZoom } from "../../scripts/helper/utils";
 
 const props = defineProps<{
   map: maplibregl.Map;
@@ -16,10 +17,15 @@ const props = defineProps<{
 }>();
 
 let marker: maplibregl.Marker;
+const markerSize = ref(getMarkerSizeOnZoom(props.map.getZoom()));
 const crossTemplate = ref<ComponentPublicInstance<typeof CrossMarker>>();
 
 const updateCrossFlash = (state: boolean) => {
   marker.setOpacity(state ? "1" : "0");
+};
+
+const scaleMarker = () => {
+  markerSize.value = getMarkerSizeOnZoom(props.map.getZoom());
 };
 
 defineExpose({
@@ -56,16 +62,19 @@ onMounted(() => {
   })
     .setLngLat([props.eew.lng, props.eew.lat])
     .addTo(props.map);
+
+  props.map.on("zoom", scaleMarker);
 });
 
 onUnmounted(() => {
   marker.remove();
+  props.map.off("zoom", scaleMarker);
 });
 </script>
 
 <template lang="pug">
-CrossMarker(v-if="eew.detail", ref="crossTemplate", :map="map", :size="28", :z-index="1000")
-DotMarker(v-else, ref="crossTemplate", :map="map", :size="28", :int="eew.max", :z-index="1000")
+CrossMarker(v-if="eew.detail", ref="crossTemplate", :map="map", :size="markerSize", :z-index="1000")
+DotMarker(v-else, ref="crossTemplate", :map="map", :size="markerSize", :int="eew.max", :z-index="1000")
 CircleMarker(v-if="eew.detail" ,:map="map", type="s", :radius="eew.r.s", :lng="eew.lng", :lat="eew.lat", :alert="eew.status == EewStatus.Alert", :z-index="1000")
 CircleMarker(v-if="eew.detail" :map="map", type="p", :radius="eew.r.p", :lng="eew.lng", :lat="eew.lat", :alert="eew.status == EewStatus.Alert", :z-index="1000")
 </template>
