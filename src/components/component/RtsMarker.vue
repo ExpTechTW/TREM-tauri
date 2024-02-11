@@ -131,16 +131,6 @@ const getIntensityColor = (rts?: RtsStation) => {
       font-size: 14px;
       font-weight: 700;
       outline: 2px solid #fff;
-      text-align: center;
-    }
-
-    &::before {
-      position: absolute;
-      top: 12px;
-      width: 8px;
-      height: 8px;
-      background-color: hsl(var(--surface-variant-hsl));
-      transform: rotate(45deg);
     }
 
     > .rts-marker-detail {
@@ -155,6 +145,7 @@ const getIntensityColor = (rts?: RtsStation) => {
       background-color: hsl(var(--surface-variant-hsl));
       border-radius: 8px;
       white-space: nowrap;
+      color: #fff;
       text-rendering: optimizeLegibility;
       box-shadow: 0 0 8px 0 hsl(var(--background-hsl) / 0.6);
       cursor: default;
@@ -187,10 +178,6 @@ const getIntensityColor = (rts?: RtsStation) => {
         grid-template-rows: 1fr 1fr;
         grid-template-columns: 1fr 1fr;
       }
-    }
-
-    &:hover::before {
-      content: "";
     }
 
     &:hover > .rts-marker-detail {

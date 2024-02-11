@@ -44,11 +44,11 @@ interface BaseEewEvent {
   /**
    * 震波半徑
    */
-  r: { p: number; s: number; };
+  r: { p: number; s: number };
   /**
    * 預估震波抵達所在地秒數
    */
-  t?: { p: number; s: number; };
+  t?: { p: number; s: number };
   /**
    * 預估所在地震度
    */
