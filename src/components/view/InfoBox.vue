@@ -56,11 +56,13 @@ onMounted(() => {});
             IntensityBox(:int="eew[currentEewIndex].max == 0 ? -1 : eew[currentEewIndex].max")
             .detail
               .location {{ eew[currentEewIndex].location || "未知區域" }}
-              .parameter-container
+              .parameter-container(v-if="eew[currentEewIndex].detail")
                 .magnitude.magnitude-6(data-background-text="規模")
                   .magnitude-value {{ eew[currentEewIndex].magnitude }}
                 .depth.depth-deep(data-background-text="深度")
                   .depth-value {{ eew[currentEewIndex].depth }}
+              .parameter-container(v-else)
+                .nsspe NSSPE 假設震源參數
           .footer
             .footer-title 預估最大震度
             .time-container
@@ -290,6 +292,12 @@ onMounted(() => {});
                       font-size: 12px;
                     }
                   }
+                }
+
+                > .nsspe {
+                  font-size: 16px;
+                  font-weight: 400;
+                  line-height: 28px;
                 }
               }
             }
