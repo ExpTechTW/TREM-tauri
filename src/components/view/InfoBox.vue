@@ -58,7 +58,7 @@ onMounted(() => {});
               .location {{ eew[currentEewIndex].location || "未知區域" }}
               .parameter-container
                 .magnitude.magnitude-6(data-background-text="規模")
-                  .magnitude-value {{ eew[currentEewIndex].magnitude }}
+                  .magnitude-value {{ eew[currentEewIndex].magnitude.toFixed(1) }}
                 .depth.depth-deep(data-background-text="深度")
                   .depth-value {{ eew[currentEewIndex].depth }}
           .footer
