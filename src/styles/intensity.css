@@ -9,6 +9,7 @@
   --intensity-7: #ff0000;
   --intensity-8: #c00000;
   --intensity-9: #9600c8;
+  --intensity-unknow: #202020;
 }
 
 .intensity-0 {
@@ -180,8 +181,15 @@
 
 .intensity-unknow {
   color: #fff;
-  background-color: #202020;
-  box-shadow: inset 0px 0px 0px 2px #808080;
+  background-color: var(--intensity-unknow);
+
+  .inner {
+    fill: var(--intensity-unknow);
+  }
+
+  .outer {
+    fill: #fff;
+  }
 
   &::after {
     content: "?";
