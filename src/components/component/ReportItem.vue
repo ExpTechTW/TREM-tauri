@@ -29,7 +29,7 @@ defineProps<{
   gap: 8px;
   height: 44px;
   border-radius: 11px;
-  background-color: hsl(var(--background-variant-hsl));
+  background-color: hsl(var(--surface-variant-hsl));
   color: #fff;
   font-size: 16px;
   margin: 1px;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import InfoBox from "./components/view/InfoBox.vue";
+import HomeView from "./components/view/HomeView.vue";
 import TimeDisplay from "./components/component/TimeDisplay.vue";
 import MapView from "./components/view/MapView.vue";
 import NavigationBar from "./components/component/NavigationBar.vue";
@@ -68,7 +68,7 @@ const changeReport = async (report: PartialReport) => {
 NavigationBar(:current-view="currentView", :change-view="changeView")
 TimeDisplay(:timestamp="rts.value.time")
 MapView(:current-view="currentView", :reports="reports", :active-report="activeReport", :stations="stations", :rts="rts", :eew="eew", :current-eew-index="currentEewIndex", :change-report="changeReport")
-InfoBox(:current-view="currentView", :stations="stations", :rts="rts", :eew="eew", :current-eew-index="currentEewIndex.value")
+HomeView(:current-view="currentView", :stations="stations", :rts="rts", :eew="eew", :current-eew-index="currentEewIndex.value", :reports="reports", :change-report="changeReport", :change-view="changeView")
 ReportBox(:current-view="currentView", :report="activeReport", :handle-hide-report-box="handleHideReportBox")
 ReportListBox(:current-view="currentView", :reports="reports", :change-report="changeReport")
 </template>

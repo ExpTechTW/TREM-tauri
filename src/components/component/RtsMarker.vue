@@ -4,6 +4,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 
 import type { RtsStation, Station } from "../../scripts/class/api";
 import { pga } from "../../scripts/helper/color";
+import { roundIntensity } from "../../scripts/helper/utils";
 
 const props = defineProps<{
   map: maplibregl.Map;
@@ -52,7 +53,7 @@ const getIntensityClass = (rts?: RtsStation) => {
 
       if (value >= 1) {
         classes.push(`has-intensity`);
-        classes.push(`intensity-${~~value}`);
+        classes.push(`intensity-${roundIntensity(value)}`);
       }
     }
 

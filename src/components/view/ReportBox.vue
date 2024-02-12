@@ -10,7 +10,7 @@ import { inject } from "vue";
 import { SettingsManager } from "tauri-settings";
 
 import type { Report } from "../../scripts/class/api";
-import type { DefaultSettingSchema } from "../../types";
+import type { DefaultConfigSchema } from "../../types";
 import {
   extractLocationFromString,
   toFormattedTimeString,
@@ -23,7 +23,7 @@ defineProps<{
   handleHideReportBox: () => void;
 }>();
 
-const setting = inject<SettingsManager<DefaultSettingSchema>>("settings");
+const setting = inject<SettingsManager<DefaultConfigSchema>>("settings");
 
 const openUrl = async (id?: string) => {
   if (id) {
@@ -41,7 +41,7 @@ const openUrl = async (id?: string) => {
   #report-box.report-box.panel(:class="{ show: currentView == 'report' }")
     .report-box-header
       .report-box-header
-        FilledButton(@click="handleHideReportBox")
+        FilledButton(leading-icon="arrow_back", label="返回列表", @click="handleHideReportBox")
         #report-source.report-source 交通部中央氣象署
 
       // 報告標題

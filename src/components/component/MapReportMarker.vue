@@ -45,7 +45,7 @@ onMounted(() => {
 
   props.map.fitBounds(bounds, {
     padding: { top: 48, right: 382, bottom: 48, left: 64 },
-    maxZoom: 9,
+    maxZoom: 8.75,
   });
 });
 

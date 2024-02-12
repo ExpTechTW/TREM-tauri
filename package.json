@@ -12,6 +12,9 @@
     "prettier": "prettier --write ./src"
   },
   "dependencies": {
+    "@fontsource/lato": "^5.0.18",
+    "@fontsource/noto-sans-tc": "^5.0.17",
+    "@fontsource/open-sans": "^5.0.23",
     "@tauri-apps/api": "^1.5.3",
     "chroma-js": "^2.4.2",
     "events": "^3.3.0",
@@ -30,7 +33,6 @@
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "@vitejs/plugin-vue": "^4.2.3",
-    "@vue/devtools": "^7.0.14",
     "@vue/language-plugin-pug": "^1.8.27",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
