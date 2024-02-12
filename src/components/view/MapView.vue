@@ -271,7 +271,7 @@ onUnmounted(() => {
   .eew-town-intensity(v-if="currentEewIndex.value && currentView == 'home'")
     MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int")
   .location(v-if="setting?.settings?.location?.area")
-    MapLocalMarker(:map="map", :lat="code[setting.settings.location.area].lat", :lng="code[setting.settings.location.area].lat")
+    MapLocalMarker(:map="map", :lat="code[setting.settings.location.area].lat", :lng="code[setting.settings.location.area].lng")
 </template>
 
 <style>
