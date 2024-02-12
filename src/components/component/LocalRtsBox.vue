@@ -26,15 +26,15 @@ defineProps<{
       .station-data 
         .data-field
           span.name 計測震度
-          span.value {{ rts.value.station[station]?.I ?? "無資料" }}
+          span.value {{ rts.value.station[station]?.I?.toFixed(1) ?? "無資料" }}
         .data-field
           span.name PGA
           span.unit gal
-          span.value {{ rts.value.station[station]?.pga ?? "無資料" }}
+          span.value {{ rts.value.station[station]?.pga?.toFixed(2) ?? "無資料" }}
         .data-field
           span.name PGV
           span.unit kine
-          span.value {{ rts.value.station[station]?.pgv ?? "無資料" }}
+          span.value {{ rts.value.station[station]?.pgv?.toFixed(2) ?? "無資料" }}
 </template>
 
 <style lang="scss" scoped>

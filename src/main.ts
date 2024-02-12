@@ -64,7 +64,7 @@ const instance = app.mount("#app") as InstanceType<typeof App>;
 
   api.setApiKey(await setting.get("api.key"));
 
-  props.reports.push(...(await api.getReports(20)));
+  props.reports.push(...(await api.getReports(50)));
   props.stations.value = await api.getStations();
 
   /* 
