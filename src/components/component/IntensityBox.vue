@@ -15,5 +15,8 @@ defineProps<{
   justify-content: center;
   aspect-ratio: 1;
   border-radius: 25%;
+
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
 }
 </style>

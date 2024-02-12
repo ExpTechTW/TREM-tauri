@@ -91,7 +91,7 @@ onMounted(() => {});
                   ReportIntensityItem(:area="r?.area", :station="r.station", :int="r.i")
     template(v-for="(e, id) in eew", :key="id")
       WaveTimer(v-if="e.t && e.detail" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
-  .home-report-box-wrapper(v-if="!currentEewIndex")
+  .home-report-box-wrapper(v-if="!currentEewIndex && reports.length")
     .home-report-box(:class="{ show: !currentEewIndex && currentView == 'home' }")
       .title-container
         span.title-icon.material-symbols-rounded earthquake
@@ -521,7 +521,7 @@ onMounted(() => {});
   flex-direction: column;
 
   .home-report-box {
-    gap: 4px;
+    gap: 8px;
     overflow: hidden;
 
     &:hover > .report-container {
