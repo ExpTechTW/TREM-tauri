@@ -19,7 +19,8 @@ import type {
   Rts,
   PartialReport,
 } from "../../scripts/class/api";
-import type { DefaultSettingSchema, EewEvent } from "../../types";
+import type { DefaultConfigSchema, EewEvent } from "../../types";
+import code from "../../assets/json/code.json";
 
 defineProps<{
   currentView: string;
@@ -33,7 +34,7 @@ defineProps<{
 }>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
-const setting = inject<SettingsManager<DefaultSettingSchema>>("settings");
+const setting = inject<SettingsManager<DefaultConfigSchema>>("settings");
 
 onMounted(() => {
   const initialState = { lng: 120.5, lat: 23.6, zoom: 6.75 };
@@ -263,14 +264,14 @@ onUnmounted(() => {
     MapReportMarker(:map="map", :report="activeReport")
   .rts(v-if="stations && currentView == 'home'")
     MapRtsMarker(:map="map", :stations="stations", :rts="rts", :hide-non-alert="!!Object.keys(eew).length")
-  .rts-box(v-if="Object.keys(rts.value.box).length")
+  .rts-box(v-if="Object.keys(rts.value.box).length && currentView == 'home'")
     MapRtsBox(:map="map", :box="rts.value.box")
   .eew(v-if="Object.keys(eew).length && currentView == 'home'")
     MapEew(:map="map", :eew="eew")
   .eew-town-intensity(v-if="currentEewIndex.value && currentView == 'home'")
     MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int")
-  .location(v-if="setting?.settings?.location?.lat && setting.settings.location.lng")
-    MapLocalMarker(:map="map", :lat="setting.settings.location.lat", :lng="setting.settings.location.lng")
+  .location(v-if="setting?.settings?.location?.area")
+    MapLocalMarker(:map="map", :lat="code[setting.settings.location.area].lat", :lng="code[setting.settings.location.area].lat")
 </template>
 
 <style>

@@ -7,7 +7,7 @@ import { UserAttentionType } from "@tauri-apps/api/window";
 import JSZip from "jszip";
 
 import type { Station, PartialReport, Rts, Eew } from "./scripts/class/api";
-import type { DefaultSettingSchema, EewEvent } from "./types";
+import type { DefaultConfigSchema, EewEvent } from "./types";
 import {
   calculateWaveRadius,
   calculateEpicenterDistance,
@@ -24,6 +24,7 @@ import {
 } from "./scripts/class/api";
 import { AudioType } from "./types";
 import { getAudio } from "./scripts/helper/audio";
+import DefaultConfig from "./assets/json/default_config.json";
 import code from "./assets/json/code.json";
 
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -43,12 +44,9 @@ const props = {
 const timer: Record<string, number> = {};
 const eewTimer: Record<string, RefreshableTimeout> = {};
 
-const setting = new SettingsManager<DefaultSettingSchema>({
-  api: { key: "" },
-  behavior: { showWindowWhenEew: true, openExternal: false },
-  location: { lat: 0, lng: 0 },
-  audio: { enabled: true, theme: "trem_default" },
-});
+const setting = new SettingsManager<DefaultConfigSchema>(
+  DefaultConfig as DefaultConfigSchema
+);
 
 const api = new ExpTechApi();
 const ntp = { remote: Date.now(), server: Date.now(), client: Date.now() };
@@ -168,11 +166,12 @@ api.on(WebSocketEvent.Eew, (eew) => {
     raw: eew,
   };
 
-  if (setting.settings.location.lat && setting.settings.location.lng) {
+  if (setting.settings.location.area) {
+    const area = code[setting.settings.location.area];
     const { surfaceDistance, distance } = calculateEpicenterDistance({
       lat: eew.eq.lat,
       lng: eew.eq.lon,
-    })(setting.settings.location)(eew.eq.depth);
+    })({ lng: area.lng, lat: area.lat })(eew.eq.depth);
     const localExpectedIntensity = calculateIntensity(
       surfaceDistance,
       distance,
@@ -225,7 +224,7 @@ api.on(WebSocketEvent.Eew, (eew) => {
   if (
     Object.keys(props.eew).length == 0 &&
     eew.serial == 1 &&
-    setting.settings.behavior.showWindowWhenEew
+    setting.settings.behavior.focusWindowWhenEew
   ) {
     browserWindow.setFocus();
   }

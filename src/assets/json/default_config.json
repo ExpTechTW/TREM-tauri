@@ -1,0 +1,28 @@
+{
+  "api": {
+     "key": "",
+     "cache": false,
+     "cacheExpire": 60,
+     "replayMode": 1
+  },
+  "behavior": {
+     "focusWindowWhenEew": true,
+     "flashWindowWhenEew": true,
+     "alwaysOnTopWhenEew": true,
+     "alwaysOnTop": false,
+     "streamMode": false,
+     "openExternal": false
+  },
+  "location": {
+     "area": "",
+     "station": ""
+  },
+  "audio": {
+     "enabled": true,
+     "theme": "trem_default",
+     "alwaysPlayWhenCancel": false,
+     "alwaysPlayWhenIntensity": true,
+     "alwaysPlayWhenPga": true,
+     "alwaysPlayWhenUpdate": true
+  }
+}

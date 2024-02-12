@@ -68,7 +68,7 @@ const changeReport = async (report: PartialReport) => {
 NavigationBar(:current-view="currentView", :change-view="changeView")
 TimeDisplay(:timestamp="rts.value.time")
 MapView(:current-view="currentView", :reports="reports", :active-report="activeReport", :stations="stations", :rts="rts", :eew="eew", :current-eew-index="currentEewIndex", :change-report="changeReport")
-HomeView(:current-view="currentView", :stations="stations", :rts="rts", :eew="eew", :current-eew-index="currentEewIndex.value")
+HomeView(:current-view="currentView", :stations="stations", :rts="rts", :eew="eew", :current-eew-index="currentEewIndex.value", :reports="reports", :change-report="changeReport", :change-view="changeView")
 ReportBox(:current-view="currentView", :report="activeReport", :handle-hide-report-box="handleHideReportBox")
 ReportListBox(:current-view="currentView", :reports="reports", :change-report="changeReport")
 </template>

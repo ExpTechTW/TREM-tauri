@@ -1,17 +1,24 @@
+<script setup lang="ts">
+defineProps<{
+  leadingIcon?: string;
+  label: string;
+  trailingIcon?: string;
+}>();
+</script>
+
 <template lang="pug">
 button#report-back-btn.filled-button.button
-  span.button-leading-icon.material-symbols-rounded arrow_back
-  span.button-label 返回列表
+  span.leading-icon.material-symbols-rounded(v-if="leadingIcon") {{ leadingIcon }}
+  span.label {{ label }}
+  span.trailing-icon.material-symbols-rounded(v-if="trailingIcon") {{ trailingIcon }}
 </template>
 <style lang="scss" scoped>
 .button {
   all: unset;
   display: flex;
   align-items: center;
-  gap: 4px;
   height: 20px;
   padding: 6px;
-  padding-right: 12px;
   border-radius: 32px;
   font-family: "Noto Sans TC", sans-serif;
   cursor: pointer;
@@ -19,16 +26,23 @@ button#report-back-btn.filled-button.button
     background-color 0.1s cubic-bezier(0.2, 0, 0, 1),
     opacity 0.1s cubic-bezier(0.2, 0, 0, 1);
 
-  > .button-leading-icon {
+  > .leading-icon {
     width: 20px;
     aspect-ratio: 1;
     font-size: 20px;
   }
 
-  > .button-label {
+  > .label {
+    padding: 4px;
     line-height: 16px;
     font-size: 12px;
     font-weight: 500;
+  }
+
+  > .trailing-icon {
+    width: 20px;
+    aspect-ratio: 1;
+    font-size: 20px;
   }
 
   &.filled-button {

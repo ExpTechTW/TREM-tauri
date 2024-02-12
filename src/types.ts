@@ -1,25 +1,37 @@
 import type { Eew, EewSource, EewStatus } from "./scripts/class/api";
+import code from "./assets/json/code.json";
 
 export interface LastNtp {
   server: number;
   client: number;
 }
 
-export interface DefaultSettingSchema {
+export interface DefaultConfigSchema {
   api: {
     key: string;
+    cache: boolean;
+    cacheExpire: number;
+    replayMode: number;
   };
   behavior: {
-    showWindowWhenEew: boolean;
+    focusWindowWhenEew: boolean;
+    flashWindowWhenEew: boolean;
+    alwaysOnTopWhenEew: boolean;
+    alwaysOnTop: boolean;
+    streamMode: boolean;
     openExternal: boolean;
   };
   location: {
-    lng: number;
-    lat: number;
+    area: keyof typeof code;
+    station: string;
   };
   audio: {
     enabled: boolean;
     theme: string;
+    alwaysPlayWhenCancel: boolean;
+    alwaysPlayWhenIntensity: boolean;
+    alwaysPlayWhenPga: boolean;
+    alwaysPlayWhenUpdate: boolean;
   };
 }
 
