@@ -305,6 +305,10 @@ interface BaseEewDetail {
    * 地震預估最大震度
    */
   max: number;
+  /**
+   * 覆蓋預估震度
+   */
+  area?: Record<string, string[]>;
 }
 
 /**

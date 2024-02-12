@@ -8,7 +8,7 @@ import MapReportMarker from "../component/MapReportMarker.vue";
 import MapRtsBox from "../component/MapRtsBox.vue";
 import MapRtsMarker from "../component/MapRtsMarker.vue";
 
-import { markRaw, onMounted, onUnmounted, shallowRef, inject } from "vue";
+import { markRaw, onBeforeUnmount, onMounted, shallowRef, inject } from "vue";
 import type { Ref } from "vue";
 import { SettingsManager } from "tauri-settings";
 import maplibregl from "maplibre-gl";
@@ -188,7 +188,12 @@ onMounted(() => {
             1,
             0,
           ],
-          "fill-outline-color": "#8691a4",
+          "fill-outline-color": [
+            "case",
+            ["coalesce", ["feature-state", "override"], false],
+            "#fff",
+            "#8691a4",
+          ],
         },
       })
       .addLayer({
@@ -246,7 +251,7 @@ onMounted(() => {
   });
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   if (map.value) {
     map.value.remove();
   }
@@ -269,7 +274,7 @@ onUnmounted(() => {
   .eew(v-if="Object.keys(eew).length && currentView == 'home'")
     MapEew(:map="map", :eew="eew")
   .eew-town-intensity(v-if="currentEewIndex.value && currentView == 'home'")
-    MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int")
+    MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int", :area="eew[currentEewIndex.value].raw.eq?.area")
   .location(v-if="setting?.settings?.location?.area")
     MapLocalMarker(:map="map", :lat="code[setting.settings.location.area].lat", :lng="code[setting.settings.location.area].lng")
 </template>

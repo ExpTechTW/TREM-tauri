@@ -6,24 +6,32 @@ const props = defineProps<{
   map: maplibregl.Map;
   code: string;
   int: number;
+  override?: number;
 }>();
 
 onMounted(() => {
   props.map.setFeatureState(
     { source: "tw_town", id: props.code },
-    { int: props.int }
+    { int: props.override ?? props.int, override: props.override != undefined }
   );
 });
 
 onUpdated(() => {
   props.map.setFeatureState(
     { source: "tw_town", id: props.code },
-    { int: props.int }
+    { int: props.override ?? props.int, override: props.override != undefined }
   );
 });
 
 onUnmounted(() => {
-  props.map.removeFeatureState({ source: "tw_town", id: props.code }, "int");
+  props.map.removeFeatureState(
+    { source: "tw_town", id: props.override ?? props.code },
+    "int"
+  );
+  props.map.removeFeatureState(
+    { source: "tw_town", id: props.override ?? props.code },
+    "override"
+  );
 });
 </script>
 
