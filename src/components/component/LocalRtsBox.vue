@@ -93,6 +93,8 @@ defineProps<{
   .data-field {
     display: flex;
     gap: 4px;
+    height: 16px;
+    line-height: 16px;
 
     > .name {
       font-weight: 700;
@@ -106,6 +108,10 @@ defineProps<{
       flex: 1;
       opacity: 0.6;
     }
+  }
+
+  .data-field:first-child > .name {
+    font-size: 11px;
   }
 }
 </style>

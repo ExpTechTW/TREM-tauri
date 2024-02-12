@@ -15,28 +15,31 @@ defineProps<{
     .wave-timer-container 
       .wave-timer 
         .wave-timer-name P波 
-        .wave-timer-value {{ (eew.t.p > 0) ? eew.t.p : "抵達" }} 
+        .wave-timer-value(v-if="eew.detail") {{ (eew.t.p > 0) ? eew.t.p : "抵達" }} 
+        .wave-timer-value(v-else) 未知 
       .wave-timer 
         .wave-timer-name S波 
-        .wave-timer-value {{ (eew.t.s > 0) ? eew.t.s : "抵達" }} 
+        .wave-timer-value(v-if="eew.detail") {{ (eew.t.s > 0) ? eew.t.s : "抵達" }} 
+        .wave-timer-value(v-else) 未知 
     .local-number {{ index }} 
 </template>
 
 <style lang="scss">
 .local-box {
   display: flex;
+  align-items: center;
   gap: 8px;
   padding: 8px;
   padding-left: 12px;
   border-radius: 20px;
-  background-color: #383838;
+  background-color: hsl(var(--surface-hsl));
   color: #fff;
 
   > .local-title {
     opacity: 0.6;
     writing-mode: vertical-rl;
     text-orientation: upright;
-    font-size: 12px;
+    font-size: 11px;
   }
 
   > .local-container {
@@ -45,14 +48,13 @@ defineProps<{
     display: flex;
     gap: 8px;
     border-radius: 12px;
-    background-color: #505050;
+    background-color: hsl(var(--surface-variant-hsl));
 
     > .local-intensity {
       width: 44px;
       aspect-ratio: 1;
       padding: 8px;
       border-radius: inherit;
-      box-shadow: 4px 0 4px rgb(0 0 0 / 20%);
       line-height: 44px;
       font-family: "Open Sans", sans-serif;
       font-size: 44px;

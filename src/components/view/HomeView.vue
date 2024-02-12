@@ -90,7 +90,7 @@ onMounted(() => {});
                 template(v-for="r in rts.value.int", :key="r.station")
                   ReportIntensityItem(:area="r?.area", :station="r.station", :int="r.i")
     template(v-for="(e, id) in eew", :key="id")
-      WaveTimer(v-if="e.t && e.detail" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
+      WaveTimer(v-if="e.t" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
   .home-report-box-wrapper(v-if="!currentEewIndex && reports.length")
     .home-report-box(:class="{ show: !currentEewIndex && currentView == 'home' }")
       .title-container
@@ -116,7 +116,7 @@ onMounted(() => {});
   bottom: 8px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   min-width: 300px;
   width: 20vw;
   pointer-events: none;
@@ -136,7 +136,7 @@ onMounted(() => {});
 
   .title-container {
     display: flex;
-    gap: 4px;
+    gap: 8px;
     align-items: center;
     padding: 0 4px;
     line-height: 14px;
@@ -144,8 +144,8 @@ onMounted(() => {});
     font-weight: 700;
 
     > .title-icon {
-      line-height: 20px;
-      font-size: 20px;
+      line-height: 24px;
+      font-size: 24px;
     }
 
     > .title {
@@ -162,7 +162,7 @@ onMounted(() => {});
   flex-direction: column;
   min-height: 0;
   border-radius: 20px;
-  background-color: #505050;
+  background-color: hsl(var(--surface-hsl));
   color: #fff;
   white-space: nowrap;
 
@@ -196,6 +196,14 @@ onMounted(() => {});
 .home-weather-box,
 .home-local-rts-box {
   padding: 8px;
+
+  .title-container {
+    opacity: 0.8;
+
+    > .title {
+      font-weight: 500;
+    }
+  }
 
   &:hover {
     opacity: 1;

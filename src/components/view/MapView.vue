@@ -103,7 +103,7 @@ onMounted(() => {
         source: "cn",
         layout: {},
         paint: {
-          "fill-color": "#383c43",
+          "fill-color": "#2d3137",
           "fill-opacity": 1,
           "fill-outline-color": "#545f70",
         },
@@ -114,7 +114,7 @@ onMounted(() => {
         source: "jp",
         layout: {},
         paint: {
-          "fill-color": "#383c43",
+          "fill-color": "#2d3137",
           "fill-opacity": 1,
           "fill-outline-color": "#545f70",
         },
@@ -125,7 +125,7 @@ onMounted(() => {
         source: "kp",
         layout: {},
         paint: {
-          "fill-color": "#383c43",
+          "fill-color": "#2d3137",
           "fill-opacity": 1,
           "fill-outline-color": "#545f70",
         },
@@ -136,7 +136,7 @@ onMounted(() => {
         source: "kr",
         layout: {},
         paint: {
-          "fill-color": "#383c43",
+          "fill-color": "#2d3137",
           "fill-opacity": 1,
           "fill-outline-color": "#545f70",
         },
@@ -147,7 +147,7 @@ onMounted(() => {
         source: "tw_county",
         layout: {},
         paint: {
-          "fill-color": "#43474e",
+          "fill-color": "#383c43",
           "fill-opacity": 1,
         },
       })
@@ -180,7 +180,7 @@ onMounted(() => {
             "#0070e0",
             1,
             "#004080",
-            "#43474e",
+            "#383c43",
           ],
           "fill-opacity": [
             "case",

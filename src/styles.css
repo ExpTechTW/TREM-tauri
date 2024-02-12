@@ -15,10 +15,10 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --surface-hsl: 0deg 0% 25%;
-  --surface-variant-hsl: 0deg 0% 20%;
-  --background-hsl: 0deg 0% 13%;
-  --background-variant-hsl: 0deg 0% 16%;
+  --surface-hsl: 0deg 0% 30%;
+  --surface-variant-hsl: 0deg 0% 22%;
+  --background-hsl: 0deg 0% 14%;
+  --background-variant-hsl: 0deg 0% 18%;
 }
 
 ::-webkit-scrollbar {
@@ -32,6 +32,8 @@
 
 body {
   margin: 0;
+  background-color: hsl(var(--background-hsl));
+  color: #fff;
 }
 
 .container {
