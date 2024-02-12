@@ -90,7 +90,7 @@ onMounted(() => {});
                 template(v-for="r in rts.value.int", :key="r.station")
                   ReportIntensityItem(:area="r?.area", :station="r.station", :int="r.i")
     template(v-for="(e, id) in eew", :key="id")
-      WaveTimer(v-if="e.t && e.detail" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
+      WaveTimer(v-if="e.t" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
   .home-report-box-wrapper(v-if="!currentEewIndex && reports.length")
     .home-report-box(:class="{ show: !currentEewIndex && currentView == 'home' }")
       .title-container

@@ -15,10 +15,12 @@ defineProps<{
     .wave-timer-container 
       .wave-timer 
         .wave-timer-name P波 
-        .wave-timer-value {{ (eew.t.p > 0) ? eew.t.p : "抵達" }} 
+        .wave-timer-value(v-if="eew.detail") {{ (eew.t.p > 0) ? eew.t.p : "抵達" }} 
+        .wave-timer-value(v-else) 未知 
       .wave-timer 
         .wave-timer-name S波 
-        .wave-timer-value {{ (eew.t.s > 0) ? eew.t.s : "抵達" }} 
+        .wave-timer-value(v-if="eew.detail") {{ (eew.t.s > 0) ? eew.t.s : "抵達" }} 
+        .wave-timer-value(v-else) 未知 
     .local-number {{ index }} 
 </template>
 
