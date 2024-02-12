@@ -27,3 +27,21 @@ export const pga = scale([
   "#aa0000",
   "#9600c8",
 ]).domain([-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8]);
+
+export const depth = scale([
+  "#FF0000",
+  "#FF6400",
+  "#FFC800",
+  "#00C800",
+  "#00C8C8",
+  "#0000C8",
+]).domain([0, 20, 50, 100, 200, 350]);
+
+export const magnitude = scale([
+  "#0000C8",
+  "#00C8C8",
+  "#00C800",
+  "#FFC800",
+  "#FF0000",
+  "#9600FF",
+]).domain([0, 1.5, 3, 4.5, 6, 7]);

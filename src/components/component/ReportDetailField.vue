@@ -1,7 +1,13 @@
+<script setup lang="ts">
+defineProps<{
+  dividerColor?: string;
+}>();
+</script>
+
 <template lang="pug">
 .report-detail-field
   .report-detail-field-icon.material-symbols-rounded: slot(name="icon")
-  .report-detail-field-divider
+  .report-detail-field-divider(:style="{ backgroundColor: dividerColor }")
   .report-detail-field-content-container
     .report-detail-field-name: slot(name="name")
     #report-time.report-detail-field-value.skeleton: slot(name="value")

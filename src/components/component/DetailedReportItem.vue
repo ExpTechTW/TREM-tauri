@@ -6,6 +6,7 @@ import {
   extractLocationFromString,
   toFormattedTimeString,
 } from "../../scripts/helper/utils";
+import { depth, magnitude } from "../../scripts/helper/color";
 
 defineProps<{
   report: PartialReport;
@@ -24,11 +25,11 @@ defineProps<{
     span.time {{ toFormattedTimeString(report.time) }}
     .parameter-container
       .magnitude
-        .vertical-bar
+        .vertical-bar(:style="{ backgroundColor: magnitude(report.mag).hex() }")
         .value {{ report.mag.toFixed(1) }}
       .depth
         .value {{ report.depth }}
-        .vertical-bar
+        .vertical-bar(:style="{ backgroundColor: depth(report.depth).hex() }")
 </template>
 
 <style lang="scss" scoped>

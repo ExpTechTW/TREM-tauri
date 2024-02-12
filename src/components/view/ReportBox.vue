@@ -16,6 +16,7 @@ import {
   toFormattedTimeString,
   toReportUrl,
 } from "../../scripts/helper/utils";
+import { depth, magnitude } from "../../scripts/helper/color";
 
 defineProps<{
   currentView: string;
@@ -85,14 +86,14 @@ const openUrl = async (id?: string) => {
               template(#value) {{ report.lat }}
               template(#trailing-unit) {{ report.lat ? report.lat > 0 ? "°N" : "°S" : "°" }}
         .report-detail-field-row
-          ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 60%'")
+          ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 60%'", :divider-color="magnitude(report?.mag).hex()")
             template(#icon) speed
             template(#name) 規模
             template(v-if="report?.mag != undefined", #value)
               FieldValueUnitPair
                 template(#leading-unit) M#[sub L]
                 template(#value) {{ report.mag }}
-          ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 40%'")
+          ReportDetailField(:style="report?.lon != undefined ? '' : 'max-width: 40%'", :divider-color="depth(report?.depth).hex()")
             template(#icon) keyboard_double_arrow_down
             template(#name) 深度
             template(v-if="report?.depth != undefined", #value)
