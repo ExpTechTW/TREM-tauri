@@ -90,7 +90,7 @@ onMounted(() => {});
                 template(v-for="r in rts.value.int", :key="r.station")
                   ReportIntensityItem(:area="r?.area", :station="r.station", :int="r.i")
     template(v-for="(e, id) in eew", :key="id")
-      WaveTimer(v-if="e.t" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
+      WaveTimer(v-if="e.t && e.detail" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
   .home-report-box-wrapper(v-if="!currentEewIndex")
     .home-report-box(:class="{ show: !currentEewIndex && currentView == 'home' }")
       .title-container
@@ -103,8 +103,8 @@ onMounted(() => {});
         ReportItem(v-if="reports[2]", :report="reports[2]", :change-report="changeReport")
         ReportItem(v-if="reports[3]", :report="reports[3]", :change-report="changeReport")
         ReportItem(v-if="reports[4]", :report="reports[4]", :change-report="changeReport")
-  .home-local-rts-box-wrapper(v-if="!currentEewIndex && setting?.settings?.location?.station")
-    LocalRtsBox.home-local-rts-box(:class="{ show: !currentEewIndex && currentView == 'home' }", :station="setting.settings.location.station", :stations="stations", :rts="rts")
+  .home-local-rts-box-wrapper(v-if="setting?.settings?.location?.station")
+    LocalRtsBox.home-local-rts-box(:class="{ show:  currentView == 'home' }", :station="setting.settings.location.station", :stations="stations", :rts="rts")
 </template>
 
 <style lang="scss">
@@ -121,16 +121,17 @@ onMounted(() => {});
   width: 20vw;
   pointer-events: none;
   opacity: 1;
+  z-index: 5000;
   transition-property: opacity;
   transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 
-  &.eew {
-    gap: 0;
+  &.eew > .home-info-box-wrapper {
+    flex: 1;
+  }
 
-    > .home-info-box-wrapper {
-      flex: 1;
-    }
+  &.eew .home-local-rts-box {
+    opacity: 1;
   }
 
   .title-container {
@@ -213,7 +214,6 @@ onMounted(() => {});
   flex-direction: column;
   gap: 4px;
   min-height: 0;
-  z-index: 5000;
 
   > .home-info-box-container {
     flex: 1;
