@@ -12,6 +12,10 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "http": {
+        "request": true,
+        "scope": ["https://*.exptech.com.tw/*"]
+      },
       "shell": {
         "all": false,
         "open": true
