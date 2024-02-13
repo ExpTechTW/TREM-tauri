@@ -15,10 +15,10 @@
 
 <div align="center">
   
-  <a href="https://github.com/ExpTechTW/TREM-tauri/releases/latest">![GitHub Release](https://img.shields.io/github/v/release/ExptechTW/TREM-Tauri?include_prereleases&label=latest)</a>
-  <a href="https://github.com/ExpTechTW/TREM-tauri/releases/latest">![Releases](https://img.shields.io/github/downloads/ExpTechTW/TREM-tauri/total)</a>
-  <a href="https://github.com/ExpTechTW/TREM-tauri/actions/workflows/build.yml">![GitHub Workflow Status](https://github.com/ExpTechTW/TREM-tauri/actions/workflows/build.yml/badge.svg)</a>
-  <a href="https://discord.gg/exptech-studio">![TREM Discord](https://img.shields.io/discord/926545182407688273?color=%237289DA&logo=discord&logoColor=white)</a>
+  <a href="https://github.com/ExpTechTW/TREM-tauri/releases/latest">![GitHub Release](https://img.shields.io/github/v/release/ExpTechTW/TREM-tauri?include_prereleases&label=latest)</a>
+  <a href="https://github.com/ExpTechTW/TREM-tauri/releases/latest">![Releases](https://img.shields.io/github/downloads/ExptechTW/TREM-tauri/total?color=%231094fc)</a>
+  <a href="https://github.com/ExpTechTW/TREM-tauri/actions/workflows/build.yml">![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/ExpTechTW/TREM-tauri/build.yml?branch=main&logo=github)</a>
+  <a href="https://discord.gg/exptech-studio">![TREM Discord](https://img.shields.io/discord/926545182407688273?color=%235865F2&logo=discord&logoColor=white)</a>
 </div>
 
 ## 關於 TREM
