@@ -13,6 +13,14 @@ export interface DefaultConfigSchema {
     cacheExpire: number;
     replayMode: number;
   };
+  audio: {
+    enabled: boolean;
+    theme: string;
+    alwaysPlayWhenCancel: boolean;
+    alwaysPlayWhenIntensity: boolean;
+    alwaysPlayWhenPga: boolean;
+    alwaysPlayWhenUpdate: boolean;
+  };
   behavior: {
     focusWindowWhenEew: boolean;
     flashWindowWhenEew: boolean;
@@ -25,13 +33,10 @@ export interface DefaultConfigSchema {
     area: keyof typeof code;
     station: string;
   };
-  audio: {
-    enabled: boolean;
-    theme: string;
-    alwaysPlayWhenCancel: boolean;
-    alwaysPlayWhenIntensity: boolean;
-    alwaysPlayWhenPga: boolean;
-    alwaysPlayWhenUpdate: boolean;
+  system: {
+    startWithSystem: boolean;
+    quiet: boolean;
+    closeToTray: boolean;
   };
 }
 
