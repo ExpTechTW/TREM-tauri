@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import { ResponseType, fetch, type FetchOptions } from "@tauri-apps/api/http";
 import EventEmitter from "events";
 
 import Route from "./route";
@@ -559,31 +560,24 @@ export class ExpTechApi extends EventEmitter {
    * @returns {Promise<any>}
    */
   async #get(url: string): Promise<any> {
-    try {
-      const ac = new AbortController();
-      const request = new Request(url, {
-        method: "GET",
-        cache: "default",
-        signal: ac.signal,
-        headers: {
-          // TODO: Replace User-Agent with a variable
-          "User-Agent": "TREM-Lite/v2.0.0",
-          Accept: "application/json",
-        },
-      });
+    const request: FetchOptions = {
+      method: "GET",
+      headers: {
+        // TODO: Replace User-Agent with a variable
+        "User-Agent": "TREM-Lite/v2.0.0",
+        Accept: "application/json",
+      },
+      timeout: 2500,
+      responseType: ResponseType.JSON,
+    };
 
-      const abortTimer = window.setTimeout(() => ac.abort(), 2_500);
-      const res = await fetch(request);
-      window.clearTimeout(abortTimer);
+    const res = await fetch(url, request);
 
-      if (!res.ok) {
-        throw new Error(`Server returned ${res.status}`);
-      }
-
-      return await res.json();
-    } catch (error) {
-      throw new Error(`Request timed out after 2500ms`);
+    if (!res.ok) {
+      throw new Error(`Server returned ${res.status}`);
     }
+
+    return res.data;
   }
 
   async getStations(): Promise<Record<string, Station>> {
@@ -665,7 +659,7 @@ export class ExpTechApi extends EventEmitter {
    * @returns {Promise<Rts>}
    */
   async getRts(time: number = Date.now()): Promise<Rts> {
-    const url = this.route.rts(`${time}`);
+    const url = new Route({ version: 1, key: this.key }).rts(`${time}`);
 
     try {
       return await this.#get(url);

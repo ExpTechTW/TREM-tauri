@@ -12,6 +12,13 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "clipboard": {
+        "writeText": true
+      },
+      "http": {
+        "request": true,
+        "scope": ["https://*.exptech.com.tw/*"]
+      },
       "shell": {
         "all": false,
         "open": true
