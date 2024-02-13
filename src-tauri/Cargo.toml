@@ -13,7 +13,15 @@ edition = "2021"
 tauri-build = { version = "1.5", features = [] }
 
 [dependencies]
-tauri = { version = "1.5", features = [ "http-request", "window-set-always-on-top", "window-request-user-attention", "window-set-focus", "window-set-skip-taskbar", "window-show", "window-set-title",
+tauri = { version = "1.5", features = [
+  "clipboard-write-text",
+  "http-request",
+  "window-set-always-on-top",
+  "window-request-user-attention",
+  "window-set-focus",
+  "window-set-skip-taskbar",
+  "window-show",
+  "window-set-title",
   "system-tray",
   "fs-write-file",
   "fs-read-file",
