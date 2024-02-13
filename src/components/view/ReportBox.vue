@@ -95,10 +95,8 @@ const copyReport = function (event: MouseEvent, report?: Report) {
     areas.push(areaString);
   }
 
-  let count = areas.length;
-
-  if (count > 2) {
-    while (count > 0) {
+  if (areas.length > 2) {
+    while (areas.length > 0) {
       const threeAreas = areas.splice(0, 3);
 
       const whichToLoop =
@@ -108,12 +106,13 @@ const copyReport = function (event: MouseEvent, report?: Report) {
             0
           )
         ];
+
       const theLine = [];
 
       for (const index in whichToLoop) {
-        const a = threeAreas[0][index];
-        const b = threeAreas[1][index];
-        const c = threeAreas[2][index];
+        const a = threeAreas[0]?.[index];
+        const b = threeAreas[1]?.[index];
+        const c = threeAreas[2]?.[index];
         let strToPush = "";
 
         if (a) {
@@ -141,7 +140,6 @@ const copyReport = function (event: MouseEvent, report?: Report) {
       }
 
       string.push(theLine.join("\n"));
-      count -= 3;
       continue;
     }
   } else {
