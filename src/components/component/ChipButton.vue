@@ -1,7 +1,13 @@
+<script setup lang="ts">
+defineEmits<{
+  click: [payload: MouseEvent];
+}>();
+</script>
+
 <template lang="pug">
-button.chip
-  span.chip-leading-icon.material-symbols-rounded: slot(name="icon")
-  span.chip-label: slot(name="label")
+button.chip(@click="$emit('click', $event)")
+  span.leading-icon.material-symbols-rounded: slot(name="icon")
+  span.label: slot(name="label")
 </template>
 
 <style lang="scss" scoped>
@@ -35,15 +41,17 @@ button.chip
     opacity: 0.4;
   }
 
-  > .chip-leading-icon {
+  > .leading-icon {
     height: 16px;
     aspect-ratio: 1;
     font-size: 16px;
+    pointer-events: none;
   }
 
-  > .chip-label {
+  > .label {
     line-height: 12px;
     font-size: 12px;
+    pointer-events: none;
   }
 
   &:not(:disabled) {

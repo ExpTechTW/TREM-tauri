@@ -24,6 +24,7 @@
     "@typescript-eslint/no-unused-vars": ["warn", {"vars":"local"}],
     "vue/valid-template-root": "off",
     "curly": ["warn", "all"],
+    "no-irregular-whitespace": ["warn", { "skipTemplates": true }],
     "no-unused-vars": ["off"]
   }
 }
