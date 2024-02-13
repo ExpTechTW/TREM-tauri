@@ -69,7 +69,7 @@ const instance = app.mount("#app") as InstanceType<typeof App>;
 
   api.setApiKey(await setting.get("api.key"));
 
-  props.reports.push(...(await api.getReports(50)));
+  props.reports.push(...(await api.getReports()));
   props.stations.value = await api.getStations();
 
   await browserWindow.setAlwaysOnTop(setting.settings.behavior.alwaysOnTop);
@@ -79,6 +79,14 @@ const instance = app.mount("#app") as InstanceType<typeof App>;
   } else {
     disableAutoStart();
   }
+
+  timer.reportFetchTimer = window.setInterval(async () => {
+    const ids = props.reports.map((r) => r.id);
+    const reports = (await api.getReports()).filter((r) => !ids.includes(r.id));
+
+    props.reports.push(...reports);
+    props.reports.sort((a, b) => b.time - a.time);
+  }, 60_000);
 })();
 
 let replayMode: boolean = false;
