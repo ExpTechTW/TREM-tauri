@@ -8,7 +8,6 @@ import { createApp, reactive, ref } from "vue";
 import { SettingsManager } from "tauri-settings";
 import { fs, window as win } from "@tauri-apps/api";
 import { UserAttentionType } from "@tauri-apps/api/window";
-import { getMatches } from "@tauri-apps/api/cli";
 import JSZip from "jszip";
 
 import type { Station, PartialReport, Rts, Eew } from "./scripts/class/api";
@@ -64,18 +63,7 @@ app.provide("api", api);
 
 const instance = app.mount("#app") as InstanceType<typeof App>;
 
-getMatches().then((matches) => {
-  console.log(matches);
-  console.log("quiet", matches.args.quiet.value);
-
-  if (!matches.args.quiet.value) {
-    browserWindow.setFocus();
-  }
-});
-
 (async () => {
-
-
   await setting.initialize();
   await setting.syncCache();
 
