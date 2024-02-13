@@ -5,6 +5,7 @@
 * 新增開機時自動啟動的設定 (https://github.com/ExpTechTW/TREM-tauri/pull/30)
 * 新增最小化至系統匣的設定 (https://github.com/ExpTechTW/TREM-tauri/pull/30)
 * 新增啟動參數 `--quiet` 在開啟程式時隱藏視窗 (https://github.com/ExpTechTW/TREM-tauri/pull/30)
+* 自動抓取並更新地震報告 (https://github.com/ExpTechTW/TREM-tauri/pull/32)
 
 **完整變更紀錄**: https://github.com/ExpTechTW/TREM-tauri/compare/v0.0.0-alpha.2...v0.0.0-alpha.3
 
