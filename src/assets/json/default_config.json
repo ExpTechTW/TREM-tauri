@@ -5,6 +5,14 @@
      "cacheExpire": 60,
      "replayMode": 1
   },
+  "audio": {
+     "enabled": true,
+     "theme": "trem_default",
+     "alwaysPlayWhenCancel": false,
+     "alwaysPlayWhenIntensity": true,
+     "alwaysPlayWhenPga": true,
+     "alwaysPlayWhenUpdate": true
+  },
   "behavior": {
      "focusWindowWhenEew": true,
      "flashWindowWhenEew": true,
@@ -17,12 +25,9 @@
      "area": "",
      "station": ""
   },
-  "audio": {
-     "enabled": true,
-     "theme": "trem_default",
-     "alwaysPlayWhenCancel": false,
-     "alwaysPlayWhenIntensity": true,
-     "alwaysPlayWhenPga": true,
-     "alwaysPlayWhenUpdate": true
+  "system": {
+    "startWithSystem": false,
+    "quiet": false,
+    "closeToTray": true
   }
 }

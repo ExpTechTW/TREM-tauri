@@ -35,6 +35,8 @@
       },
       "window": {
         "all": false,
+        "close": true,
+        "hide": true,
         "requestUserAttention": true,
         "setAlwaysOnTop": true,
         "setFocus": true,
@@ -64,6 +66,14 @@
         }
       }
     },
+    "cli":{
+      "args": [
+        {
+          "name": "quiet",
+          "short": "q"
+        }
+    ]
+    },
     "security": {
       "csp": null
     },
@@ -71,6 +81,7 @@
       {
         "fullscreen": false,
         "resizable": true,
+        "visible": false,
         "title": "TREM Tauri | 臺灣即時地震監測",
         "width": 1200,
         "height": 720

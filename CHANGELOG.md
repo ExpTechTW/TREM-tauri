@@ -2,6 +2,9 @@
 
 ### ✨ 新功能
 
+* 新增開機時自動啟動的設定 (https://github.com/ExpTechTW/TREM-tauri/pull/30)
+* 新增啟動參數 `--quiet` (https://github.com/ExpTechTW/TREM-tauri/pull/30)
+
 **完整變更紀錄**: https://github.com/ExpTechTW/TREM-tauri/compare/v0.0.0-alpha.2...v0.0.0-alpha.3
 
 

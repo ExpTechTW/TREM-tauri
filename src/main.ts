@@ -1,9 +1,14 @@
 import App from "./App.vue";
 
+import {
+  enable as enableAutoStart,
+  disable as disableAutoStart,
+} from "tauri-plugin-autostart-api";
 import { createApp, reactive, ref } from "vue";
 import { SettingsManager } from "tauri-settings";
 import { fs, window as win } from "@tauri-apps/api";
 import { UserAttentionType } from "@tauri-apps/api/window";
+import { getMatches } from "@tauri-apps/api/cli";
 import JSZip from "jszip";
 
 import type { Station, PartialReport, Rts, Eew } from "./scripts/class/api";
@@ -23,13 +28,13 @@ import {
   WebSocketEvent,
 } from "./scripts/class/api";
 import { AudioType } from "./types";
+import { RefreshableTimeout } from "./scripts/class/timeout";
 import { getAudio } from "./scripts/helper/audio";
 import DefaultConfig from "./assets/json/default_config.json";
 import code from "./assets/json/code.json";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
-import { RefreshableTimeout } from "./scripts/class/timeout";
 
 const browserWindow = win.getCurrent();
 
@@ -45,11 +50,9 @@ const timer: Record<string, number> = {};
 const eewTimer: Record<string, RefreshableTimeout> = {};
 
 const setting = new SettingsManager<DefaultConfigSchema>(
-  DefaultConfig as DefaultConfigSchema,
-  {
-    prettify: true,
-  }
-);
+  DefaultConfig as DefaultConfigSchema, {
+  prettify: true,
+});
 
 const api = new ExpTechApi();
 const ntp = { remote: Date.now(), server: Date.now(), client: Date.now() };
@@ -61,7 +64,18 @@ app.provide("api", api);
 
 const instance = app.mount("#app") as InstanceType<typeof App>;
 
+getMatches().then((matches) => {
+  console.log(matches);
+  console.log("quiet", matches.args.quiet.value);
+
+  if (!matches.args.quiet.value) {
+    browserWindow.setFocus();
+  }
+});
+
 (async () => {
+
+
   await setting.initialize();
   await setting.syncCache();
 
@@ -71,6 +85,12 @@ const instance = app.mount("#app") as InstanceType<typeof App>;
   props.stations.value = await api.getStations();
 
   await browserWindow.setAlwaysOnTop(setting.settings.behavior.alwaysOnTop);
+
+  if (setting.settings.system.startWithSystem) {
+    await enableAutoStart();
+  } else {
+    disableAutoStart();
+  }
 })();
 
 let replayMode: boolean = false;
@@ -343,14 +363,14 @@ browserWindow.onFileDropEvent(async (e) => {
       `[Replay] Loading replay ${e.payload.paths[0].split(/(\\|\/)/g).pop()}`
     );
 
-    const replayData: { rts: Rts; eew: Eew[]; time: number }[] = [];
+    const replayData: { rts: Rts; eew: Eew[]; time: number; }[] = [];
     const binary = await fs.readBinaryFile(e.payload.paths[0]);
     const zip = await JSZip.loadAsync(binary);
 
     for (let i = 0, k = Object.keys(zip.files), n = k.length; i < n; i++) {
       const filename = k[i];
       const content = await zip.files[filename].async("string");
-      const data: { rts: Rts; eew: Eew[]; time: number } = JSON.parse(content);
+      const data: { rts: Rts; eew: Eew[]; time: number; } = JSON.parse(content);
       data.rts.replay = true;
       data.eew.forEach((e) => (e.replay = true));
       data.time = +filename;
@@ -401,5 +421,12 @@ browserWindow.onFileDropEvent(async (e) => {
   } catch (error) {
     console.error("[Replay] Exception thrown while loading replay.", error);
     replayMode = false;
+  }
+});
+
+browserWindow.onCloseRequested((event) => {
+  if (setting.settings.system.closeToTray) {
+    event.preventDefault();
+    browserWindow.hide();
   }
 });
