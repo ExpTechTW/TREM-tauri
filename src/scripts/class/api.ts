@@ -665,7 +665,7 @@ export class ExpTechApi extends EventEmitter {
    * @returns {Promise<Rts>}
    */
   async getRts(time: number = Date.now()): Promise<Rts> {
-    const url = this.route.rts(1,`${time}`);
+    const url = new Route({ version:1, key:this.key }).rts(`${time}`);
 
     try {
       return await this.#get(url);

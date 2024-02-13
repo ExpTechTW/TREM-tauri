@@ -16,8 +16,8 @@ export default class Route {
     return `https://lb-${Math.ceil(Math.random() * 4)}.exptech.com.tw` as const;
   }
 
-  randomBaseUrl(version: number = this.version) {
-    return `${this.randomHostUrl()}/api/v${version}` as const;
+  randomBaseUrl() {
+    return `${this.randomHostUrl()}/api/v${this.version}` as const;
   }
 
   websocket() {
@@ -32,8 +32,8 @@ export default class Route {
     return `${this.randomBaseUrl()}/eq/report/${id}` as const;
   }
 
-  rts(version: number,timestamp: string) {
-    return `${this.randomBaseUrl(version)}/trem/rts?time=${timestamp}` as const;
+  rts(timestamp: string) {
+    return `${this.randomBaseUrl()}/trem/rts?time=${timestamp}` as const;
   }
 
   station() {
