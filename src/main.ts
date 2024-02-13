@@ -45,7 +45,10 @@ const timer: Record<string, number> = {};
 const eewTimer: Record<string, RefreshableTimeout> = {};
 
 const setting = new SettingsManager<DefaultConfigSchema>(
-  DefaultConfig as DefaultConfigSchema
+  DefaultConfig as DefaultConfigSchema,
+  {
+    prettify: true,
+  }
 );
 
 const api = new ExpTechApi();
@@ -67,6 +70,7 @@ const instance = app.mount("#app") as InstanceType<typeof App>;
   props.reports.push(...(await api.getReports(50)));
   props.stations.value = await api.getStations();
 
+  await browserWindow.setAlwaysOnTop(setting.settings.behavior.alwaysOnTop);
 })();
 
 let replayMode: boolean = false;
@@ -104,6 +108,12 @@ const resetEew = () => {
     eewTimer[id].clear();
     delete props.eew[id];
   }
+
+  if (!setting.settings.behavior.alwaysOnTop) {
+    browserWindow.setAlwaysOnTop(false);
+  }
+
+  browserWindow.requestUserAttention(null);
 };
 
 api.on(WebSocketEvent.Rts, (rts) => {
@@ -222,7 +232,12 @@ api.on(WebSocketEvent.Eew, (eew) => {
     browserWindow.setFocus();
   }
 
-  browserWindow.requestUserAttention(UserAttentionType.Critical);
+  if (
+    !setting.settings.behavior.alwaysOnTop &&
+    setting.settings.behavior.alwaysOnTopWhenEew
+  ) {
+    browserWindow.setAlwaysOnTop(true);
+  }
 
   if (props.eew[eew.id]) {
     if (eew.serial > props.eew[eew.id].serial) {
@@ -232,11 +247,15 @@ api.on(WebSocketEvent.Eew, (eew) => {
         eewTimer[eew.id].refresh();
       }
 
+      browserWindow.requestUserAttention(UserAttentionType.Informational);
+
       if (setting.settings.audio.enabled) {
         getAudio(setting.settings.audio.theme, AudioType.Update).play();
       }
     }
   } else {
+    browserWindow.requestUserAttention(UserAttentionType.Critical);
+
     if (!eewTimer[eew.id]) {
       eewTimer[eew.id] = new RefreshableTimeout(() => {
         delete props.eew[eew.id];
