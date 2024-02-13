@@ -6,16 +6,19 @@ import ReportDetailField from "../component/ReportDetailField.vue";
 import ReportIntensityGroup from "../component/ReportIntensityGroup.vue";
 import ReportIntensityItem from "../component/ReportIntensityItem.vue";
 
-import { inject } from "vue";
 import { SettingsManager } from "tauri-settings";
+import { clipboard } from "@tauri-apps/api";
+import { inject } from "vue";
 
-import type { Report } from "../../scripts/class/api";
 import type { DefaultConfigSchema } from "../../types";
+import type { Report } from "../../scripts/class/api";
 import {
   extractLocationFromString,
   toFormattedTimeString,
   toReportUrl,
 } from "../../scripts/helper/utils";
+import { Intensity } from "../../scripts/class/api";
+import { RefreshableTimeout } from "../../scripts/class/timeout";
 import { depth, magnitude } from "../../scripts/helper/color";
 
 defineProps<{
@@ -32,6 +35,149 @@ const openUrl = async (id?: string) => {
       window.open(toReportUrl(id), "_blank");
     } else {
       window.open(toReportUrl(id));
+    }
+  }
+};
+
+let copyIconTimer: RefreshableTimeout;
+
+const copyReport = function (event: MouseEvent, report?: Report) {
+  if (!report) {
+    return;
+  }
+
+  const string: string[] = [];
+
+  if (report.loc) {
+    string.push(
+      `　　　　　　　　　　中央氣象署地震測報中心　${report.no % 1000 ? `第 ${report.no.toString().slice(-3)} 號` : "小區域"}有感地震報告`
+    );
+  }
+
+  const time = new Date(report.time);
+  string.push(
+    `　　　　　　　　　　發　震　時　間： ${time.getFullYear() - 1911} 年 ${`${time.getMonth() + 1}`.padStart(2, " ")} 月 ${`${time.getDate()}`.padStart(2, " ")} 日 ${`${time.getHours()}`.padStart(2, " ")} 時 ${`${time.getMinutes()}`.padStart(2, " ")} 分 ${`${time.getSeconds()}`.padStart(2, " ")} 秒`
+  );
+  string.push(
+    `　　　　　　　　　　震　央　位　置： 北　緯　 ${report.lat.toFixed(2)} °`
+  );
+  string.push(
+    `　　　　　　　　　　　　　　　　　　 東　經　${report.lon.toFixed(2)} °`
+  );
+  string.push(
+    `　　　　　　　　　　震　源　深　度：　 ${`${report.depth.toFixed(1)}`.padStart(4, " ")}  公里`
+  );
+  string.push(
+    `　　　　　　　　　　芮　氏　規　模：　  ${report.mag.toFixed(1)}`
+  );
+  string.push(`　　　　　　　　　　相　對　位　置： ${report.loc}`);
+  string.push("");
+  string.push("　　　　　　　　　　　　　　　各　地　震　度　級");
+  string.push("");
+
+  const name = (str: string) =>
+    str.length < 3 ? str.split("").join("　") : str;
+  const int = (i: number) => Intensity[i].text;
+
+  const areas = [];
+
+  for (const areaIntensity of report.list) {
+    const areaString = [];
+    areaString.push(
+      `${areaIntensity.area}地區最大震度${int(areaIntensity.int)}`
+    );
+
+    for (const stationIntensity of areaIntensity.stations) {
+      areaString.push(
+        `　　　${name(stationIntensity.station)}${int(stationIntensity.int)}　　　`
+      );
+    }
+    areas.push(areaString);
+  }
+
+  let count = areas.length;
+
+  if (count > 2) {
+    while (count > 0) {
+      const threeAreas = areas.splice(0, 3);
+
+      const whichToLoop =
+        threeAreas[
+          threeAreas.reduce(
+            (p, c, i, a) => (a[p]?.length > c?.length ? p : i),
+            0
+          )
+        ];
+      const theLine = [];
+
+      for (const index in whichToLoop) {
+        const a = threeAreas[0][index];
+        const b = threeAreas[1][index];
+        const c = threeAreas[2][index];
+        let strToPush = "";
+
+        if (a) {
+          strToPush += `${a}`;
+        } else {
+          strToPush += "　　　　　　　　　　　";
+        }
+
+        strToPush += "　　　";
+
+        if (b) {
+          strToPush += `${b}`;
+        } else {
+          strToPush += "　　　　　　　　　　　";
+        }
+
+        strToPush += "　　　";
+
+        if (c) {
+          strToPush += `${c}`;
+        } else {
+          strToPush += "　　　　　　　　";
+        }
+        theLine.push(strToPush.trimEnd());
+      }
+
+      string.push(theLine.join("\n"));
+      count -= 3;
+      continue;
+    }
+  } else {
+    for (const area of areas) {
+      const theLine = [];
+
+      for (const str of area) {
+        let strToPush = "";
+
+        if (str) {
+          strToPush += `　　　　　　　　　　　　　　${str}`;
+        }
+
+        theLine.push(strToPush.trimEnd());
+      }
+
+      string.push(theLine.join("\n"));
+    }
+  }
+
+  clipboard.writeText(string.join("\n"));
+
+  if (event.target instanceof Element) {
+    const button = event.target as HTMLButtonElement;
+    const icon = button.querySelector(".leading-icon") as HTMLSpanElement;
+
+    button.classList.add("copied");
+    icon.textContent = "done";
+
+    if (copyIconTimer) {
+      copyIconTimer.refresh();
+    } else {
+      copyIconTimer = new RefreshableTimeout(() => {
+        button.classList.remove("copied");
+        icon.textContent = "content_copy";
+      }, 1_000);
     }
   }
 };
@@ -60,7 +206,7 @@ const openUrl = async (id?: string) => {
         ChipButton.report-action-chip(:disabled="!report?.id", @click="openUrl(report?.id)")
           template(#icon) captive_portal
           template(#label) 報告頁面
-        ChipButton.report-action-chip
+        ChipButton.report-action-copy.report-action-chip(:disabled="!report", @click="copyReport($event, report)")
           template(#icon) content_copy
           template(#label) 複製
 
@@ -391,5 +537,12 @@ const openUrl = async (id?: string) => {
       }
     }
   }
+}
+
+.report-action-copy.copied {
+  transition-duration: 0s;
+  color: #efc !important;
+  background-color: #8f42 !important;
+  outline: 2px solid #8c4 !important;
 }
 </style>
