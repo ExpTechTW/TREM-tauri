@@ -34,7 +34,8 @@ defineProps<{
 }>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
-const setting = inject<SettingsManager<DefaultConfigSchema>>("settings");
+const setting =
+  inject<SettingsManager<DefaultConfigSchema>>("settings")?.settings;
 
 onMounted(() => {
   const initialState = { lng: 120.5, lat: 23.6, zoom: 6.75 };
@@ -273,10 +274,10 @@ onBeforeUnmount(() => {
     MapRtsBox(:map="map", :box="rts.value.box")
   .eew(v-if="Object.keys(eew).length && currentView == 'home'")
     MapEew(:map="map", :eew="eew")
-  .eew-town-intensity(v-if="currentEewIndex.value && currentView == 'home'")
+  .eew-town-intensity(v-if="eew[currentEewIndex.value] && currentView == 'home'")
     MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int", :area="eew[currentEewIndex.value].raw.eq?.area")
-  .location(v-if="setting?.settings?.location?.area")
-    MapLocalMarker(:map="map", :lat="code[setting.settings.location.area].lat", :lng="code[setting.settings.location.area].lng")
+  .location(v-if="setting?.location?.area && code[setting.location.area]")
+    MapLocalMarker(:map="map", :lat="code[setting.location.area].lat", :lng="code[setting.location.area].lng")
 </template>
 
 <style>

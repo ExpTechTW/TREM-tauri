@@ -87,7 +87,7 @@ onMounted(() => {});
           .intensity-list-wrapper
             .intensity-list-scroller
               .intensity-list
-                template(v-for="r in rts.value.int", :key="r.station")
+                template(v-for="r in rts.value.int", :key="`${r.area ?? ''}${r.station ?? ''}`")
                   ReportIntensityItem(:area="r?.area", :station="r.station", :int="r.i")
     template(v-for="(e, id) in eew", :key="id")
       WaveTimer(v-if="e.t" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
