@@ -27,7 +27,6 @@ import {
   WebSocketEvent,
 } from "./scripts/class/api";
 import { AudioType } from "./types";
-import { RefreshableTimeout } from "./scripts/class/timeout";
 import { getAudio } from "./scripts/helper/audio";
 import DefaultConfig from "./assets/json/default_config.json";
 import code from "./assets/json/code.json";
@@ -46,12 +45,14 @@ const props = {
 };
 
 const timer: Record<string, number> = {};
-const eewTimer: Record<string, RefreshableTimeout> = {};
+const eewTimer: Record<string, number> = {};
 
 const setting = new SettingsManager<DefaultConfigSchema>(
-  DefaultConfig as DefaultConfigSchema, {
-  prettify: true,
-});
+  DefaultConfig as DefaultConfigSchema,
+  {
+    prettify: true,
+  }
+);
 
 const api = new ExpTechApi();
 const ntp = { remote: Date.now(), server: Date.now(), client: Date.now() };
@@ -121,7 +122,7 @@ const resetEew = () => {
   delete timer.eewIndexTimer;
 
   for (const id in props.eew) {
-    eewTimer[id].clear();
+    delete eewTimer[id];
     delete props.eew[id];
   }
 
@@ -257,12 +258,6 @@ api.on(WebSocketEvent.Eew, (eew) => {
 
   if (props.eew[eew.id]) {
     if (eew.serial > props.eew[eew.id].serial) {
-      if (time - eew.eq.time > 120_000) {
-        eewTimer[eew.id].refresh(30_000);
-      } else {
-        eewTimer[eew.id].refresh();
-      }
-
       browserWindow.requestUserAttention(UserAttentionType.Informational);
 
       if (setting.settings.audio.enabled) {
@@ -273,7 +268,7 @@ api.on(WebSocketEvent.Eew, (eew) => {
     browserWindow.requestUserAttention(UserAttentionType.Critical);
 
     if (!eewTimer[eew.id]) {
-      eewTimer[eew.id] = new RefreshableTimeout(() => {
+      eewTimer[eew.id] = window.setTimeout(() => {
         delete props.eew[eew.id];
         delete eewTimer[eew.id];
 
@@ -283,7 +278,7 @@ api.on(WebSocketEvent.Eew, (eew) => {
         ) {
           setEewIndex();
         }
-      }, 120_000);
+      }, 240_000);
     }
 
     if (eew.author == EewSource.Cwa) {
@@ -359,14 +354,14 @@ browserWindow.onFileDropEvent(async (e) => {
       `[Replay] Loading replay ${e.payload.paths[0].split(/(\\|\/)/g).pop()}`
     );
 
-    const replayData: { rts: Rts; eew: Eew[]; time: number; }[] = [];
+    const replayData: { rts: Rts; eew: Eew[]; time: number }[] = [];
     const binary = await fs.readBinaryFile(e.payload.paths[0]);
     const zip = await JSZip.loadAsync(binary);
 
     for (let i = 0, k = Object.keys(zip.files), n = k.length; i < n; i++) {
       const filename = k[i];
       const content = await zip.files[filename].async("string");
-      const data: { rts: Rts; eew: Eew[]; time: number; } = JSON.parse(content);
+      const data: { rts: Rts; eew: Eew[]; time: number } = JSON.parse(content);
       data.rts.replay = true;
       data.eew.forEach((e) => (e.replay = true));
       data.time = +filename;
