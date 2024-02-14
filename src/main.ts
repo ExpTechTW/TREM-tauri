@@ -239,13 +239,12 @@ api.on(WebSocketEvent.Eew, (eew) => {
     }
   }
 
-  instance.changeView("home");
-
   if (
     Object.keys(props.eew).length == 0 &&
     eew.serial == 1 &&
     setting.settings.behavior.focusWindowWhenEew
   ) {
+    instance.changeView("home");
     browserWindow.setFocus();
   }
 
@@ -354,14 +353,14 @@ browserWindow.onFileDropEvent(async (e) => {
       `[Replay] Loading replay ${e.payload.paths[0].split(/(\\|\/)/g).pop()}`
     );
 
-    const replayData: { rts: Rts; eew: Eew[]; time: number }[] = [];
+    const replayData: { rts: Rts; eew: Eew[]; time: number; }[] = [];
     const binary = await fs.readBinaryFile(e.payload.paths[0]);
     const zip = await JSZip.loadAsync(binary);
 
     for (let i = 0, k = Object.keys(zip.files), n = k.length; i < n; i++) {
       const filename = k[i];
       const content = await zip.files[filename].async("string");
-      const data: { rts: Rts; eew: Eew[]; time: number } = JSON.parse(content);
+      const data: { rts: Rts; eew: Eew[]; time: number; } = JSON.parse(content);
       data.rts.replay = true;
       data.eew.forEach((e) => (e.replay = true));
       data.time = +filename;
