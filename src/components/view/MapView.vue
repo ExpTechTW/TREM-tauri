@@ -41,11 +41,15 @@ defineProps<{
 }>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
-const mapTemplate = ref<HTMLDivElement>(document.createElement("div"));
+const mapTemplate = ref<HTMLDivElement>();
 const setting =
   inject<SettingsManager<DefaultConfigSchema>>("settings")?.settings;
 
 onMounted(() => {
+  if (!mapTemplate.value) {
+    return;
+  }
+
   const initialState = { lng: 120.5, lat: 23.6, zoom: 6.75 };
 
   map.value = markRaw(
