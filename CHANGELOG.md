@@ -7,6 +7,7 @@
 * 新增啟動參數 `--quiet` 在開啟程式時隱藏視窗 (https://github.com/ExpTechTW/TREM-tauri/pull/30)
 * 停用瀏覽器內建快捷鍵 (https://github.com/ExpTechTW/TREM-tauri/pull/31)
 * 自動抓取並更新地震報告 (https://github.com/ExpTechTW/TREM-tauri/pull/32)
+* 修正切換面板後地圖不見的問題 (https://github.com/ExpTechTW/TREM-tauri/pull/34)
 
 **完整變更紀錄**: https://github.com/ExpTechTW/TREM-tauri/compare/v0.0.0-alpha.2...v0.0.0-alpha.3
 
