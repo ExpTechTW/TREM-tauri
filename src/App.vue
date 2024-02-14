@@ -57,6 +57,7 @@ const changeReport = async (report: PartialReport) => {
   if (!api) {
     return;
   }
+
   activeReport.value = undefined;
   currentView.value = "report";
   const fullReport = await api?.getReport(report.id);

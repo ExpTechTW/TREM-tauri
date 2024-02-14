@@ -8,7 +8,14 @@ import MapReportMarker from "../component/MapReportMarker.vue";
 import MapRtsBox from "../component/MapRtsBox.vue";
 import MapRtsMarker from "../component/MapRtsMarker.vue";
 
-import { markRaw, onBeforeUnmount, onMounted, shallowRef, inject } from "vue";
+import {
+  markRaw,
+  onBeforeUnmount,
+  onMounted,
+  shallowRef,
+  inject,
+  ref,
+} from "vue";
 import type { Ref } from "vue";
 import { SettingsManager } from "tauri-settings";
 import maplibregl from "maplibre-gl";
@@ -34,15 +41,20 @@ defineProps<{
 }>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
+const mapTemplate = ref<HTMLDivElement>();
 const setting =
   inject<SettingsManager<DefaultConfigSchema>>("settings")?.settings;
 
 onMounted(() => {
+  if (!mapTemplate.value) {
+    return;
+  }
+
   const initialState = { lng: 120.5, lat: 23.6, zoom: 6.75 };
 
   map.value = markRaw(
     new maplibregl.Map({
-      container: "map",
+      container: mapTemplate.value,
       style: {
         version: 8,
         name: "TREM Map",
@@ -260,7 +272,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template lang="pug">
-#map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': currentView.startsWith('report'), 'hide-report-list-markers': currentView != 'report-list' }")
+#map.map-container.maplibregl-map(ref="mapTemplate", :class="{ 'hide-rts-markers': currentView.startsWith('report'), 'hide-report-list-markers': currentView != 'report-list' }")
 .map-layers(v-if="map")
   .home(v-if="!Object.keys(eew).length && currentView == 'home'")
     MapHomeViewControl(:map="map")
