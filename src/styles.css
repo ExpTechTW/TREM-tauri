@@ -5,11 +5,10 @@
 
 :root {
   font-family: "Lato", "Noto Sans TC", sans-serif;
-  font-synthesis: none;
   text-rendering: optimizeLegibility;
-  user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
+  user-select: none;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -31,6 +30,8 @@
 }
 
 body {
+  position: fixed;
+  inset: 0;
   margin: 0;
   background-color: hsl(var(--background-hsl));
   color: #fff;
