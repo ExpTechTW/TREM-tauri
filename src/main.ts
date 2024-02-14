@@ -418,3 +418,32 @@ browserWindow.onCloseRequested((event) => {
     browserWindow.hide();
   }
 });
+
+document.addEventListener("keydown", (ev) => {
+  // Disabling keyboard shortcuts
+  ev.preventDefault();
+
+  if (ev.ctrlKey && !ev.shiftKey && !ev.altKey) {
+    switch (ev.code) {
+      case "Digit1":
+        instance.changeView("home");
+        break;
+
+      case "Digit2":
+        instance.changeView("report-list");
+        break;
+
+      case "Digit3":
+      case "KeyO":
+        instance.changeView("setting");
+        break;
+
+      case "KeyR":
+        location.reload();
+        break;
+
+      default:
+        break;
+    }
+  }
+});

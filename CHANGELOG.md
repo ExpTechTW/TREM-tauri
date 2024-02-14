@@ -5,6 +5,7 @@
 * 新增開機時自動啟動的設定 (https://github.com/ExpTechTW/TREM-tauri/pull/30)
 * 新增最小化至系統匣的設定 (https://github.com/ExpTechTW/TREM-tauri/pull/30)
 * 新增啟動參數 `--quiet` 在開啟程式時隱藏視窗 (https://github.com/ExpTechTW/TREM-tauri/pull/30)
+* 停用瀏覽器內建快捷鍵 (https://github.com/ExpTechTW/TREM-tauri/pull/31)
 
 **完整變更紀錄**: https://github.com/ExpTechTW/TREM-tauri/compare/v0.0.0-alpha.2...v0.0.0-alpha.3
 
