@@ -16,7 +16,6 @@ import {
   inject,
   ref,
 } from "vue";
-import type { Ref } from "vue";
 import maplibregl from "maplibre-gl";
 
 import type {
@@ -33,10 +32,10 @@ defineProps<{
   currentView: string;
   reports: PartialReport[];
   activeReport?: Report;
-  stations: Ref<Record<string, Station>>;
-  rts: Ref<Rts>;
+  stations: Record<string, Station>;
+  rts: Rts;
   eew: Record<string, EewEvent>;
-  currentEewIndex: Ref<string>;
+  currentEewIndex?: string;
   changeReport(report: PartialReport): void;
 }>();
 
@@ -281,12 +280,12 @@ onBeforeUnmount(() => {
     MapReportMarker(:map="map", :report="activeReport")
   .rts(v-if="stations && currentView == 'home' && !currentView.startsWith('report')")
     MapRtsMarker(:map="map", :stations="stations", :rts="rts", :hide-non-alert="!!Object.keys(eew).length")
-  .rts-box(v-if="Object.keys(rts.value.box).length && currentView == 'home'")
-    MapRtsBox(:map="map", :box="rts.value.box")
+  .rts-box(v-if="Object.keys(rts.box).length && currentView == 'home'")
+    MapRtsBox(:map="map", :box="rts.box")
   .eew(v-if="Object.keys(eew).length && currentView == 'home'")
     MapEew(:map="map", :eew="eew")
-  .eew-town-intensity(v-if="eew[currentEewIndex.value] && currentView == 'home'")
-    MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int", :area="eew[currentEewIndex.value].raw.eq?.area")
+  .eew-town-intensity(v-if="currentEewIndex && eew[currentEewIndex] && currentView == 'home'")
+    MapEewIntensity(:map="map", :int="eew[currentEewIndex].int", :area="eew[currentEewIndex].raw.eq?.area")
   .location(v-if="config.location.area && code[config.location.area]")
     MapLocalMarker(:map="map", :lat="code[config.location.area].lat", :lng="code[config.location.area].lng")
 </template>
@@ -297,10 +296,6 @@ onBeforeUnmount(() => {
   inset: 0;
   height: 100svh;
   width: 100svw;
-
-  &.hide-rts-markers .rts-marker {
-    opacity: 0 !important;
-  }
 }
 
 .map-layers {

@@ -2,7 +2,7 @@
 import CrossMarker from "./CrossMarker.vue";
 
 import type { ComponentPublicInstance } from "vue";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onBeforeUnmount, ref } from "vue";
 import maplibregl from "maplibre-gl";
 
 import type { Report } from "../../scripts/class/api";
@@ -49,7 +49,7 @@ onMounted(() => {
   });
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   for (const marker of markers) {
     marker.remove();
   }

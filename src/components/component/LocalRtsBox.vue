@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import type { Ref } from "vue";
-
 import type { Rts, Station } from "../../scripts/class/api";
 
 defineProps<{
   station: string;
-  stations: Ref<Record<string, Station>>;
-  rts: Ref<Rts>;
+  stations: Record<string, Station>;
+  rts: Rts;
 }>();
 </script>
 
@@ -18,23 +16,23 @@ defineProps<{
   .station-container
     .station
       .station-detail
-        .location {{ stations.value[station]?.city ?? "載入中..." }} {{ stations.value[station]?.town ?? "" }}
+        .location {{ stations[station]?.city ?? "載入中..." }} {{ stations[station]?.town ?? "" }}
         .info
-          span.net {{ stations.value[station]?.net ?? "載入中..." }}
+          span.net {{ stations[station]?.net ?? "載入中..." }}
           span.id {{ station }}
       .divider
       .station-data 
         .data-field
           span.name 計測震度
-          span.value {{ rts.value.station[station]?.I?.toFixed(1) ?? "無資料" }}
+          span.value {{ rts.station[station]?.I?.toFixed(1) ?? "無資料" }}
         .data-field
           span.name PGA
           span.unit gal
-          span.value {{ rts.value.station[station]?.pga?.toFixed(2) ?? "無資料" }}
+          span.value {{ rts.station[station]?.pga?.toFixed(2) ?? "無資料" }}
         .data-field
           span.name PGV
           span.unit kine
-          span.value {{ rts.value.station[station]?.pgv?.toFixed(2) ?? "無資料" }}
+          span.value {{ rts.station[station]?.pgv?.toFixed(2) ?? "無資料" }}
 </template>
 
 <style lang="scss" scoped>
