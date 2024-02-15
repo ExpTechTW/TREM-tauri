@@ -420,8 +420,6 @@ webviewWindow.onCloseRequested((event) => {
 
 document.addEventListener("keydown", (ev) => {
   // Disabling keyboard shortcuts
-  //ev.preventDefault();
-
   if (ev.ctrlKey && !ev.shiftKey && !ev.altKey) {
     switch (ev.code) {
       case "Digit1":
@@ -442,7 +440,10 @@ document.addEventListener("keydown", (ev) => {
         break;
 
       default:
+        ev.preventDefault();
         break;
     }
+  } else if (!(ev.ctrlKey && ev.shiftKey && !ev.altKey && ev.code == "KeyI")) {
+    ev.preventDefault();
   }
 });
