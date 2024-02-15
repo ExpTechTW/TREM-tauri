@@ -17,7 +17,6 @@ import {
   ref,
 } from "vue";
 import type { Ref } from "vue";
-import { SettingsManager } from "tauri-settings";
 import maplibregl from "maplibre-gl";
 
 import type {
@@ -27,6 +26,7 @@ import type {
   PartialReport,
 } from "../../scripts/class/api";
 import type { DefaultConfigSchema, EewEvent } from "../../types";
+import type { Config } from "../../scripts/class/config";
 import code from "../../assets/json/code.json";
 
 defineProps<{
@@ -42,8 +42,7 @@ defineProps<{
 
 const map = shallowRef<maplibregl.Map | null>(null);
 const mapTemplate = ref<HTMLDivElement>();
-const setting =
-  inject<SettingsManager<DefaultConfigSchema>>("settings")?.settings;
+const config = inject<Config<DefaultConfigSchema>>("config")!.cache;
 
 onMounted(() => {
   if (!mapTemplate.value) {
@@ -288,8 +287,8 @@ onBeforeUnmount(() => {
     MapEew(:map="map", :eew="eew")
   .eew-town-intensity(v-if="eew[currentEewIndex.value] && currentView == 'home'")
     MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int", :area="eew[currentEewIndex.value].raw.eq?.area")
-  .location(v-if="setting?.location?.area && code[setting.location.area]")
-    MapLocalMarker(:map="map", :lat="code[setting.location.area].lat", :lng="code[setting.location.area].lng")
+  .location(v-if="config.location.area && code[config.location.area]")
+    MapLocalMarker(:map="map", :lat="code[config.location.area].lat", :lng="code[config.location.area].lng")
 </template>
 
 <style>

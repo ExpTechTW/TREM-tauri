@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
-import { ResponseType, fetch, type FetchOptions } from "@tauri-apps/api/http";
+import { fetch, type ClientOptions } from "@tauri-apps/plugin-http";
 import EventEmitter from "events";
 
 import Route from "./route";
@@ -560,15 +560,13 @@ export class ExpTechApi extends EventEmitter {
    * @returns {Promise<any>}
    */
   async #get(url: string): Promise<any> {
-    const request: FetchOptions = {
+    const request: RequestInit & ClientOptions = {
       method: "GET",
       headers: {
         // TODO: Replace User-Agent with a variable
         "User-Agent": "TREM-Lite/v2.0.0",
         Accept: "application/json",
       },
-      timeout: 2500,
-      responseType: ResponseType.JSON,
     };
 
     const res = await fetch(url, request);
@@ -577,7 +575,7 @@ export class ExpTechApi extends EventEmitter {
       throw new Error(`Server returned ${res.status}`);
     }
 
-    return res.data;
+    return await res.json();
   }
 
   async getStations(): Promise<Record<string, Station>> {

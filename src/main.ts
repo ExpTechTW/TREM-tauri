@@ -3,11 +3,12 @@ import App from "./App.vue";
 import {
   enable as enableAutoStart,
   disable as disableAutoStart,
-} from "tauri-plugin-autostart-api";
+  isEnabled as isAutoStartEnabled,
+} from "@tauri-apps/plugin-autostart";
 import { createApp, reactive, ref } from "vue";
-import { SettingsManager } from "tauri-settings";
-import { fs, window as win } from "@tauri-apps/api";
-import { UserAttentionType } from "@tauri-apps/api/window";
+import { UserAttentionType, getCurrent } from "@tauri-apps/api/window";
+import { getMatches } from "@tauri-apps/plugin-cli";
+import { readFile } from "@tauri-apps/plugin-fs";
 import JSZip from "jszip";
 
 import type { Station, PartialReport, Rts, Eew } from "./scripts/class/api";
@@ -27,6 +28,7 @@ import {
   WebSocketEvent,
 } from "./scripts/class/api";
 import { AudioType } from "./types";
+import { Config } from "./scripts/class/config";
 import { getAudio } from "./scripts/helper/audio";
 import DefaultConfig from "./assets/json/default_config.json";
 import code from "./assets/json/code.json";
@@ -34,7 +36,15 @@ import code from "./assets/json/code.json";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
 
-const browserWindow = win.getCurrent();
+const webviewWindow = getCurrent();
+
+const args = await getMatches();
+
+const config = new Config<DefaultConfigSchema>(DefaultConfig as DefaultConfigSchema);
+
+if (!args.args["quiet"].value) {
+  webviewWindow.show();
+}
 
 const props = {
   stations: ref<Record<string, Station>>({}),
@@ -47,48 +57,36 @@ const props = {
 const timer: Record<string, number> = {};
 const eewTimer: Record<string, number> = {};
 
-const setting = new SettingsManager<DefaultConfigSchema>(
-  DefaultConfig as DefaultConfigSchema,
-  {
-    prettify: true,
-  }
-);
-
-const api = new ExpTechApi();
+const api = new ExpTechApi(config.cache.api.key);
 const ntp = { remote: Date.now(), server: Date.now(), client: Date.now() };
 
 const app = createApp(App, props);
 
-app.provide("settings", setting);
 app.provide("api", api);
+app.provide("config", config);
 
 const instance = app.mount("#app") as InstanceType<typeof App>;
 
-(async () => {
-  await setting.initialize();
-  await setting.syncCache();
+await webviewWindow.setAlwaysOnTop(config.cache.behavior.alwaysOnTop);
 
-  api.setApiKey(await setting.get("api.key"));
+if (config.cache.system.startWithSystem) {
+  await enableAutoStart();
+} else if (await isAutoStartEnabled()) {
+  await disableAutoStart();
+}
 
-  props.reports.push(...(await api.getReports()));
+const updateResources = async () => {
+  const ids = props.reports.map((r) => r.id);
+  const reports = (await api.getReports()).filter((r) => !ids.includes(r.id));
+
+  props.reports.push(...reports);
+  props.reports.sort((a, b) => b.time - a.time);
+
   props.stations.value = await api.getStations();
+};
 
-  await browserWindow.setAlwaysOnTop(setting.settings.behavior.alwaysOnTop);
-
-  if (setting.settings.system.startWithSystem) {
-    await enableAutoStart();
-  } else {
-    disableAutoStart();
-  }
-
-  timer.reportFetchTimer = window.setInterval(async () => {
-    const ids = props.reports.map((r) => r.id);
-    const reports = (await api.getReports()).filter((r) => !ids.includes(r.id));
-
-    props.reports.push(...reports);
-    props.reports.sort((a, b) => b.time - a.time);
-  }, 60_000);
-})();
+updateResources();
+timer.reportFetchTimer = window.setInterval(updateResources, 60_000);
 
 let replayMode: boolean = false;
 
@@ -126,11 +124,11 @@ const resetEew = () => {
     delete props.eew[id];
   }
 
-  if (!setting.settings.behavior.alwaysOnTop) {
-    browserWindow.setAlwaysOnTop(false);
+  if (!config.cache.behavior.alwaysOnTop) {
+    webviewWindow.setAlwaysOnTop(false);
   }
 
-  browserWindow.requestUserAttention(null);
+  webviewWindow.requestUserAttention(null);
 };
 
 api.on(WebSocketEvent.Rts, (rts) => {
@@ -186,8 +184,8 @@ api.on(WebSocketEvent.Eew, (eew) => {
     raw: eew,
   };
 
-  if (setting.settings.location.area) {
-    const area = code[setting.settings.location.area];
+  if (config.cache.location.area) {
+    const area = code[config.cache.location.area];
     const { surfaceDistance, distance } = calculateEpicenterDistance({
       lat: eew.eq.lat,
       lng: eew.eq.lon,
@@ -242,29 +240,29 @@ api.on(WebSocketEvent.Eew, (eew) => {
   if (
     Object.keys(props.eew).length == 0 &&
     eew.serial == 1 &&
-    setting.settings.behavior.focusWindowWhenEew
+    config.cache.behavior.focusWindowWhenEew
   ) {
     instance.changeView("home");
-    browserWindow.setFocus();
+    webviewWindow.setFocus();
   }
 
   if (
-    !setting.settings.behavior.alwaysOnTop &&
-    setting.settings.behavior.alwaysOnTopWhenEew
+    !config.cache.behavior.alwaysOnTop &&
+    config.cache.behavior.alwaysOnTopWhenEew
   ) {
-    browserWindow.setAlwaysOnTop(true);
+    webviewWindow.setAlwaysOnTop(true);
   }
 
   if (props.eew[eew.id]) {
     if (eew.serial > props.eew[eew.id].serial) {
-      browserWindow.requestUserAttention(UserAttentionType.Informational);
+      webviewWindow.requestUserAttention(UserAttentionType.Informational);
 
-      if (setting.settings.audio.enabled) {
-        getAudio(setting.settings.audio.theme, AudioType.Update).play();
+      if (config.cache.audio.enabled) {
+        getAudio(config.cache.audio.theme, AudioType.Update).play();
       }
     }
   } else {
-    browserWindow.requestUserAttention(UserAttentionType.Critical);
+    webviewWindow.requestUserAttention(UserAttentionType.Critical);
 
     if (!eewTimer[eew.id]) {
       eewTimer[eew.id] = window.setTimeout(() => {
@@ -281,12 +279,12 @@ api.on(WebSocketEvent.Eew, (eew) => {
     }
 
     if (eew.author == EewSource.Cwa) {
-      if (setting.settings.audio.enabled) {
-        getAudio(setting.settings.audio.theme, AudioType.CwaEew).play();
+      if (config.cache.audio.enabled) {
+        getAudio(config.cache.audio.theme, AudioType.CwaEew).play();
       }
     } else {
-      if (setting.settings.audio.enabled) {
-        getAudio(setting.settings.audio.theme, AudioType.Eew).play();
+      if (config.cache.audio.enabled) {
+        getAudio(config.cache.audio.theme, AudioType.Eew).play();
       }
     }
   }
@@ -335,13 +333,11 @@ const getAccurateTime = () => {
   return ntp.server + (Date.now() - ntp.client);
 };
 
-browserWindow.onFileDropEvent(async (e) => {
+const unlisten = await webviewWindow.listen<{ paths: string[]; }>("tauri://file-drop", async (e) => {
   if (replayMode) {
     return;
   }
-  if (e.payload.type != "drop") {
-    return;
-  }
+
   if (!e.payload.paths[0].endsWith(".trply")) {
     return;
   }
@@ -354,7 +350,7 @@ browserWindow.onFileDropEvent(async (e) => {
     );
 
     const replayData: { rts: Rts; eew: Eew[]; time: number; }[] = [];
-    const binary = await fs.readBinaryFile(e.payload.paths[0]);
+    const binary = await readFile(e.payload.paths[0]);
     const zip = await JSZip.loadAsync(binary);
 
     for (let i = 0, k = Object.keys(zip.files), n = k.length; i < n; i++) {
@@ -413,17 +409,18 @@ browserWindow.onFileDropEvent(async (e) => {
     replayMode = false;
   }
 });
+unlisten();
 
-browserWindow.onCloseRequested((event) => {
-  if (setting.settings.system.closeToTray) {
+webviewWindow.onCloseRequested((event) => {
+  if (config.cache.system.closeToTray) {
     event.preventDefault();
-    browserWindow.hide();
+    webviewWindow.hide();
   }
 });
 
 document.addEventListener("keydown", (ev) => {
   // Disabling keyboard shortcuts
-  ev.preventDefault();
+  //ev.preventDefault();
 
   if (ev.ctrlKey && !ev.shiftKey && !ev.altKey) {
     switch (ev.code) {

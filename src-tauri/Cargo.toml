@@ -8,33 +8,24 @@ repository = ""
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "1.5", features = [] }
+tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies]
-tauri = { version = "1.5", features = [ "cli",
-  "clipboard-write-text",
-  "http-request",
-  "fs-create-dir",
-  "fs-read-dir",
-  "fs-read-file",
-  "fs-write-file",
-  "path-all",
-  "shell-open",
-  "system-tray",
-  "window-close",
-  "window-hide",
-  "window-request-user-attention",
-  "window-set-always-on-top",
-  "window-set-focus",
-  "window-set-skip-taskbar",
-  "window-set-title",
-  "window-show",
-] }
+tauri = { version = "2.0.0-beta", features = ["devtools", "tray-icon"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-autostart = "2.0.0-beta.0"
+tauri-plugin-cli = "2.0.0-beta.0"
+tauri-plugin-clipboard-manager = "2.0.0-beta.0"
+tauri-plugin-fs = "2.0.0-beta.0"
+tauri-plugin-http = "2.0.0-beta"
+tauri-plugin-shell = "2.0.0-beta"
+tauri-plugin-websocket = "2.0.0-beta"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

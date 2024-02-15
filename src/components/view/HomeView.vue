@@ -7,12 +7,12 @@ import ReportIntensityItem from "../component/ReportIntensityItem.vue";
 import ReportItem from "../component/ReportItem.vue";
 import WaveTimer from "../component/WaveTimer.vue";
 
-import type { SettingsManager } from "tauri-settings";
 import type { Ref } from "vue";
 import { onMounted, inject } from "vue";
 
 import type { DefaultConfigSchema, EewEvent } from "../../types";
 import type { PartialReport, Rts, Station } from "../../scripts/class/api";
+import type { Config } from "../../scripts/class/config";
 import { EewStatus } from "../../scripts/class/api";
 import { toFormattedTimeString } from "../../scripts/helper/utils";
 
@@ -27,7 +27,7 @@ defineProps<{
   changeReport(report: PartialReport): void;
 }>();
 
-const setting = inject<SettingsManager<DefaultConfigSchema>>("settings");
+const config = inject<Config<DefaultConfigSchema>>("config")!.cache;
 
 const InfoBoxStatusClass = {
   [EewStatus.Warn]: "warn",
@@ -103,8 +103,8 @@ onMounted(() => {});
         ReportItem(v-if="reports[2]", :report="reports[2]", :change-report="changeReport")
         ReportItem(v-if="reports[3]", :report="reports[3]", :change-report="changeReport")
         ReportItem(v-if="reports[4]", :report="reports[4]", :change-report="changeReport")
-  .home-local-rts-box-wrapper(v-if="setting?.settings?.location?.station")
-    LocalRtsBox.home-local-rts-box(:class="{ show: currentView == 'home' }", :station="setting.settings.location.station", :stations="stations", :rts="rts")
+  .home-local-rts-box-wrapper(v-if="config.location.station")
+    LocalRtsBox.home-local-rts-box(:class="{ show: currentView == 'home' }", :station="config.location.station", :stations="stations", :rts="rts")
 </template>
 
 <style lang="scss">

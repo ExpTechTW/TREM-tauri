@@ -6,8 +6,7 @@ import ReportDetailField from "../component/ReportDetailField.vue";
 import ReportIntensityGroup from "../component/ReportIntensityGroup.vue";
 import ReportIntensityItem from "../component/ReportIntensityItem.vue";
 
-import { SettingsManager } from "tauri-settings";
-import { clipboard } from "@tauri-apps/api";
+import { open } from "@tauri-apps/plugin-shell";
 import { inject } from "vue";
 
 import type { DefaultConfigSchema } from "../../types";
@@ -17,6 +16,7 @@ import {
   toFormattedTimeString,
   toReportUrl,
 } from "../../scripts/helper/utils";
+import { Config } from "../../scripts/class/config";
 import { Intensity } from "../../scripts/class/api";
 import { RefreshableTimeout } from "../../scripts/class/timeout";
 import { depth, magnitude } from "../../scripts/helper/color";
@@ -27,12 +27,12 @@ defineProps<{
   handleHideReportBox: () => void;
 }>();
 
-const setting = inject<SettingsManager<DefaultConfigSchema>>("settings");
+const setting = inject<Config<DefaultConfigSchema>>("config")!.cache;
 
 const openUrl = async (id?: string) => {
   if (id) {
-    if (await setting!.get("behavior.openExternal")) {
-      window.open(toReportUrl(id), "_blank");
+    if (setting.behavior.openExternal) {
+      open(toReportUrl(id));
     } else {
       window.open(toReportUrl(id));
     }
@@ -160,7 +160,7 @@ const copyReport = function (event: MouseEvent, report?: Report) {
     }
   }
 
-  clipboard.writeText(string.join("\n"));
+  //(string.join("\n"));
 
   if (event.target instanceof Element) {
     const button = event.target as HTMLButtonElement;
