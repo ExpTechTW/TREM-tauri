@@ -272,7 +272,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template lang="pug">
-#map.map-container.maplibregl-map(ref="mapTemplate", :class="{ 'hide-rts-markers': currentView.startsWith('report'), 'hide-report-list-markers': currentView != 'report-list' }")
+#map.map-container.maplibregl-map(ref="mapTemplate")
 .map-layers(v-if="map")
   .home(v-if="!Object.keys(eew).length && currentView == 'home'")
     MapHomeViewControl(:map="map")
@@ -280,7 +280,7 @@ onBeforeUnmount(() => {
     MapReportListMarker(:map="map", :reports="reports", :change-report="changeReport")
   .active-report(v-if="activeReport && currentView == 'report'")
     MapReportMarker(:map="map", :report="activeReport")
-  .rts(v-if="stations && currentView == 'home'")
+  .rts(v-if="stations && currentView == 'home' && !currentView.startsWith('report')")
     MapRtsMarker(:map="map", :stations="stations", :rts="rts", :hide-non-alert="!!Object.keys(eew).length")
   .rts-box(v-if="Object.keys(rts.value.box).length && currentView == 'home'")
     MapRtsBox(:map="map", :box="rts.value.box")

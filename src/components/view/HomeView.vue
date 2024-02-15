@@ -50,7 +50,7 @@ onMounted(() => {});
 .home-view(:class="{eew: currentEewIndex != undefined}")
   .home-info-box-wrapper
     .home-info-box-container
-      .home-info-box(:class="{[currentEewIndex ? InfoBoxStatusClass[eew[currentEewIndex].status] : '']: true, show: currentView == 'home'}")
+      .home-info-box(:class="{[currentEewIndex && eew[currentEewIndex] ? InfoBoxStatusClass[eew[currentEewIndex].status] : '']: true, show: currentView == 'home'}")
         .header
           .title-container
             .header-title(v-if="currentEewIndex")
@@ -90,7 +90,7 @@ onMounted(() => {});
                 template(v-for="r in rts.value.int", :key="`${r.area ?? ''}${r.station ?? ''}`")
                   ReportIntensityItem(:area="r?.area", :station="r.station", :int="r.i")
     template(v-for="(e, id) in eew", :key="id")
-      WaveTimer(v-if="e.t" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
+      WaveTimer.wave-timer-box(v-if="e.t" , :class="{ show: currentView == 'home' }", :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
   .home-report-box-wrapper(v-if="!currentEewIndex && reports.length")
     .home-report-box(:class="{ show: !currentEewIndex && currentView == 'home' }")
       .title-container
@@ -104,7 +104,7 @@ onMounted(() => {});
         ReportItem(v-if="reports[3]", :report="reports[3]", :change-report="changeReport")
         ReportItem(v-if="reports[4]", :report="reports[4]", :change-report="changeReport")
   .home-local-rts-box-wrapper(v-if="setting?.settings?.location?.station")
-    LocalRtsBox.home-local-rts-box(:class="{ show:  currentView == 'home' }", :station="setting.settings.location.station", :stations="stations", :rts="rts")
+    LocalRtsBox.home-local-rts-box(:class="{ show: currentView == 'home' }", :station="setting.settings.location.station", :stations="stations", :rts="rts")
 </template>
 
 <style lang="scss">
@@ -128,10 +128,6 @@ onMounted(() => {});
 
   &.eew > .home-info-box-wrapper {
     flex: 1;
-  }
-
-  &.eew .home-local-rts-box {
-    opacity: 1;
   }
 
   .title-container {
@@ -165,9 +161,16 @@ onMounted(() => {});
   background-color: hsl(var(--surface-hsl));
   color: #fff;
   white-space: nowrap;
-
-  pointer-events: all;
   border-radius: 20px;
+}
+
+.home-info-box,
+.home-report-box,
+.home-weather-box,
+.home-local-rts-box,
+.wave-timer-box {
+  /* show hide transition */
+  pointer-events: all;
   opacity: 0;
   translate: 100%;
   transition-property: opacity, translate;
@@ -176,6 +179,7 @@ onMounted(() => {});
     cubic-bezier(0.3, 0, 0.8, 0.15);
 
   &.show {
+    opacity: 1;
     translate: 0;
     transition-timing-function: cubic-bezier(0.2, 0, 0, 1),
       cubic-bezier(0.05, 0.7, 0.1, 1);
