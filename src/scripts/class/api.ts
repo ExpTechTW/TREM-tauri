@@ -398,6 +398,8 @@ export interface Ntp {
 }
 
 export enum WebSocketCloseCode {
+  Normal = 1000,
+  AbnormalClosure = 1006,
   InsufficientPermission = 4000,
 }
 
@@ -422,6 +424,7 @@ export enum WebSocketEvent {
   Rts = "rts",
   Verify = "verify",
   Close = "close",
+  Error = "error",
 }
 
 export class ExpTechApi extends EventEmitter {
@@ -429,6 +432,7 @@ export class ExpTechApi extends EventEmitter {
   route: Route;
   wsConfig: WebSocketConnectionConfig;
   ws!: WebSocket;
+  _destroyed: boolean;
 
   constructor(key: string = "") {
     super();
@@ -450,6 +454,8 @@ export class ExpTechApi extends EventEmitter {
     if (key) {
       this.#initWebSocket();
     }
+
+    this._destroyed = false;
   }
 
   setApiKey(apiKey: string): this {
@@ -465,7 +471,16 @@ export class ExpTechApi extends EventEmitter {
     return this;
   }
 
+  destroy() {
+    this._destroyed = true;
+    this.ws.close(1000);
+  }
+
   #initWebSocket() {
+    if (this._destroyed) {
+      return;
+    }
+
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.close();
     }
@@ -550,18 +565,20 @@ export class ExpTechApi extends EventEmitter {
       info("[WebSocket] Socket closed");
       this.emit(WebSocketEvent.Close, ev);
 
-      if (ev.code != WebSocketCloseCode.InsufficientPermission) {
-        window.setTimeout(this.#initWebSocket.bind(this), 5_000);
+      switch (ev.code) {
+        case WebSocketCloseCode.Normal:
+        case WebSocketCloseCode.InsufficientPermission:
+          break;
+
+        default:
+          window.setTimeout(this.#initWebSocket.bind(this), 5_000);
+          break;
       }
     });
 
-    this.ws.addEventListener("error", (err) => {
-      if (err instanceof Error) {
-        error(`[WebSocket] ${err.message}`);
-        if (err.stack) {
-          trace(err.stack);
-        }
-      }
+    this.ws.addEventListener("error", (ev) => {
+      error(`[WebSocket] Websocet failed to establish a connection to ${url}.`);
+      this.emit(WebSocketEvent.Error, ev);
     });
   }
 
@@ -580,6 +597,7 @@ export class ExpTechApi extends EventEmitter {
       },
     };
 
+    info(`[API] Fetching ${url}`);
     const res = await fetch(url, request);
 
     if (!res.ok) {
@@ -708,9 +726,14 @@ export declare interface ExpTechApi extends EventEmitter {
   on(event: WebSocketEvent.Report, listener: (report: Report) => void): this;
 
   /**
-   * 地震速報資料
    * @param {WebSocketEvent.Close} event close
    * @param {(ev: CloseEvent) => void} listener
    */
   on(event: WebSocketEvent.Close, listener: (ev: CloseEvent) => void): this;
+
+  /**
+   * @param {WebSocketEvent.Error} event error
+   * @param {(ev: Event) => void} listener
+   */
+  on(event: WebSocketEvent.Error, listener: (ev: Event) => void): this;
 }

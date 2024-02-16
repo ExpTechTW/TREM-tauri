@@ -29,9 +29,12 @@ const config = new Config<DefaultConfigSchema>(
   DefaultConfig as DefaultConfigSchema
 );
 
+
 const app = createApp(App);
 app.provide("config", config);
 app.mount("#app");
+
+window.onbeforeunload = () => app.unmount();
 
 await webviewWindow.setAlwaysOnTop(config.cache.behavior.alwaysOnTop);
 

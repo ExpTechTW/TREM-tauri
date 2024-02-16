@@ -65,13 +65,32 @@ const currentEewIndex = ref<string>();
 let isReplaying: boolean = false;
 
 const updateResources = async () => {
-  const ids = reports.map((r) => r.id);
-  const r = (await api.getReports()).filter((r) => !ids.includes(r.id));
+  try {
+    const ids = reports.map((r) => r.id);
+    const r = (await api.getReports()).filter((r) => !ids.includes(r.id));
 
-  reports.push(...r);
-  reports.sort((a, b) => b.time - a.time);
+    reports.push(...r);
+    reports.sort((a, b) => b.time - a.time);
+  } catch (err) {
+    if (err instanceof Error) {
+      error("[API] Error fetching report list.");
+      if (err.stack) {
+        trace(err.stack);
+      }
+    }
+  }
 
-  stations.value = await api.getStations();
+  try {
+    const s = await api.getStations();
+    stations.value = s;
+  } catch (err) {
+    if (err instanceof Error) {
+      error("[API] Error fetching station data.");
+      if (err.stack) {
+        trace(err.stack);
+      }
+    }
+  }
 };
 
 updateResources();
@@ -308,8 +327,6 @@ api.on(WebSocketEvent.Ntp, ({ time }) => {
   ntp.remote = time;
 });
 
-api.on(WebSocketEvent.Close, console.debug);
-
 const getAccurateTime = () => {
   return ntp.server + (Date.now() - ntp.client);
 };
@@ -461,9 +478,13 @@ const offCloseRequest = webviewWindow.onCloseRequested((event) => {
 });
 
 onBeforeUnmount(() => {
+  console.log("unmount");
+
   offFileDrop.then((f) => f());
   offCloseRequest.then((f) => f());
   unattachConsole.then((f) => f());
+  clearInterval(timer.reportFetchTimer);
+  api.destroy();
 });
 </script>
 
