@@ -34,6 +34,9 @@
     "licenseFile": "./assets/TOS",
     "targets": "all",
     "windows": {
+      "wix":{
+        "language": "zh-TW"
+      },
       "nsis": {
         "installMode": "currentUser",
         "installerIcon": "icons/icon.ico",
