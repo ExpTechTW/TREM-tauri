@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import maplibregl from "maplibre-gl";
 
 const props = defineProps<{
@@ -17,7 +17,7 @@ onMounted(() => {
     .addTo(props.map);
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   marker.remove();
 });
 </script>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import EewIntensity from "./EewIntensity.vue";
 
-import { ref, watch } from "vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import maplibregl from "maplibre-gl";
 
 const props = defineProps<{
@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const overrides = ref<Record<string, number>>({});
 
-watch(
+const unwatch = watch(
   () => props.area,
   () => {
     const newOverrides: Record<string, number> = {};
@@ -24,9 +24,20 @@ watch(
     overrides.value = newOverrides;
   }
 );
+
+onMounted(() => {
+  props.map.setLayoutProperty("town", "visibility", "visible");
+  props.map.setLayoutProperty("county", "visibility", "none");
+});
+
+onBeforeUnmount(() => {
+  props.map.setLayoutProperty("county", "visibility", "visible");
+  props.map.setLayoutProperty("town", "visibility", "none");
+  unwatch();
+});
 </script>
 
 <template lang="pug">
 template(v-for="(intensity, code) in int" :key="code")
-  EewIntensity(:code="code", :int="intensity", :map="map" :override="overrides[code]")
+  EewIntensity(:code="code", :int="overrides[code]??intensity", :map="map", :override="overrides[code]")
 </template>

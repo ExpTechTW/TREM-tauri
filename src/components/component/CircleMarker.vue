@@ -47,9 +47,7 @@ const updateCircle = () => {
   updateLock = false;
 };
 
-watch(() => props.radius, updateCircle);
-
-props.map.on("move", updateCircle);
+const unwatch = watch(() => props.radius, updateCircle);
 
 onMounted(() => {
   if (strokeTemplate.value) {
@@ -58,6 +56,8 @@ onMounted(() => {
   if (backgroundTemplate.value) {
     props.map.getCanvasContainer().prepend(backgroundTemplate.value);
   }
+
+  props.map.on("move", updateCircle);
 });
 
 onBeforeUnmount(() => {
@@ -69,6 +69,7 @@ onBeforeUnmount(() => {
   }
 
   props.map.off("move", updateCircle);
+  unwatch();
 });
 </script>
 

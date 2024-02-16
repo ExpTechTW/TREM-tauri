@@ -8,9 +8,14 @@ import MapReportMarker from "../component/MapReportMarker.vue";
 import MapRtsBox from "../component/MapRtsBox.vue";
 import MapRtsMarker from "../component/MapRtsMarker.vue";
 
-import { markRaw, onBeforeUnmount, onMounted, shallowRef, inject } from "vue";
-import type { Ref } from "vue";
-import { SettingsManager } from "tauri-settings";
+import {
+  markRaw,
+  onBeforeUnmount,
+  onMounted,
+  shallowRef,
+  inject,
+  ref,
+} from "vue";
 import maplibregl from "maplibre-gl";
 
 import type {
@@ -20,28 +25,34 @@ import type {
   PartialReport,
 } from "../../scripts/class/api";
 import type { DefaultConfigSchema, EewEvent } from "../../types";
+import type { Config } from "../../scripts/class/config";
 import code from "../../assets/json/code.json";
 
 defineProps<{
   currentView: string;
   reports: PartialReport[];
   activeReport?: Report;
-  stations: Ref<Record<string, Station>>;
-  rts: Ref<Rts>;
+  stations: Record<string, Station>;
+  rts: Rts;
   eew: Record<string, EewEvent>;
-  currentEewIndex: Ref<string>;
+  currentEewIndex?: string;
   changeReport(report: PartialReport): void;
 }>();
 
 const map = shallowRef<maplibregl.Map | null>(null);
-const setting = inject<SettingsManager<DefaultConfigSchema>>("settings");
+const mapTemplate = ref<HTMLDivElement>();
+const config = inject<Config<DefaultConfigSchema>>("config")!.cache;
 
 onMounted(() => {
+  if (!mapTemplate.value) {
+    return;
+  }
+
   const initialState = { lng: 120.5, lat: 23.6, zoom: 6.75 };
 
   map.value = markRaw(
     new maplibregl.Map({
-      container: "map",
+      container: mapTemplate.value,
       style: {
         version: 8,
         name: "TREM Map",
@@ -259,7 +270,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template lang="pug">
-#map.map-container.maplibregl-map(:class="{ 'hide-rts-markers': currentView.startsWith('report'), 'hide-report-list-markers': currentView != 'report-list' }")
+#map.map-container.maplibregl-map(ref="mapTemplate")
 .map-layers(v-if="map")
   .home(v-if="!Object.keys(eew).length && currentView == 'home'")
     MapHomeViewControl(:map="map")
@@ -267,16 +278,16 @@ onBeforeUnmount(() => {
     MapReportListMarker(:map="map", :reports="reports", :change-report="changeReport")
   .active-report(v-if="activeReport && currentView == 'report'")
     MapReportMarker(:map="map", :report="activeReport")
-  .rts(v-if="stations && currentView == 'home'")
+  .rts(v-if="stations && currentView == 'home' && !currentView.startsWith('report')")
     MapRtsMarker(:map="map", :stations="stations", :rts="rts", :hide-non-alert="!!Object.keys(eew).length")
-  .rts-box(v-if="Object.keys(rts.value.box).length && currentView == 'home'")
-    MapRtsBox(:map="map", :box="rts.value.box")
+  .rts-box(v-if="Object.keys(rts.box).length && currentView == 'home'")
+    MapRtsBox(:map="map", :box="rts.box")
   .eew(v-if="Object.keys(eew).length && currentView == 'home'")
     MapEew(:map="map", :eew="eew")
-  .eew-town-intensity(v-if="currentEewIndex.value && currentView == 'home'")
-    MapEewIntensity(:map="map", :int="eew[currentEewIndex.value].int", :area="eew[currentEewIndex.value].raw.eq?.area")
-  .location(v-if="setting?.settings?.location?.area")
-    MapLocalMarker(:map="map", :lat="code[setting.settings.location.area].lat", :lng="code[setting.settings.location.area].lng")
+  .eew-town-intensity(v-if="currentEewIndex && eew[currentEewIndex] && currentView == 'home'")
+    MapEewIntensity(:map="map", :int="eew[currentEewIndex].int", :area="eew[currentEewIndex].raw.eq?.area")
+  .location(v-if="config.location.area && code[config.location.area]")
+    MapLocalMarker(:map="map", :lat="code[config.location.area].lat", :lng="code[config.location.area].lng")
 </template>
 
 <style>
@@ -285,10 +296,6 @@ onBeforeUnmount(() => {
   inset: 0;
   height: 100svh;
   width: 100svw;
-
-  &.hide-rts-markers .rts-marker {
-    opacity: 0 !important;
-  }
 }
 
 .map-layers {

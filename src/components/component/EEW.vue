@@ -4,7 +4,7 @@ import CrossMarker from "./CrossMarker.vue";
 import DotMarker from "./DotMarker.vue";
 
 import type { ComponentPublicInstance } from "vue";
-import { onMounted, onUnmounted, ref, watch } from "vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import maplibregl from "maplibre-gl";
 
 import type { EewEvent } from "../../types";
@@ -34,14 +34,14 @@ defineExpose({
   },
 });
 
-watch(
+const unwatchLngLat = watch(
   () => [props.eew.lng, props.eew.lat],
   () => {
     marker.setLngLat([props.eew.lng, props.eew.lat]);
   }
 );
 
-watch(
+const unwatchTemplate = watch(
   () => crossTemplate.value,
   () => {
     if (marker) {
@@ -66,9 +66,11 @@ onMounted(() => {
   props.map.on("zoom", scaleMarker);
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   marker.remove();
   props.map.off("zoom", scaleMarker);
+  unwatchLngLat();
+  unwatchTemplate();
 });
 </script>
 

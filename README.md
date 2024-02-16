@@ -6,16 +6,19 @@
 <br />
 
 <div align="center" style="display: grid; grid-template-columns: 1fr 1fr;">
-<img alt="地震報告" title="地震報告" src="https://github.com/ExpTechTW/TREM-tauri/assets/58339640/55d288e2-020e-4e70-9195-e86f6cce0b20" style="width: 49%; height: auto;" />
+<img alt="主頁" title="主頁" src="./.github/home.png" style="width: 49%; height: auto;" />
+<img alt="地震速報" title="地震速報" src="./.github/eew.png" style="width: 49%; height: auto;" />
+<img alt="地震報告" title="地震報告" src="./.github/report.png" style="width: 49%; height: auto;" />
 </div>
 
 <br />
 
 <div align="center">
   
-  <a href="https://github.com/ExpTechTW/TREM-tauri/releases/latest">![Releases](https://img.shields.io/github/downloads/ExpTechTW/TREM-tauri/total)</a>
-  <a href="https://github.com/ExpTechTW/TREM-tauri/actions/workflows/build.yml">![GitHub Workflow Status](https://github.com/ExpTechTW/TREM-tauri/actions/workflows/build.yml/badge.svg)</a>
-  <a href="https://discord.gg/exptech-studio">![TREM Discord](https://img.shields.io/discord/926545182407688273?color=%237289DA&logo=discord&logoColor=white)</a>
+  <a href="https://github.com/ExpTechTW/TREM-tauri/releases/latest">![GitHub Release](https://img.shields.io/github/v/release/ExpTechTW/TREM-tauri?include_prereleases&label=latest)</a>
+  <a href="https://github.com/ExpTechTW/TREM-tauri/releases/latest">![Releases](https://img.shields.io/github/downloads/ExptechTW/TREM-tauri/total?color=%231094fc)</a>
+  <a href="https://github.com/ExpTechTW/TREM-tauri/actions/workflows/build.yml">![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/ExpTechTW/TREM-tauri/build.yml?branch=main&logo=github)</a>
+  <a href="https://discord.gg/exptech-studio">![TREM Discord](https://img.shields.io/discord/926545182407688273?color=%235865F2&logo=discord&logoColor=white)</a>
 </div>
 
 ## 關於 TREM

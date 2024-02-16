@@ -1,0 +1,76 @@
+name: 問題回報
+description: 回報非常明顯的問題。
+title: '[Bug]: '
+labels:
+  - 🐛 Bug
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        # TREM Tauri 問題回報
+
+        注意，你的問題其他人之前可能已經回報過，請檢查：
+
+        - 釘選問題 https://github.com/ExpTechTW/TREM-tauri/issues 頂部。
+        - 尚未關閉優先順序為 0 (`priority: 0`) 的問題，可以在[這裡](https://github.com/ExpTechTW/TREM-tauri/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Apriority%3A0)查看。
+        - 在問題列表和問答討論串中搜尋你的問題，如果你發現它已經存在，就請在相對應的問題/討論串中回覆或添加任何可能有幫助的資訊。
+  - type: textarea
+    id: desc
+    attributes:
+      label: 描述詳細情況
+      description: 請清楚描述問題，以供我們了解發生了什麼事。
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: 問題重現步驟
+      description: 請提供能重現這個問題的步驟。
+      placeholder: 請在這裡條列重現這個問題的每個步驟
+    validations:
+      required: true
+  - type: input
+    id: screenshot
+    attributes:
+      label: 截圖或影片
+      description: 可以在這裡提供其他截圖或影片來讓我們更快了解這個問題。
+      placeholder: 直接將檔案拖曳到這裡來上傳檔案
+  - type: input
+    id: version
+    attributes:
+      label: 程式版本
+      description: 請在這裡填入發生這個問題時的程式版本編號。
+      placeholder: v
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |-
+        ## 記錄檔
+
+        **每個問題回報都要附上記錄檔**，不論你認為是否需要它們。請參閱下面有關如何找到記錄檔的步驟。
+
+        如果你發現問題的時候還未關閉程式：
+
+        - 前往設定並點擊「匯出記錄檔」
+        - 將產生的 .zip 壓縮檔拖曳到 Github 輸入欄位中
+
+        記錄檔路徑：
+
+        - **Windows**:
+          - `%AppData/trem-tauri.tw.com.exptech/webview.log`
+          - `%AppData/trem-tauri.tw.com.exptech/runtime.log`
+        - **Linux**:
+          - `$HOME/.config/trem-tauri.tw.com.exptech/webview.log`
+          - `$HOME/.config/trem-tauri.tw.com.exptech/runtime.log`
+        - **macOS**:
+          - `/Library/Logs/trem-tauri.tw.com.exptech/webview.log`
+          - `/Library/Logs/trem-tauri.tw.com.exptech/runtime.log`
+  - type: input
+    id: logs
+    attributes:
+      label: 記錄檔
+      description: 請在這裡上傳程式的紀錄檔。
+      placeholder: 直接將檔案拖曳到這裡來上傳檔案
+    validations:
+      required: true

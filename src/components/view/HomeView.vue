@@ -7,19 +7,18 @@ import ReportIntensityItem from "../component/ReportIntensityItem.vue";
 import ReportItem from "../component/ReportItem.vue";
 import WaveTimer from "../component/WaveTimer.vue";
 
-import type { SettingsManager } from "tauri-settings";
-import type { Ref } from "vue";
 import { onMounted, inject } from "vue";
 
 import type { DefaultConfigSchema, EewEvent } from "../../types";
 import type { PartialReport, Rts, Station } from "../../scripts/class/api";
+import type { Config } from "../../scripts/class/config";
 import { EewStatus } from "../../scripts/class/api";
 import { toFormattedTimeString } from "../../scripts/helper/utils";
 
 defineProps<{
   currentView: string;
-  rts: Ref<Rts>;
-  stations: Ref<Record<string, Station>>;
+  rts: Rts;
+  stations: Record<string, Station>;
   eew: Record<string, EewEvent>;
   currentEewIndex?: string;
   reports: PartialReport[];
@@ -27,7 +26,7 @@ defineProps<{
   changeReport(report: PartialReport): void;
 }>();
 
-const setting = inject<SettingsManager<DefaultConfigSchema>>("settings");
+const config = inject<Config<DefaultConfigSchema>>("config")!.cache;
 
 const InfoBoxStatusClass = {
   [EewStatus.Warn]: "warn",
@@ -50,18 +49,17 @@ onMounted(() => {});
 .home-view(:class="{eew: currentEewIndex != undefined}")
   .home-info-box-wrapper
     .home-info-box-container
-      .home-info-box(:class="{[currentEewIndex ? InfoBoxStatusClass[eew[currentEewIndex].status] : '']: true, show: currentView == 'home'}")
-        .header
+      .home-info-box(:class="{[currentEewIndex && eew[currentEewIndex] ? InfoBoxStatusClass[eew[currentEewIndex].status] : '']: true, show: currentView == 'home'}")
+        .header(v-if="Object.keys(eew).length && currentEewIndex && eew[currentEewIndex]")
           .title-container
-            .header-title(v-if="currentEewIndex")
+            .header-title
               | 地震速報
               | #[span.current-eew-index(v-if="Object.keys(eew).length > 1") {{ Object.keys(eew).indexOf(currentEewIndex) + 1 }}]
               | #[span.total-eew-count(v-if="Object.keys(eew).length > 1") {{ Object.keys(eew).length }}]
               |｜
               |{{ eew[currentEewIndex].source.toUpperCase() }} {{ InfoBoxStatusText[eew[currentEewIndex].status] }}
-            .header-title(v-else) 目前無發布地震預警
-            .header-subtitle(v-if="currentEewIndex && !eew[currentEewIndex].final") 第{{ `${eew[currentEewIndex].serial}` }}報
-            .header-subtitle(v-else-if="currentEewIndex") \#{{ `${eew[currentEewIndex].serial}` }} (最終)
+            .header-subtitle(v-if="!eew[currentEewIndex].final") 第{{ `${eew[currentEewIndex].serial}` }}報
+            .header-subtitle(v-else) \#{{ `${eew[currentEewIndex].serial}` }} (最終)
           .header-body(v-if="currentEewIndex")
             .detail-container
               IntensityBox(:int="eew[currentEewIndex].max == 0 ? -1 : eew[currentEewIndex].max")
@@ -82,15 +80,20 @@ onMounted(() => {});
             .cancel-box(v-if="eew[currentEewIndex].cancel")
               .cancel-title #[span 取]#[span 消]
               .cancel-body 此地震速報已取消
-        .intensity(v-if="rts.value.int.length")
+        
+        .header(v-else)
+          .title-container
+            .header-title() 目前無發布地震預警
+          
+        .intensity(v-if="rts.int.length")
           .intensity-title 最大觀測震度
           .intensity-list-wrapper
             .intensity-list-scroller
               .intensity-list
-                template(v-for="r in rts.value.int", :key="r.station")
+                template(v-for="r in rts.int", :key="`${r.area ?? ''}${r.station ?? ''}`")
                   ReportIntensityItem(:area="r?.area", :station="r.station", :int="r.i")
     template(v-for="(e, id) in eew", :key="id")
-      WaveTimer(v-if="e.t" , :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
+      WaveTimer.wave-timer-box(v-if="e.t" , :class="{ show: currentView == 'home' }", :eew="e", :index="Object.keys(eew).indexOf(id) + 1")
   .home-report-box-wrapper(v-if="!currentEewIndex && reports.length")
     .home-report-box(:class="{ show: !currentEewIndex && currentView == 'home' }")
       .title-container
@@ -103,8 +106,8 @@ onMounted(() => {});
         ReportItem(v-if="reports[2]", :report="reports[2]", :change-report="changeReport")
         ReportItem(v-if="reports[3]", :report="reports[3]", :change-report="changeReport")
         ReportItem(v-if="reports[4]", :report="reports[4]", :change-report="changeReport")
-  .home-local-rts-box-wrapper(v-if="setting?.settings?.location?.station")
-    LocalRtsBox.home-local-rts-box(:class="{ show:  currentView == 'home' }", :station="setting.settings.location.station", :stations="stations", :rts="rts")
+  .home-local-rts-box-wrapper(v-if="config.location.station")
+    LocalRtsBox.home-local-rts-box(:class="{ show: currentView == 'home' }", :station="config.location.station", :stations="stations", :rts="rts")
 </template>
 
 <style lang="scss">
@@ -128,10 +131,6 @@ onMounted(() => {});
 
   &.eew > .home-info-box-wrapper {
     flex: 1;
-  }
-
-  &.eew .home-local-rts-box {
-    opacity: 1;
   }
 
   .title-container {
@@ -165,9 +164,16 @@ onMounted(() => {});
   background-color: hsl(var(--surface-hsl));
   color: #fff;
   white-space: nowrap;
-
-  pointer-events: all;
   border-radius: 20px;
+}
+
+.home-info-box,
+.home-report-box,
+.home-weather-box,
+.home-local-rts-box,
+.wave-timer-box {
+  /* show hide transition */
+  pointer-events: all;
   opacity: 0;
   translate: 100%;
   transition-property: opacity, translate;
@@ -176,6 +182,7 @@ onMounted(() => {});
     cubic-bezier(0.3, 0, 0.8, 0.15);
 
   &.show {
+    opacity: 1;
     translate: 0;
     transition-timing-function: cubic-bezier(0.2, 0, 0, 1),
       cubic-bezier(0.05, 0.7, 0.1, 1);
