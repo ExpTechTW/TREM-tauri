@@ -42,7 +42,7 @@
           "TradChinese",
           "Japanese"
         ],
-        "sidebarImage": "assets/sidebar.bmp"
+        "sidebarImage": "./assets/sidebar.bmp"
       }
     }
   },
