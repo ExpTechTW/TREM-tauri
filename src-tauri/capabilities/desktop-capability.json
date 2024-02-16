@@ -34,6 +34,7 @@
     "fs:default",
     "fs:read-files",
     "fs:write-files",
+    "log:default",
     "shell:allow-open",
     {
       "identifier": "fs:scope",

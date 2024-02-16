@@ -31,7 +31,7 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "licenseFile": "../LICENSE",
+    "licenseFile": "./assets/TOS",
     "targets": "all",
     "windows": {
       "nsis": {

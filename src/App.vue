@@ -8,6 +8,7 @@ import ReportListBox from "./components/view/ReportListBox.vue";
 
 import { inject, onBeforeUnmount, reactive, ref } from "vue";
 import { UserAttentionType, getCurrent } from "@tauri-apps/api/window";
+import { attachConsole, error, info, trace } from "@tauri-apps/plugin-log";
 
 import {
   ExpTechApi,
@@ -36,6 +37,7 @@ import { getAudio } from "./scripts/helper/audio";
 import JSZip from "jszip";
 import { readFile } from "@tauri-apps/plugin-fs";
 
+const unattachConsole = attachConsole();
 const webviewWindow = getCurrent();
 
 const config = inject<Config<DefaultConfigSchema>>("config")!;
@@ -96,7 +98,7 @@ const setEewIndex = () => {
 };
 
 const resetEew = () => {
-  console.log("[EEW] Cleaning eew states...");
+  info("[EEW] Cleaning eew states...");
 
   currentEewIndex.value = undefined;
   window.clearInterval(timer.eewRadiusTimer);
@@ -379,7 +381,7 @@ const offFileDrop = webviewWindow.listen<{ paths: string[] }>(
     isReplaying = true;
 
     try {
-      console.log(
+      info(
         `[Replay] Loading replay ${e.payload.paths[0].split(/(\\|\/)/g).pop()}`
       );
 
@@ -400,7 +402,7 @@ const offFileDrop = webviewWindow.listen<{ paths: string[] }>(
 
       const replayLength = replayData.length;
       let replayPercentage = 0;
-      console.log(`[Replay] Loaded ${replayLength} frames.`);
+      info(`[Replay] Loaded ${replayLength} frames.`);
 
       const emitEvents = () => {
         const current = replayData.shift();
@@ -425,7 +427,7 @@ const offFileDrop = webviewWindow.listen<{ paths: string[] }>(
         );
 
         if (newReplayPercentage > replayPercentage) {
-          console.log(
+          info(
             `[Replay] ${`${newReplayPercentage * 10}`.padStart(3, " ")}% [${"#".repeat(newReplayPercentage).padEnd(10, ".")}] | Frame ${replayLength - replayData.length}`
           );
         }
@@ -439,9 +441,14 @@ const offFileDrop = webviewWindow.listen<{ paths: string[] }>(
       };
 
       emitEvents();
-    } catch (error) {
-      console.error("[Replay] Exception thrown while loading replay.", error);
+    } catch (err) {
       isReplaying = false;
+      if (err instanceof Error) {
+        error("[Replay] Exception thrown while loading replay.");
+        if (err.stack) {
+          trace(err.stack);
+        }
+      }
     }
   }
 );
@@ -456,6 +463,7 @@ const offCloseRequest = webviewWindow.onCloseRequested((event) => {
 onBeforeUnmount(() => {
   offFileDrop.then((f) => f());
   offCloseRequest.then((f) => f());
+  unattachConsole.then((f) => f());
 });
 </script>
 

@@ -5,6 +5,7 @@ import EventEmitter from "events";
 import Route from "./route";
 
 import Code from "../../assets/json/code.json";
+import { error, info, trace } from "@tauri-apps/plugin-log";
 
 /**
  * 測站資訊
@@ -471,13 +472,13 @@ export class ExpTechApi extends EventEmitter {
 
     const url = this.route.websocket();
 
-    console.log("[WebSocket] Initializing connection");
-    console.log(`[WebSocket] Connecting to ${url}`);
+    info("[WebSocket] Initializing connection");
+    info(`[WebSocket] Connecting to ${url}`);
 
     this.ws = new WebSocket(url);
 
     this.ws.addEventListener("open", () => {
-      console.log("[WebSocket] Socket opened");
+      info("[WebSocket] Socket opened");
       this.ws.send(JSON.stringify(this.wsConfig));
     });
 
@@ -535,13 +536,18 @@ export class ExpTechApi extends EventEmitter {
             }
           }
         }
-      } catch (error) {
-        console.error("[WebSocket]", error);
+      } catch (err) {
+        if (err instanceof Error) {
+          error(`[WebSocket] ${err.message}`);
+          if (err.stack) {
+            trace(err.stack);
+          }
+        }
       }
     });
 
     this.ws.addEventListener("close", (ev) => {
-      console.log("[WebSocket] Socket closed");
+      info("[WebSocket] Socket closed");
       this.emit(WebSocketEvent.Close, ev);
 
       if (ev.code != WebSocketCloseCode.InsufficientPermission) {
@@ -550,7 +556,12 @@ export class ExpTechApi extends EventEmitter {
     });
 
     this.ws.addEventListener("error", (err) => {
-      console.error("[WebSocket]", err);
+      if (err instanceof Error) {
+        error(`[WebSocket] ${err.message}`);
+        if (err.stack) {
+          trace(err.stack);
+        }
+      }
     });
   }
 

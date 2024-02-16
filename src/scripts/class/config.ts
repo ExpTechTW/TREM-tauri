@@ -1,11 +1,12 @@
 import { appConfigDir, join } from "@tauri-apps/api/path";
 import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { error } from "@tauri-apps/plugin-log";
 
 const dir = await appConfigDir();
 const path = await join(dir, "config.json");
 
 if (!(await exists(path))) {
-  await writeTextFile(path, JSON.stringify({}, null, 2)).catch(console.error);
+  await writeTextFile(path, JSON.stringify({}, null, 2)).catch(error);
 }
 
 const data = JSON.parse(await readTextFile(path));
