@@ -4,7 +4,7 @@ import RtsBox from "./RtsBox.vue";
 import maplibregl from "maplibre-gl";
 
 import type { Box } from "../../scripts/class/api";
-import { onMounted, onUnmounted } from "vue";
+import { onMounted, onBeforeUnmount } from "vue";
 
 const props = defineProps<{
   map: maplibregl.Map;
@@ -22,7 +22,7 @@ onMounted(() => {
   }, 500);
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   props.map.setLayoutProperty("box", "visibility", "none");
   window.clearInterval(blink);
 });

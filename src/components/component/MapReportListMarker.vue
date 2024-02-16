@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CrossMarker from "./CrossMarker.vue";
 
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onBeforeUnmount, ref } from "vue";
 import maplibregl from "maplibre-gl";
 
 import type { PartialReport } from "../../scripts/class/api";
@@ -44,7 +44,7 @@ onMounted(() => {
   props.map.on("zoom", scaleMarker);
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   for (const marker of markers) {
     marker.remove();
   }

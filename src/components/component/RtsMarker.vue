@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import maplibregl from "maplibre-gl";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onBeforeUnmount, ref } from "vue";
 
 import type { RtsStation, Station } from "../../scripts/class/api";
 import { pga } from "../../scripts/helper/color";
@@ -22,7 +22,7 @@ onMounted(() => {
     .addTo(props.map);
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   marker.remove();
 });
 

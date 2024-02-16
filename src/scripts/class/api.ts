@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
-import { ResponseType, fetch, type FetchOptions } from "@tauri-apps/api/http";
+import { fetch, type ClientOptions } from "@tauri-apps/plugin-http";
 import EventEmitter from "events";
 
 import Route from "./route";
 
 import Code from "../../assets/json/code.json";
+import { error, info, trace } from "@tauri-apps/plugin-log";
 
 /**
  * 測站資訊
@@ -397,6 +398,8 @@ export interface Ntp {
 }
 
 export enum WebSocketCloseCode {
+  Normal = 1000,
+  AbnormalClosure = 1006,
   InsufficientPermission = 4000,
 }
 
@@ -421,6 +424,7 @@ export enum WebSocketEvent {
   Rts = "rts",
   Verify = "verify",
   Close = "close",
+  Error = "error",
 }
 
 export class ExpTechApi extends EventEmitter {
@@ -428,6 +432,7 @@ export class ExpTechApi extends EventEmitter {
   route: Route;
   wsConfig: WebSocketConnectionConfig;
   ws!: WebSocket;
+  _destroyed: boolean;
 
   constructor(key: string = "") {
     super();
@@ -449,6 +454,8 @@ export class ExpTechApi extends EventEmitter {
     if (key) {
       this.#initWebSocket();
     }
+
+    this._destroyed = false;
   }
 
   setApiKey(apiKey: string): this {
@@ -464,20 +471,29 @@ export class ExpTechApi extends EventEmitter {
     return this;
   }
 
+  destroy() {
+    this._destroyed = true;
+    this.ws.close(1000);
+  }
+
   #initWebSocket() {
+    if (this._destroyed) {
+      return;
+    }
+
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.close();
     }
 
     const url = this.route.websocket();
 
-    console.log("[WebSocket] Initializing connection");
-    console.log(`[WebSocket] Connecting to ${url}`);
+    info("[WebSocket] Initializing connection");
+    info(`[WebSocket] Connecting to ${url}`);
 
     this.ws = new WebSocket(url);
 
     this.ws.addEventListener("open", () => {
-      console.log("[WebSocket] Socket opened");
+      info("[WebSocket] Socket opened");
       this.ws.send(JSON.stringify(this.wsConfig));
     });
 
@@ -535,22 +551,34 @@ export class ExpTechApi extends EventEmitter {
             }
           }
         }
-      } catch (error) {
-        console.error("[WebSocket]", error);
+      } catch (err) {
+        if (err instanceof Error) {
+          error(`[WebSocket] ${err.message}`);
+          if (err.stack) {
+            trace(err.stack);
+          }
+        }
       }
     });
 
     this.ws.addEventListener("close", (ev) => {
-      console.log("[WebSocket] Socket closed");
+      info("[WebSocket] Socket closed");
       this.emit(WebSocketEvent.Close, ev);
 
-      if (ev.code != WebSocketCloseCode.InsufficientPermission) {
-        window.setTimeout(this.#initWebSocket.bind(this), 5_000);
+      switch (ev.code) {
+        case WebSocketCloseCode.Normal:
+        case WebSocketCloseCode.InsufficientPermission:
+          break;
+
+        default:
+          window.setTimeout(this.#initWebSocket.bind(this), 5_000);
+          break;
       }
     });
 
-    this.ws.addEventListener("error", (err) => {
-      console.error("[WebSocket]", err);
+    this.ws.addEventListener("error", (ev) => {
+      error(`[WebSocket] Websocet failed to establish a connection to ${url}.`);
+      this.emit(WebSocketEvent.Error, ev);
     });
   }
 
@@ -560,24 +588,23 @@ export class ExpTechApi extends EventEmitter {
    * @returns {Promise<any>}
    */
   async #get(url: string): Promise<any> {
-    const request: FetchOptions = {
+    const request: RequestInit & ClientOptions = {
       method: "GET",
       headers: {
         // TODO: Replace User-Agent with a variable
         "User-Agent": "TREM-Lite/v2.0.0",
         Accept: "application/json",
       },
-      timeout: 2500,
-      responseType: ResponseType.JSON,
     };
 
+    info(`[API] Fetching ${url}`);
     const res = await fetch(url, request);
 
     if (!res.ok) {
       throw new Error(`Server returned ${res.status}`);
     }
 
-    return res.data;
+    return await res.json();
   }
 
   async getStations(): Promise<Record<string, Station>> {
@@ -699,9 +726,14 @@ export declare interface ExpTechApi extends EventEmitter {
   on(event: WebSocketEvent.Report, listener: (report: Report) => void): this;
 
   /**
-   * 地震速報資料
    * @param {WebSocketEvent.Close} event close
    * @param {(ev: CloseEvent) => void} listener
    */
   on(event: WebSocketEvent.Close, listener: (ev: CloseEvent) => void): this;
+
+  /**
+   * @param {WebSocketEvent.Error} event error
+   * @param {(ev: Event) => void} listener
+   */
+  on(event: WebSocketEvent.Error, listener: (ev: Event) => void): this;
 }

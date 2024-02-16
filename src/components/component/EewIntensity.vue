@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, onUpdated } from "vue";
+import { onMounted, onBeforeUnmount, onUpdated } from "vue";
 import maplibregl from "maplibre-gl";
 
 const props = defineProps<{
@@ -23,7 +23,7 @@ onUpdated(() => {
   );
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   props.map.removeFeatureState(
     { source: "tw_town", id: props.override ?? props.code },
     "int"
