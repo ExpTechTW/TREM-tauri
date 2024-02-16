@@ -1,12 +1,12 @@
 name: 問題回報
-description: 報告非常明顯的問題。
+description: 回報非常明顯的問題。
 title: '[Bug]: '
 labels:
   - 🐛 Bug
 body:
   - type: markdown
     attributes:
-      value: >+
+      value: |-
         # TREM Tauri 問題回報
 
         注意，你的問題其他人之前可能已經回報過，請檢查：
@@ -14,7 +14,6 @@ body:
         - 釘選問題 https://github.com/ExpTechTW/TREM-tauri/issues 頂部。
         - 尚未關閉優先順序為 0 (`priority: 0`) 的問題，可以在[這裡](https://github.com/ExpTechTW/TREM-tauri/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Apriority%3A0)查看。
         - 在問題列表和問答討論串中搜尋你的問題，如果你發現它已經存在，就請在相對應的問題/討論串中回覆或添加任何可能有幫助的資訊。
-
   - type: textarea
     id: desc
     attributes:
