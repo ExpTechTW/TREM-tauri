@@ -4,7 +4,7 @@ use tauri::{
     Manager,
 };
 use tauri_plugin_autostart::MacosLauncher;
-use tauri_plugin_log::{Target, TargetKind, WEBVIEW_TARGET};
+use tauri_plugin_log::{Target, TargetKind};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -54,8 +54,8 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_log::Builder::new().targets([
           Target::new(TargetKind::Stdout),
-          Target::new(TargetKind::LogDir { file_name: Some("webview".into()) }).filter(|metadata| metadata.target() == WEBVIEW_TARGET),
-          Target::new(TargetKind::LogDir { file_name: Some("runtime".into()) }).filter(|metadata| metadata.target() != WEBVIEW_TARGET),
+          Target::new(TargetKind::LogDir { file_name: Some("webview".into()) }).filter(|metadata| metadata.target().starts_with("webview")),
+          Target::new(TargetKind::LogDir { file_name: Some("runtime".into()) }).filter(|metadata| !metadata.target().starts_with("webview")),
           Target::new(TargetKind::Webview),
         ]).build())
         .plugin(tauri_plugin_shell::init())
