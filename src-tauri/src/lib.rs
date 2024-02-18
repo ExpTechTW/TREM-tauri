@@ -13,15 +13,8 @@ pub fn run() {
             #[cfg(desktop)]
             app.handle().plugin(tauri_plugin_cli::init())?;
 
-            let version = MenuItemBuilder::with_id(
-                "version",
-                format!("TREM Tauri v{}", app.package_info().version),
-            )
-            .enabled(false)
-            .build(app)?;
-
             let quit = MenuItemBuilder::with_id("quit", "關閉").build(app)?;
-            let menu = MenuBuilder::new(app).items(&[&version, &quit]).build()?;
+            let menu = MenuBuilder::new(app).items(&[&quit]).build()?;
             let _ = TrayIconBuilder::new()
                 .menu(&menu)
                 .icon(app.default_window_icon().unwrap().clone())
