@@ -16,9 +16,10 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
 
 import DefaultConfig from "./assets/json/default_config.json";
+import Package from "../package.json";
 
 const webviewWindow = getCurrent();
-
+webviewWindow.setTitle(`TREM Tauri | 臺灣即時地震監測 v${Package.version}`);
 const args = await getMatches();
 
 if (!args.args["quiet"].value) {
@@ -28,7 +29,6 @@ if (!args.args["quiet"].value) {
 const config = new Config<DefaultConfigSchema>(
   DefaultConfig as DefaultConfigSchema
 );
-
 
 const app = createApp(App);
 app.provide("config", config);
