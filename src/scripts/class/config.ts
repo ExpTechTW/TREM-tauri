@@ -31,6 +31,8 @@ export class Config<T> {
 
   async load() {
     info("[Config] Loading user configuration...");
+    const data = JSON.parse(await readTextFile(path));
+    this.cache = { ...this.defaultValue, ...data };
     info("[Config] Configuration loaded.");
   }
 
