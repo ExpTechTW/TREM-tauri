@@ -7,6 +7,7 @@ const path = await join(dir, "config.json");
 
 if (!(await exists(path))) {
   info("[Config] Creating configuration file...");
+  await mkdir(dir, { recursive: true }).catch(error);
   await writeTextFile(path, JSON.stringify({}, null, 2)).catch(error);
 }
 
