@@ -24,7 +24,6 @@ if (!args.args["quiet"].value) {
 
 const config = new Config();
 
-
 const app = createApp(App);
 app.provide("config", config);
 app.mount("#app");

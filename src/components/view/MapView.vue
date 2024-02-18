@@ -24,8 +24,9 @@ import type {
   Rts,
   PartialReport,
 } from "../../scripts/class/api";
-import type { DefaultConfigSchema, EewEvent } from "../../types";
 import type { Config } from "../../scripts/class/config";
+import type { EewEvent } from "../../types";
+
 import code from "../../assets/json/code.json";
 
 defineProps<{
@@ -41,7 +42,7 @@ defineProps<{
 
 const map = shallowRef<maplibregl.Map | null>(null);
 const mapTemplate = ref<HTMLDivElement>();
-const config = inject<Config<DefaultConfigSchema>>("config")!.cache;
+const config = inject<Config>("config")!.cache;
 
 onMounted(() => {
   if (!mapTemplate.value) {
