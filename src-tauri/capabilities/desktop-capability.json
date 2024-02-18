@@ -32,6 +32,7 @@
       ]
     },
     "fs:default",
+    "fs:allow-mkdir",
     "fs:read-files",
     "fs:write-files",
     "log:default",

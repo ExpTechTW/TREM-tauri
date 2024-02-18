@@ -21,7 +21,7 @@ import {
   EewStatus,
   type Eew,
 } from "./scripts/class/api";
-import { AudioType, type DefaultConfigSchema, type EewEvent } from "./types";
+import { AudioType, type EewEvent } from "./types";
 import { Config } from "./scripts/class/config";
 
 import PostalCode from "./assets/json/code.json";
@@ -40,7 +40,7 @@ import { readFile } from "@tauri-apps/plugin-fs";
 const unattachConsole = attachConsole();
 const webviewWindow = getCurrent();
 
-const config = inject<Config<DefaultConfigSchema>>("config")!;
+const config = inject<Config>("config")!;
 const api = new ExpTechApi(config.cache.api.key);
 
 const timer: Record<string, number> = {};

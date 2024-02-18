@@ -9,9 +9,9 @@ import WaveTimer from "../component/WaveTimer.vue";
 
 import { onMounted, inject } from "vue";
 
-import type { DefaultConfigSchema, EewEvent } from "../../types";
 import type { PartialReport, Rts, Station } from "../../scripts/class/api";
 import type { Config } from "../../scripts/class/config";
+import type { EewEvent } from "../../types";
 import { EewStatus } from "../../scripts/class/api";
 import { toFormattedTimeString } from "../../scripts/helper/utils";
 
@@ -26,7 +26,7 @@ defineProps<{
   changeReport(report: PartialReport): void;
 }>();
 
-const config = inject<Config<DefaultConfigSchema>>("config")!.cache;
+const config = inject<Config>("config")!.cache;
 
 const InfoBoxStatusClass = {
   [EewStatus.Warn]: "warn",
