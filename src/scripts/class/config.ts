@@ -1,15 +1,18 @@
+import { exists, mkdir, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { appConfigDir, join } from "@tauri-apps/api/path";
-import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
-import { error } from "@tauri-apps/plugin-log";
+import { error, info } from "@tauri-apps/plugin-log";
 
 const dir = await appConfigDir();
 const path = await join(dir, "config.json");
 
 if (!(await exists(path))) {
+  info("[Config] Creating configuration file...");
   await writeTextFile(path, JSON.stringify({}, null, 2)).catch(error);
 }
 
+info("[Config] Loading user configuration...");
 const data = JSON.parse(await readTextFile(path));
+info("[Config] Configuration loaded.");
 
 export class Config<T> {
   dir: string;
@@ -26,10 +29,13 @@ export class Config<T> {
   }
 
   async load() {
-    await readTextFile(path);
+    info("[Config] Loading user configuration...");
+    info("[Config] Configuration loaded.");
   }
 
   async save() {
+    info("[Config] Saving user configuration...");
     await writeTextFile(path, JSON.stringify(this.cache, null, 2));
+    info("[Config] Configuration saved");
   }
 }
