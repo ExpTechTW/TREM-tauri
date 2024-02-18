@@ -25,6 +25,7 @@ if (!(await exists(path))) {
 
 info("[Config] Loading user configuration...");
 const data = JSON.parse(await readTextFile(path));
+info("[Config] Configuration loaded.");
 
 export class Config {
   dir: string;

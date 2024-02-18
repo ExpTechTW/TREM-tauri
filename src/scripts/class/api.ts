@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import { debug, error, info } from "@tauri-apps/plugin-log";
 import { fetch, type ClientOptions } from "@tauri-apps/plugin-http";
 import EventEmitter from "events";
 
 import Route from "./route";
 
 import Code from "../../assets/json/code.json";
-import { error, info, trace } from "@tauri-apps/plugin-log";
 
 /**
  * 測站資訊
@@ -424,7 +424,6 @@ export enum WebSocketEvent {
   Rts = "rts",
   Verify = "verify",
   Close = "close",
-  Error = "error",
 }
 
 export class ExpTechApi extends EventEmitter {
@@ -555,7 +554,7 @@ export class ExpTechApi extends EventEmitter {
         if (err instanceof Error) {
           error(`[WebSocket] ${err.message}`);
           if (err.stack) {
-            trace(err.stack);
+            error(err.stack);
           }
         }
       }
@@ -576,9 +575,8 @@ export class ExpTechApi extends EventEmitter {
       }
     });
 
-    this.ws.addEventListener("error", (ev) => {
+    this.ws.addEventListener("error", () => {
       error(`[WebSocket] Websocet failed to establish a connection to ${url}.`);
-      this.emit(WebSocketEvent.Error, ev);
     });
   }
 
@@ -597,7 +595,7 @@ export class ExpTechApi extends EventEmitter {
       },
     };
 
-    info(`[API] Fetching ${url}`);
+    debug(`[API] Fetching ${url}`);
     const res = await fetch(url, request);
 
     if (!res.ok) {
@@ -730,10 +728,4 @@ export declare interface ExpTechApi extends EventEmitter {
    * @param {(ev: CloseEvent) => void} listener
    */
   on(event: WebSocketEvent.Close, listener: (ev: CloseEvent) => void): this;
-
-  /**
-   * @param {WebSocketEvent.Error} event error
-   * @param {(ev: Event) => void} listener
-   */
-  on(event: WebSocketEvent.Error, listener: (ev: Event) => void): this;
 }
