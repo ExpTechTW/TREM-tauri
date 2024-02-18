@@ -9,7 +9,6 @@ import ReportIntensityItem from "../component/ReportIntensityItem.vue";
 import { open } from "@tauri-apps/plugin-shell";
 import { inject } from "vue";
 
-import type { DefaultConfigSchema } from "../../types";
 import type { Report } from "../../scripts/class/api";
 import {
   extractLocationFromString,
@@ -27,7 +26,7 @@ defineProps<{
   handleHideReportBox: () => void;
 }>();
 
-const setting = inject<Config<DefaultConfigSchema>>("config")!.cache;
+const setting = inject<Config>("config")!.cache;
 
 const openUrl = async (id?: string) => {
   if (id) {
