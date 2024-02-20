@@ -598,7 +598,7 @@ export class ExpTechApi extends EventEmitter {
       },
     };
 
-    debug(`[API] Fetching ${url}`);
+    debug(`[API] Fetching ${url.split(/[?#]/)[0]}`);
     const res = await fetch(url, request);
 
     if (!res.ok) {
