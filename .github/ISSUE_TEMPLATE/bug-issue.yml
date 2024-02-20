@@ -29,7 +29,7 @@ body:
       placeholder: 請在這裡條列重現這個問題的每個步驟
     validations:
       required: true
-  - type: input
+  - type: textarea
     id: screenshot
     attributes:
       label: 截圖或影片
@@ -66,7 +66,7 @@ body:
         - **macOS**:
           - `/Library/Logs/trem-tauri.tw.com.exptech/logs/webview.log`
           - `/Library/Logs/trem-tauri.tw.com.exptech/logs/runtime.log`
-  - type: input
+  - type: textarea
     id: logs
     attributes:
       label: 記錄檔
