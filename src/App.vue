@@ -96,6 +96,27 @@ const updateResources = async () => {
 updateResources();
 timer.reportFetchTimer = window.setInterval(updateResources, 60_000);
 
+const updateRts = async () => {
+  if (isReplaying) {
+    return;
+  }
+
+  try {
+    const r = await api.getRts();
+    Object.assign(rts, r);
+  } catch (err) {
+    if (err instanceof Error) {
+      error("[API] Error fetching rts data.");
+      if (err.stack) {
+        trace(err.stack);
+      }
+    }
+  }
+};
+
+updateRts();
+timer.dataFetchtimer = window.setInterval(updateRts, 1_000);
+
 const setEewIndex = () => {
   const keys = Object.keys(eew);
   if (keys.length) {
@@ -136,6 +157,12 @@ const resetEew = () => {
 
   webviewWindow.requestUserAttention(null);
 };
+
+api.on(WebSocketEvent.Ready, () => {
+  info("[API] WebSocket ready, using WebSocket instead of Fetch.");
+  window.clearInterval(timer.dataFetchtimer);
+  delete timer.dataFetchtimer;
+});
 
 api.on(WebSocketEvent.Rts, (r) => {
   if (isReplaying && !r.replay) {
@@ -325,6 +352,13 @@ api.on(WebSocketEvent.Ntp, ({ time }) => {
   }
 
   ntp.remote = time;
+});
+
+api.on(WebSocketEvent.Close, () => {
+  if (!timer.dataFetchtimer) {
+    info("[API] WebSocket closed, using Fetch.");
+    timer.dataFetchtimer = window.setInterval(updateRts, 1_000);
+  }
 });
 
 const getAccurateTime = () => {
