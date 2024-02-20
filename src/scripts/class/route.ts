@@ -32,8 +32,20 @@ export default class Route {
     return `${this.randomBaseUrl()}/eq/report/${id}` as const;
   }
 
-  rts(timestamp: string) {
-    return `${this.randomBaseUrl()}/trem/rts?time=${timestamp}` as const;
+  rts(timestamp?: string) {
+    if (timestamp) {
+      return `${this.randomBaseUrl()}/trem/rts/${timestamp}` as const;
+    } else {
+      return `${this.randomBaseUrl()}/trem/rts` as const;
+    }
+  }
+
+  eew(timestamp?: string) {
+    if (timestamp) {
+      return `${this.randomBaseUrl()}/eq/eew/${timestamp}` as const;
+    } else {
+      return `${this.randomBaseUrl()}/eq/eew` as const;
+    }
   }
 
   station() {

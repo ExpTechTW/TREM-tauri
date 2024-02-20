@@ -64,6 +64,10 @@ const rts = reactive<Rts>({
 const currentEewIndex = ref<string>();
 let isReplaying: boolean = false;
 
+const getAccurateTime = () => {
+  return ntp.server + (Date.now() - ntp.client);
+};
+
 const updateResources = async () => {
   try {
     const ids = reports.map((r) => r.id);
@@ -96,18 +100,17 @@ const updateResources = async () => {
 updateResources();
 timer.reportFetchTimer = window.setInterval(updateResources, 60_000);
 
-const updateRts = async () => {
+const updateRtsEew = async () => {
   if (isReplaying) {
     return;
   }
 
   try {
-    const time = getAccurateTime();
-    const r = await api.getRts(time);
-    ntp.server = r.time;
-    ntp.remote = r.time;
-    ntp.client = time;
-    api.emit(WebSocketEvent.Rts, r);
+    const data = await api.getRts();
+    ntp.server = data.time;
+    ntp.remote = data.time;
+    ntp.client = Date.now();
+    api.emit(WebSocketEvent.Rts, data);
   } catch (err) {
     if (err instanceof Error) {
       error("[API] Error fetching rts data.");
@@ -116,10 +119,25 @@ const updateRts = async () => {
       }
     }
   }
+
+  try {
+    const data = await api.getEew();
+
+    for (const e of data) {
+      api.emit(WebSocketEvent.Eew, e);
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      error("[API] Error fetching eew data.");
+      if (err.stack) {
+        trace(err.stack);
+      }
+    }
+  }
 };
 
-updateRts();
-timer.dataFetchtimer = window.setInterval(updateRts, 1_000);
+updateRtsEew();
+timer.dataFetchtimer = window.setInterval(updateRtsEew, 1_000);
 
 const setEewIndex = () => {
   const keys = Object.keys(eew);
@@ -361,13 +379,9 @@ api.on(WebSocketEvent.Ntp, ({ time }) => {
 api.on(WebSocketEvent.Close, () => {
   if (!timer.dataFetchtimer) {
     info("[API] WebSocket closed, using Fetch.");
-    timer.dataFetchtimer = window.setInterval(updateRts, 1_000);
+    timer.dataFetchtimer = window.setInterval(updateRtsEew, 1_000);
   }
 });
-
-const getAccurateTime = () => {
-  return ntp.server + (Date.now() - ntp.client);
-};
 
 const changeView = (view: string) => {
   if (currentView.value == view) {

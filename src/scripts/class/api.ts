@@ -695,6 +695,21 @@ export class ExpTechApi extends EventEmitter {
       throw new Error(`Failed to fetch rts data. ${error}`);
     }
   }
+
+  /**
+   * 獲取地震速報資料
+   * @param {number} [time=Date.now()] 時間
+   * @returns {Promise<Rts>}
+   */
+  async getEew(time: number = Date.now()): Promise<Eew[]> {
+    const url = new Route({ version: 1, key: this.key }).eew(`${time}`);
+
+    try {
+      return await this.#get(url);
+    } catch (error) {
+      throw new Error(`Failed to fetch eew data. ${error}`);
+    }
+  }
 }
 
 export declare interface ExpTechApi extends EventEmitter {
