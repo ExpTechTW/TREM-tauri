@@ -102,8 +102,12 @@ const updateRts = async () => {
   }
 
   try {
-    const r = await api.getRts();
-    Object.assign(rts, r);
+    const time = getAccurateTime();
+    const r = await api.getRts(time);
+    ntp.server = r.time;
+    ntp.remote = r.time;
+    ntp.client = time;
+    api.emit(WebSocketEvent.Rts, r);
   } catch (err) {
     if (err instanceof Error) {
       error("[API] Error fetching rts data.");
@@ -517,7 +521,8 @@ onBeforeUnmount(() => {
   offFileDrop.then((f) => f());
   offCloseRequest.then((f) => f());
   unattachConsole.then((f) => f());
-  clearInterval(timer.reportFetchTimer);
+  window.clearInterval(timer.reportFetchTimer);
+  window.clearInterval(timer.dataFetchtimer);
   api.destroy();
 });
 </script>
