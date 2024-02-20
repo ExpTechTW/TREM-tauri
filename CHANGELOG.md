@@ -1,3 +1,12 @@
+# v0.0.0-alpha.4
+
+### 🪄 強化
+
+* 新增 HTTPS fetch 資料來源 (https://github.com/ExpTechTW/TREM-tauri/pull/50)
+
+**完整變更紀錄**: https://github.com/ExpTechTW/TREM-tauri/compare/v0.0.0-alpha.3...v0.0.0-alpha.4
+
+
 # v0.0.0-alpha.3
 
 ### ✨ 新功能

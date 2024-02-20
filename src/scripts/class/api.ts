@@ -417,6 +417,7 @@ export const Intensity = [
 ] as const;
 
 export enum WebSocketEvent {
+  Ready = "ready",
   Eew = "eew",
   Info = "info",
   Ntp = "ntp",
@@ -457,7 +458,7 @@ export class ExpTechApi extends EventEmitter {
     this._destroyed = false;
   }
 
-  setApiKey(apiKey: string): this {
+  setApiKey(apiKey: string) {
     this.key = apiKey;
     this.wsConfig.key = apiKey;
 
@@ -513,6 +514,8 @@ export class ExpTechApi extends EventEmitter {
                   if (!data.data.list.length) {
                     this.ws.close(WebSocketCloseCode.InsufficientPermission);
                     break;
+                  } else {
+                    this.emit(WebSocketEvent.Ready);
                   }
 
                   break;
@@ -595,7 +598,7 @@ export class ExpTechApi extends EventEmitter {
       },
     };
 
-    debug(`[API] Fetching ${url}`);
+    debug(`[API] Fetching ${url.split(/[?#]/)[0]}`);
     const res = await fetch(url, request);
 
     if (!res.ok) {
@@ -692,9 +695,31 @@ export class ExpTechApi extends EventEmitter {
       throw new Error(`Failed to fetch rts data. ${error}`);
     }
   }
+
+  /**
+   * 獲取地震速報資料
+   * @param {number} [time=Date.now()] 時間
+   * @returns {Promise<Rts>}
+   */
+  async getEew(time: number = Date.now()): Promise<Eew[]> {
+    const url = new Route({ version: 1, key: this.key }).eew(`${time}`);
+
+    try {
+      return await this.#get(url);
+    } catch (error) {
+      throw new Error(`Failed to fetch eew data. ${error}`);
+    }
+  }
 }
 
 export declare interface ExpTechApi extends EventEmitter {
+  /**
+   * WebSocket 連線成功
+   * @param {WebSocketEvent.Ready} event rts
+   * @param {() => void} listener
+   */
+  on(event: WebSocketEvent.Ready, listener: () => void): this;
+
   /**
    * 地動資料
    * @param {WebSocketEvent.Rts} event rts
