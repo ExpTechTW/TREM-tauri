@@ -32,18 +32,14 @@
       "icons/icon.ico"
     ],
     "licenseFile": "./assets/TOS",
-    "targets": "all",
+    "targets": ["app","appimage","deb","dmg","nsis","rpm","updater"],
     "windows": {
-      "wix":{
-        "language": "zh-TW"
-      },
       "nsis": {
         "installMode": "currentUser",
         "installerIcon": "icons/icon.ico",
         "languages": [
           "English",
-          "TradChinese",
-          "Japanese"
+          "TradChinese"
         ],
         "sidebarImage": "./assets/sidebar.bmp"
       }
