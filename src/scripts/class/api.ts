@@ -686,8 +686,8 @@ export class ExpTechApi extends EventEmitter {
    * @param {number} [time=Date.now()] 時間
    * @returns {Promise<Rts>}
    */
-  async getRts(time: number = Date.now()): Promise<Rts> {
-    const url = new Route({ version: 1, key: this.key }).rts(`${time}`);
+  async getRts(time?: number): Promise<Rts> {
+    const url = new Route({ version: 1, key: this.key }).rts(time ? `${time}` : "");
 
     try {
       return await this.#get(url);
@@ -701,8 +701,8 @@ export class ExpTechApi extends EventEmitter {
    * @param {number} [time=Date.now()] 時間
    * @returns {Promise<Rts>}
    */
-  async getEew(time: number = Date.now()): Promise<Eew[]> {
-    const url = new Route({ version: 1, key: this.key }).eew(`${time}`);
+  async getEew(time?: number): Promise<Eew[]> {
+    const url = new Route({ version: 1, key: this.key }).eew(time ? `${time}` : "");
 
     try {
       return await this.#get(url);
