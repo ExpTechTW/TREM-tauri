@@ -31,15 +31,19 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "licenseFile": "./assets/TOS",
-    "targets": ["app","appimage","deb","dmg","nsis","rpm","updater"],
+    "licenseFile": "./assets/terms.rtf",
+    "targets": "all",
     "windows": {
+      "wix":{
+        "language": "zh-TW"
+      },
       "nsis": {
         "installMode": "currentUser",
         "installerIcon": "icons/icon.ico",
         "languages": [
           "English",
-          "TradChinese"
+          "TradChinese",
+          "Japanese"
         ],
         "sidebarImage": "./assets/sidebar.bmp"
       }
