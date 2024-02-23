@@ -278,6 +278,7 @@ onMounted(() => {});
         }
 
         > .header-body {
+          position: relative;
           display: flex;
           flex-direction: column;
           gap: 4px;
@@ -448,17 +449,14 @@ onMounted(() => {});
           }
         }
 
-        > .body > .cancel-box {
-          position: absolute;
-          top: 0;
-          left: 0;
-          display: none;
-          gap: 8px;
+        .cancel-box {
+          display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          width: 100%;
-          height: 100%;
+          gap: 8px;
+          position: absolute;
+          inset: 0;
           border-radius: inherit;
           background-color: rgb(0 0 0 / 40%);
           color: white;
