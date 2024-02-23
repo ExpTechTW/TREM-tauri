@@ -314,7 +314,11 @@ api.on(WebSocketEvent.Eew, (e) => {
       webviewWindow.requestUserAttention(UserAttentionType.Informational);
 
       if (config.cache.audio.enabled) {
-        getAudio(config.cache.audio.theme, AudioType.Update).play();
+        if (data.cancel) {
+          getAudio(config.cache.audio.theme, AudioType.Cancel).play();
+        } else {
+          getAudio(config.cache.audio.theme, AudioType.Update).play();
+        }
       }
     }
   } else {
