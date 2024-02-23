@@ -25,6 +25,7 @@
     "window:allow-set-always-on-top",
     "window:allow-set-focus",
     "window:allow-set-skip-taskbar",
+    "window:allow-set-title",
     {
       "identifier": "http:default",
       "allow": [

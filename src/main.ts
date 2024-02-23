@@ -10,6 +10,7 @@ import { getCurrent } from "@tauri-apps/api/window";
 import { getMatches } from "@tauri-apps/plugin-cli";
 
 import { Config } from "./scripts/class/config";
+import { version } from "../package.json";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
@@ -20,6 +21,7 @@ const args = await getMatches();
 
 if (!args.args["quiet"].value) {
   webviewWindow.show();
+  webviewWindow.setTitle(`TREM Tauri | 臺灣即時地震監測 v${version}`);
 }
 
 const config = new Config();

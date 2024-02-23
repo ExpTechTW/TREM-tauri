@@ -31,7 +31,7 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "licenseFile": "./assets/TOS",
+    "licenseFile": "./assets/terms.rtf",
     "targets": "all",
     "windows": {
       "wix":{
