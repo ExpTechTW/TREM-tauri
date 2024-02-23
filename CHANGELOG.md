@@ -3,6 +3,7 @@
 ### ✨ 新功能
 
 * 新增 HTTPS fetch 資料來源 (https://github.com/ExpTechTW/TREM-tauri/pull/50)
+* 支援地震速報取消報 (https://github.com/ExpTechTW/TREM-tauri/pull/50)
 
 ### 🪄 強化
 
