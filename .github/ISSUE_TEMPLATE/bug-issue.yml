@@ -1,6 +1,6 @@
 name: 問題回報
 description: 回報非常明顯的問題。
-title: '[Bug]: '
+title: "[Bug]: "
 labels:
   - 🐛 Bug
 body:
@@ -29,7 +29,7 @@ body:
       placeholder: 請在這裡條列重現這個問題的每個步驟
     validations:
       required: true
-  - type: input
+  - type: textarea
     id: screenshot
     attributes:
       label: 截圖或影片
@@ -58,15 +58,15 @@ body:
         記錄檔路徑：
 
         - **Windows**:
-          - `%AppData/trem-tauri.tw.com.exptech/webview.log`
-          - `%AppData/trem-tauri.tw.com.exptech/runtime.log`
+          - `%LocalAppData%/trem-tauri.tw.com.exptech/logs/webview.log`
+          - `%LocalAppData%/trem-tauri.tw.com.exptech/logs/runtime.log`
         - **Linux**:
-          - `$HOME/.config/trem-tauri.tw.com.exptech/webview.log`
-          - `$HOME/.config/trem-tauri.tw.com.exptech/runtime.log`
+          - `$HOME/.config/trem-tauri.tw.com.exptech/logs/webview.log`
+          - `$HOME/.config/trem-tauri.tw.com.exptech/logs/runtime.log`
         - **macOS**:
-          - `/Library/Logs/trem-tauri.tw.com.exptech/webview.log`
-          - `/Library/Logs/trem-tauri.tw.com.exptech/runtime.log`
-  - type: input
+          - `/Library/Logs/trem-tauri.tw.com.exptech/logs/webview.log`
+          - `/Library/Logs/trem-tauri.tw.com.exptech/logs/runtime.log`
+  - type: textarea
     id: logs
     attributes:
       label: 記錄檔

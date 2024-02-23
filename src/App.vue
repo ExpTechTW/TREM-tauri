@@ -21,7 +21,7 @@ import {
   EewStatus,
   type Eew,
 } from "./scripts/class/api";
-import { AudioType, type DefaultConfigSchema, type EewEvent } from "./types";
+import { AudioType, type EewEvent } from "./types";
 import { Config } from "./scripts/class/config";
 
 import PostalCode from "./assets/json/code.json";
@@ -40,7 +40,7 @@ import { readFile } from "@tauri-apps/plugin-fs";
 const unattachConsole = attachConsole();
 const webviewWindow = getCurrent();
 
-const config = inject<Config<DefaultConfigSchema>>("config")!;
+const config = inject<Config>("config")!;
 const api = new ExpTechApi(config.cache.api.key);
 
 const timer: Record<string, number> = {};
@@ -63,6 +63,10 @@ const rts = reactive<Rts>({
 
 const currentEewIndex = ref<string>();
 let isReplaying: boolean = false;
+
+const getAccurateTime = () => {
+  return ntp.server + (Date.now() - ntp.client);
+};
 
 const updateResources = async () => {
   try {
@@ -95,6 +99,45 @@ const updateResources = async () => {
 
 updateResources();
 timer.reportFetchTimer = window.setInterval(updateResources, 60_000);
+
+const updateRtsEew = async () => {
+  if (isReplaying) {
+    return;
+  }
+
+  try {
+    const data = await api.getRts();
+    ntp.server = data.time;
+    ntp.remote = data.time;
+    ntp.client = Date.now();
+    api.emit(WebSocketEvent.Rts, data);
+  } catch (err) {
+    if (err instanceof Error) {
+      error("[API] Error fetching rts data.");
+      if (err.stack) {
+        trace(err.stack);
+      }
+    }
+  }
+
+  try {
+    const data = await api.getEew();
+
+    for (const e of data) {
+      api.emit(WebSocketEvent.Eew, e);
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      error("[API] Error fetching eew data.");
+      if (err.stack) {
+        trace(err.stack);
+      }
+    }
+  }
+};
+
+updateRtsEew();
+timer.dataFetchtimer = window.setInterval(updateRtsEew, 1_000);
 
 const setEewIndex = () => {
   const keys = Object.keys(eew);
@@ -136,6 +179,12 @@ const resetEew = () => {
 
   webviewWindow.requestUserAttention(null);
 };
+
+api.on(WebSocketEvent.Ready, () => {
+  info("[API] WebSocket ready, using WebSocket instead of Fetch.");
+  window.clearInterval(timer.dataFetchtimer);
+  delete timer.dataFetchtimer;
+});
 
 api.on(WebSocketEvent.Rts, (r) => {
   if (isReplaying && !r.replay) {
@@ -265,7 +314,11 @@ api.on(WebSocketEvent.Eew, (e) => {
       webviewWindow.requestUserAttention(UserAttentionType.Informational);
 
       if (config.cache.audio.enabled) {
-        getAudio(config.cache.audio.theme, AudioType.Update).play();
+        if (data.cancel) {
+          getAudio(config.cache.audio.theme, AudioType.Cancel).play();
+        } else {
+          getAudio(config.cache.audio.theme, AudioType.Update).play();
+        }
       }
     }
   } else {
@@ -327,9 +380,12 @@ api.on(WebSocketEvent.Ntp, ({ time }) => {
   ntp.remote = time;
 });
 
-const getAccurateTime = () => {
-  return ntp.server + (Date.now() - ntp.client);
-};
+api.on(WebSocketEvent.Close, () => {
+  if (!timer.dataFetchtimer) {
+    info("[API] WebSocket closed, using Fetch.");
+    timer.dataFetchtimer = window.setInterval(updateRtsEew, 1_000);
+  }
+});
 
 const changeView = (view: string) => {
   if (currentView.value == view) {
@@ -483,7 +539,8 @@ onBeforeUnmount(() => {
   offFileDrop.then((f) => f());
   offCloseRequest.then((f) => f());
   unattachConsole.then((f) => f());
-  clearInterval(timer.reportFetchTimer);
+  window.clearInterval(timer.reportFetchTimer);
+  window.clearInterval(timer.dataFetchtimer);
   api.destroy();
 });
 </script>

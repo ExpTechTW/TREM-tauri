@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import { debug, error, info } from "@tauri-apps/plugin-log";
 import { fetch, type ClientOptions } from "@tauri-apps/plugin-http";
 import EventEmitter from "events";
 
 import Route from "./route";
 
 import Code from "../../assets/json/code.json";
-import { error, info, trace } from "@tauri-apps/plugin-log";
 
 /**
  * 測站資訊
@@ -417,6 +417,7 @@ export const Intensity = [
 ] as const;
 
 export enum WebSocketEvent {
+  Ready = "ready",
   Eew = "eew",
   Info = "info",
   Ntp = "ntp",
@@ -424,7 +425,6 @@ export enum WebSocketEvent {
   Rts = "rts",
   Verify = "verify",
   Close = "close",
-  Error = "error",
 }
 
 export class ExpTechApi extends EventEmitter {
@@ -458,7 +458,7 @@ export class ExpTechApi extends EventEmitter {
     this._destroyed = false;
   }
 
-  setApiKey(apiKey: string): this {
+  setApiKey(apiKey: string) {
     this.key = apiKey;
     this.wsConfig.key = apiKey;
 
@@ -514,6 +514,8 @@ export class ExpTechApi extends EventEmitter {
                   if (!data.data.list.length) {
                     this.ws.close(WebSocketCloseCode.InsufficientPermission);
                     break;
+                  } else {
+                    this.emit(WebSocketEvent.Ready);
                   }
 
                   break;
@@ -555,7 +557,7 @@ export class ExpTechApi extends EventEmitter {
         if (err instanceof Error) {
           error(`[WebSocket] ${err.message}`);
           if (err.stack) {
-            trace(err.stack);
+            error(err.stack);
           }
         }
       }
@@ -576,9 +578,8 @@ export class ExpTechApi extends EventEmitter {
       }
     });
 
-    this.ws.addEventListener("error", (ev) => {
+    this.ws.addEventListener("error", () => {
       error(`[WebSocket] Websocet failed to establish a connection to ${url}.`);
-      this.emit(WebSocketEvent.Error, ev);
     });
   }
 
@@ -597,7 +598,7 @@ export class ExpTechApi extends EventEmitter {
       },
     };
 
-    info(`[API] Fetching ${url}`);
+    debug(`[API] Fetching ${url.split(/[?#]/)[0]}`);
     const res = await fetch(url, request);
 
     if (!res.ok) {
@@ -685,8 +686,8 @@ export class ExpTechApi extends EventEmitter {
    * @param {number} [time=Date.now()] 時間
    * @returns {Promise<Rts>}
    */
-  async getRts(time: number = Date.now()): Promise<Rts> {
-    const url = new Route({ version: 1, key: this.key }).rts(`${time}`);
+  async getRts(time?: number): Promise<Rts> {
+    const url = new Route({ version: 1, key: this.key }).rts(time ? `${time}` : "");
 
     try {
       return await this.#get(url);
@@ -694,9 +695,31 @@ export class ExpTechApi extends EventEmitter {
       throw new Error(`Failed to fetch rts data. ${error}`);
     }
   }
+
+  /**
+   * 獲取地震速報資料
+   * @param {number} [time=Date.now()] 時間
+   * @returns {Promise<Rts>}
+   */
+  async getEew(time?: number): Promise<Eew[]> {
+    const url = new Route({ version: 1, key: this.key }).eew(time ? `${time}` : "");
+
+    try {
+      return await this.#get(url);
+    } catch (error) {
+      throw new Error(`Failed to fetch eew data. ${error}`);
+    }
+  }
 }
 
 export declare interface ExpTechApi extends EventEmitter {
+  /**
+   * WebSocket 連線成功
+   * @param {WebSocketEvent.Ready} event rts
+   * @param {() => void} listener
+   */
+  on(event: WebSocketEvent.Ready, listener: () => void): this;
+
   /**
    * 地動資料
    * @param {WebSocketEvent.Rts} event rts
@@ -730,10 +753,4 @@ export declare interface ExpTechApi extends EventEmitter {
    * @param {(ev: CloseEvent) => void} listener
    */
   on(event: WebSocketEvent.Close, listener: (ev: CloseEvent) => void): this;
-
-  /**
-   * @param {WebSocketEvent.Error} event error
-   * @param {(ev: Event) => void} listener
-   */
-  on(event: WebSocketEvent.Error, listener: (ev: Event) => void): this;
 }

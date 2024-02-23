@@ -1,3 +1,18 @@
+# v0.0.0-alpha.4
+
+### ✨ 新功能
+
+* 新增 HTTPS fetch 資料來源 (https://github.com/ExpTechTW/TREM-tauri/pull/50)
+* 支援地震速報取消報 (https://github.com/ExpTechTW/TREM-tauri/pull/50)
+
+### 🪄 強化
+
+* 修正設定檔未自動創建而導致啟動時顯示黑畫面的問題
+* 更新 tauri 至 v2.0.0-beta.3
+
+**完整變更紀錄**: https://github.com/ExpTechTW/TREM-tauri/compare/v0.0.0-alpha.3...v0.0.0-alpha.4
+
+
 # v0.0.0-alpha.3
 
 ### ✨ 新功能
@@ -9,12 +24,12 @@
 * 新增啟動參數 `--quiet` 在開啟程式時隱藏視窗 (https://github.com/ExpTechTW/TREM-tauri/pull/30)
 * 停用瀏覽器內建快捷鍵 (https://github.com/ExpTechTW/TREM-tauri/pull/31)
 * 自動抓取並更新地震報告 (https://github.com/ExpTechTW/TREM-tauri/pull/32)
-* 修正切換面板後地圖不見的問題 (https://github.com/ExpTechTW/TREM-tauri/pull/34)
-* 修正 macOS 環境下 Menu Bar 圖標黑影 (https://github.com/ExpTechTW/TREM-tauri/issues/37)
 
 ### 🪄 強化
 
 * 重構前端架構，將 API 放至 Vue 元件中 (https://github.com/ExpTechTW/TREM-tauri/pull/38)
+* 修正切換面板後地圖不見的問題 (https://github.com/ExpTechTW/TREM-tauri/pull/34)
+* 修正 macOS 環境下 Menu Bar 圖標黑影 (https://github.com/ExpTechTW/TREM-tauri/issues/37)
 
 **完整變更紀錄**: https://github.com/ExpTechTW/TREM-tauri/compare/v0.0.0-alpha.2...v0.0.0-alpha.3
 
@@ -23,11 +38,11 @@
 
 ### ✨ 新功能
 
-* 地震報告現在可以複製了！ (https://github.com/ExpTechTW/TREM-tauri/pull/24)
-* 視窗現在可以設定在速報時最上層顯示 (https://github.com/ExpTechTW/TREM-tauri/pull/22)
+* 地震報告複製 (https://github.com/ExpTechTW/TREM-tauri/pull/24)
+* 新增在速報時最上層顯示視窗的設定 (https://github.com/ExpTechTW/TREM-tauri/pull/22)
 
 ### 🪄 強化
 
-* Api 現在支援 rts 請求了 - @yayacat (https://github.com/ExpTechTW/TREM-tauri/pull/23)
+* Api 支援 rts 請求 - @yayacat (https://github.com/ExpTechTW/TREM-tauri/pull/23)
 
 **完整變更紀錄**: https://github.com/ExpTechTW/TREM-tauri/compare/v0.0.0-alpha.1...v0.0.0-alpha.2

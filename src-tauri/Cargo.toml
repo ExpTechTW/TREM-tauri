@@ -26,7 +26,6 @@ tauri-plugin-fs = "2.0.0-beta"
 tauri-plugin-http = "2.0.0-beta"
 tauri-plugin-log = "2.0.0-beta"
 tauri-plugin-shell = "2.0.0-beta"
-tauri-plugin-websocket = "2.0.0-beta"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

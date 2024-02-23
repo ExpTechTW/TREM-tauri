@@ -9,13 +9,11 @@ import { createApp } from "vue";
 import { getCurrent } from "@tauri-apps/api/window";
 import { getMatches } from "@tauri-apps/plugin-cli";
 
-import type { DefaultConfigSchema } from "./types";
 import { Config } from "./scripts/class/config";
+import { version } from "../package.json";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
-
-import DefaultConfig from "./assets/json/default_config.json";
 
 const webviewWindow = getCurrent();
 
@@ -23,12 +21,10 @@ const args = await getMatches();
 
 if (!args.args["quiet"].value) {
   webviewWindow.show();
+  webviewWindow.setTitle(`TREM Tauri | 臺灣即時地震監測 v${version}`);
 }
 
-const config = new Config<DefaultConfigSchema>(
-  DefaultConfig as DefaultConfigSchema
-);
-
+const config = new Config();
 
 const app = createApp(App);
 app.provide("config", config);

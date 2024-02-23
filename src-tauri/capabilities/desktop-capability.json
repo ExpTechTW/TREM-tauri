@@ -25,6 +25,7 @@
     "window:allow-set-always-on-top",
     "window:allow-set-focus",
     "window:allow-set-skip-taskbar",
+    "window:allow-set-title",
     {
       "identifier": "http:default",
       "allow": [
@@ -32,6 +33,7 @@
       ]
     },
     "fs:default",
+    "fs:allow-mkdir",
     "fs:read-files",
     "fs:write-files",
     "log:default",
