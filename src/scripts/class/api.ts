@@ -591,6 +591,7 @@ export class ExpTechApi extends EventEmitter {
   async #get(url: string): Promise<any> {
     const request: RequestInit & ClientOptions = {
       method: "GET",
+      connectTimeout: 2500,
       headers: {
         // TODO: Replace User-Agent with a variable
         "User-Agent": "TREM-Lite/v2.0.0",

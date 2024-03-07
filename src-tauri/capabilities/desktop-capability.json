@@ -29,7 +29,7 @@
     {
       "identifier": "http:default",
       "allow": [
-        {"url": "https://*.exptech.com.tw/*"}
+        "https://*.exptech.com.tw/*"
       ]
     },
     "fs:default",

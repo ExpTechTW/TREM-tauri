@@ -15,7 +15,7 @@
     "@fontsource/lato": "^5.0.19",
     "@fontsource/noto-sans-tc": "^5.0.18",
     "@fontsource/open-sans": "^5.0.25",
-    "@tauri-apps/api": "^1.5.3",
+    "@tauri-apps/api": "^2.0.0-beta.4",
     "@tauri-apps/plugin-autostart": "^2.0.0-beta.2",
     "@tauri-apps/plugin-cli": "^2.0.0-beta.2",
     "@tauri-apps/plugin-clipboard-manager": "^2.0.0-beta.2",
