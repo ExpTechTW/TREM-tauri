@@ -24,8 +24,12 @@ export default class Route {
     return `wss://lb-${Math.ceil(Math.random() * 4)}.exptech.com.tw/websocket` as const;
   }
 
-  earthquakeReportList(limit: number = 50) {
-    return `${this.randomBaseUrl()}/eq/report?limit=${limit}&key=${this.key}` as const;
+  earthquakeReportList(limit?: number) {
+    if (limit) {
+      return `${this.randomBaseUrl()}/eq/report?limit=${limit}` as const;
+    } else {
+      return `${this.randomBaseUrl()}/eq/report?limit=50` as const;
+    }
   }
 
   earthquakeReport(id: string) {
