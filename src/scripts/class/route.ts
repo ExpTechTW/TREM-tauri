@@ -13,7 +13,11 @@ export default class Route {
   }
 
   randomHostUrl() {
-    return `https://lb-${Math.ceil(Math.random() * 4)}.exptech.com.tw` as const;
+    if (Math.random() < 0.5) {
+      return `https://api.exptech.com.tw` as const;
+    } else {
+      return `https://api-${Math.ceil(Math.random() * 2)}.exptech.com.tw` as const;
+    }
   }
 
   randomBaseUrl() {
