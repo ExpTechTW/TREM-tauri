@@ -16,10 +16,6 @@
   color: #fff;
   outline: 1px solid #808080;
   background-color: #202020;
-
-  &::after {
-    content: "0";
-  }
 }
 
 .intensity-1 {
@@ -32,10 +28,6 @@
 
   .outer {
     fill: #fff;
-  }
-
-  &::after {
-    content: "1";
   }
 }
 
@@ -50,10 +42,6 @@
   .outer {
     fill: #fff;
   }
-
-  &::after {
-    content: "2";
-  }
 }
 
 .intensity-3 {
@@ -66,10 +54,6 @@
 
   .outer {
     fill: #fff;
-  }
-
-  &::after {
-    content: "3";
   }
 }
 
@@ -84,10 +68,6 @@
   .outer {
     fill: #fff;
   }
-
-  &::after {
-    content: "4";
-  }
 }
 
 .intensity-5 {
@@ -100,11 +80,6 @@
 
   .outer {
     fill: #fff;
-  }
-
-  &::after {
-    content: "5⁻";
-    letter-spacing: -1px;
   }
 }
 
@@ -119,11 +94,6 @@
   .outer {
     fill: #fff;
   }
-
-  &::after {
-    content: "5⁺";
-    letter-spacing: -1px;
-  }
 }
 
 .intensity-7 {
@@ -136,11 +106,6 @@
 
   .outer {
     fill: #fff;
-  }
-
-  &::after {
-    content: "6⁻";
-    letter-spacing: -1px;
   }
 }
 
@@ -155,11 +120,6 @@
   .outer {
     fill: #fff;
   }
-
-  &::after {
-    content: "6⁺";
-    letter-spacing: -1px;
-  }
 }
 
 .intensity-9 {
@@ -173,13 +133,9 @@
   .outer {
     fill: #fff;
   }
-
-  &::after {
-    content: "7";
-  }
 }
 
-.intensity-unknow {
+.intensity-unknown {
   color: #fff;
   background-color: var(--intensity-unknow);
 
@@ -189,9 +145,5 @@
 
   .outer {
     fill: #fff;
-  }
-
-  &::after {
-    content: "?";
   }
 }

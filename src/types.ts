@@ -1,4 +1,4 @@
-import type { Eew, EewSource, EewStatus } from "./scripts/class/api";
+import type { Eew, EewSource, EewStatus } from "#/@exptechtw/api-wrapper/dist/types";
 import code from "./assets/json/code.json";
 
 export interface LastNtp {
@@ -138,17 +138,9 @@ interface BaseEewEvent {
 }
 
 /**
- * Nsspe 地震預警事件
- */
-export interface NsspeEvent extends BaseEewEvent {
-  source: EewSource.Trem;
-  detail: 0;
-}
-
-/**
  * 地震速報事件
  */
-export type EewEvent = BaseEewEvent | NsspeEvent;
+export type EewEvent = BaseEewEvent;
 
 export enum AudioType {
   Eew = "eew",
