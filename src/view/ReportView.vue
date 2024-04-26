@@ -16,6 +16,7 @@ import { useMapStore } from "@/stores/map_store";
 import ProgressBar from "primevue/progressbar";
 import IntensityMarker from "@/components/map/IntensityMarker.vue";
 import CrossMarker from "@/components/map/CrossMarker.vue";
+import AreaIntensityItem from "@/components/report/AreaIntensityItem.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -118,6 +119,15 @@ onMounted(() => {
         </div>
       </div>
     </div>
+
+    <div class="side-panel">
+      <div class="side-panel-wrapper">
+        <template v-for="area in fullReport?.list">
+          <AreaIntensityItem :area="area" />
+        </template>
+      </div>
+    </div>
+
     <template v-for="area in fullReport?.list">
       <template
         v-for="station in area.stations"
@@ -180,5 +190,18 @@ onMounted(() => {
   font-size: 12px;
   line-height: 150%;
 }
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 0;
+  max-height: calc(100% - 16px);
+  margin: 8px;
+}
+
+.side-panel-wrapper {
+  padding-right: 4px;
+  overflow-y: auto;
+}
 </style>
-@/stores/report_store

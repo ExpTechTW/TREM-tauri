@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useMapStore } from "@/stores/map_store";
 import { Marker, type LngLatLike } from "maplibre-gl";
-import { onMounted, onUnmounted, ref } from "vue";
+import { ComponentPublicInstance, onMounted, onUnmounted, ref } from "vue";
+import IntensityBlock from "../misc/IntensityBlock.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -17,13 +18,13 @@ const props = withDefaults(
 );
 
 const mapStore = useMapStore();
-const markerElement = ref<HTMLDivElement>();
+const markerElement = ref<ComponentPublicInstance>();
 let marker: Marker;
 
 onMounted(() => {
   if (mapStore.map) {
     marker = new Marker({
-      element: markerElement.value,
+      element: markerElement.value?.$el,
     })
       .setLngLat(props.lnglat)
       .addTo(mapStore.map);
@@ -38,29 +39,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div
+  <IntensityBlock
     ref="markerElement"
-    class="intensity-marker"
-    :class="[`intensity-${intensity}`]"
-    :style="{
-      height: `${size}px`,
-      width: `${size}px`,
-      fontSize: `${(size / 3) * 2}px`,
-      zIndex,
-    }"
-  >
-    {{ ["0", "1", "2", "3", "4", "5⁻", "5⁺", "6⁻", "6⁺", "7"][intensity] }}
-  </div>
+    :intensity="intensity"
+    :size="size"
+    :style="{ zIndex }"
+  />
 </template>
-
-<style scoped>
-.intensity-marker {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  font-weight: 600;
-  letter-spacing: -1px;
-  border: 2px solid #fff;
-}
-</style>

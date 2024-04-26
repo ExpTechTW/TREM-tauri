@@ -19,6 +19,7 @@ onMounted(() => {
   <div id="earthquake">
     <template v-if="stationStore.value" v-for="(s, id) in stationStore.value">
       <RtsMarker
+        :id="`rts-${id}`"
         :rts="rtsStore.station[id]"
         :lnglat="[s.info[0].lon, s.info[0].lat]"
       />
