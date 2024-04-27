@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive } from "vue";
+import { computed, onMounted, reactive } from "vue";
 import { useReportStore } from "@/stores/report_store";
 
 import Global from "@/global";
@@ -11,6 +11,7 @@ import Panel from "primevue/panel";
 import InputSwitch from "primevue/inputswitch";
 import MultiSelect from "primevue/multiselect";
 import ProgressSpinner from "primevue/progressspinner";
+import ViewPanel from "@/components/misc/ViewPanel.vue";
 
 const FilterIntensityOptions = [
   { label: "1", value: 1 },
@@ -59,26 +60,16 @@ const filteredList = computed(() =>
 );
 
 onMounted(() => {
-  console.log("mount");
-
   Global.api.getReportList().then((v) => {
     reportStore.$patch({ partial: new Map(v.map((v) => [v.id, v])) });
   });
 
   window.setTimeout(() => mapStore.map?.fitBounds(TaiwanBounds));
 });
-
-onUnmounted(() => {
-  console.log("unmount");
-});
 </script>
 
 <template>
-  <div id="report-wrapper">
-    <div class="list-header">
-      <MaterialSymbols icon="earthquake" />
-      <span>地震報告</span>
-    </div>
+  <ViewPanel class="report-wrapper" title="地震報告">
     <Panel class="filter-panel" toggleable collapsed>
       <template #header>
         <div class="filter-header">
@@ -133,33 +124,18 @@ onUnmounted(() => {
         strokeWidth="4"
       />
     </div>
-  </div>
+  </ViewPanel>
 </template>
 
 <style scoped>
-#report-wrapper {
-  display: flex;
-  flex-direction: column;
+.report-wrapper {
   width: 280px;
-  max-height: 100%;
-  padding: 0 8px;
-  border-radius: 8px;
   overflow-y: auto;
 }
 
 .report-list {
   display: flex;
   flex-direction: column;
-}
-
-.list-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--p-surface-0);
 }
 
 .filter-panel {

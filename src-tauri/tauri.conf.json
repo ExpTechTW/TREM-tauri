@@ -1,7 +1,7 @@
 {
   "productName": "trem-tauri",
-  "version": "0.0.0",
-  "identifier": "com.tauri.dev",
+  "version": "0.1.0",
+  "identifier": "tw.com.exptech.trem",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",

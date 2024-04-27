@@ -55,7 +55,8 @@ const router = createRouter({
         {
           path: "/config",
           components: {
-            navigation: ConfigView
+            navigation: ConfigView,
+            stack: EarthquakeView
           },
         }
       ]

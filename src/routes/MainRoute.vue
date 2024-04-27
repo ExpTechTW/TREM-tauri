@@ -19,11 +19,7 @@ onMounted(() => {
     <div class="navigation">
       <NavigationRail :expanded="isNavigationRailExpanded" />
       <router-view name="navigation" v-slot="{ Component }">
-        <keep-alive>
-          <transition name="left">
-            <component :is="Component" />
-          </transition>
-        </keep-alive>
+        <component :is="Component" />
       </router-view>
     </div>
     <div class="content">

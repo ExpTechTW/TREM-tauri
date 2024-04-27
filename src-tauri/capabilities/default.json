@@ -2,7 +2,9 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "path:default",
     "event:default",
@@ -33,6 +35,14 @@
           "url": "https://api-*.exptech.com.tw"
         }
       ]
+    },
+    "fs:allow-mkdir",
+    "fs:allow-exists",
+    "fs:allow-write-text-file",
+    "fs:allow-read-text-file",
+    {
+      "identifier":"fs:scope",
+      "allow": ["$APPCONFIG","$APPCONFIG/*"]
     }
   ]
 }
