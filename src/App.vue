@@ -4,8 +4,9 @@ import FileDropOverlayView from "./view/FileDropOverlayView.vue";
 import Toast from "primevue/toast";
 import Titlebar from "./components/window/Titlebar.vue";
 
-import { getCurrent } from "@tauri-apps/api/webview";
 import { onUnmounted, ref } from "vue";
+
+import { getCurrent } from "@tauri-apps/api/webview";
 
 const win = getCurrent();
 

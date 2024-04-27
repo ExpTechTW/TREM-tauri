@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Map as MaplibreMap } from "maplibre-gl";
 import { onMounted, onUnmounted } from "vue";
+import { Map as MaplibreMap } from "maplibre-gl";
+import { useMapStore } from "@/stores/map_store";
 
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useMapStore } from "@/stores/map_store";
 
 const mapStore = useMapStore();
 

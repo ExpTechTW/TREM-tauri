@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import ConfigTile from "@/components/config/ConfigTile.vue";
-import ViewPanel from "@/components/misc/ViewPanel.vue";
-import { useConfigStore } from "@/stores/config_store";
 import Dropdown from "primevue/dropdown";
+import ViewPanel from "@/components/misc/ViewPanel.vue";
+
+import { useConfigStore } from "@/stores/config_store";
 
 const configStore = useConfigStore();
 

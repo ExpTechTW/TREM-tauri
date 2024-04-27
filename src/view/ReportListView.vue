@@ -1,17 +1,18 @@
 <script setup lang="ts">
+import InputSwitch from "primevue/inputswitch";
+import MaterialSymbols from "@/components/misc/MaterialSymbols.vue";
+import MultiSelect from "primevue/multiselect";
+import Panel from "primevue/panel";
+import ProgressSpinner from "primevue/progressspinner";
+import ReportItem from "@/components/report/ReportItem.vue";
+import ViewPanel from "@/components/misc/ViewPanel.vue";
+
 import { computed, onMounted, reactive } from "vue";
+import { useMapStore } from "@/stores/map_store";
 import { useReportStore } from "@/stores/report_store";
 
-import Global from "@/global";
-import ReportItem from "@/components/report/ReportItem.vue";
-import { useMapStore } from "@/stores/map_store";
 import { TaiwanBounds } from "@/helpers/constant";
-import MaterialSymbols from "@/components/misc/MaterialSymbols.vue";
-import Panel from "primevue/panel";
-import InputSwitch from "primevue/inputswitch";
-import MultiSelect from "primevue/multiselect";
-import ProgressSpinner from "primevue/progressspinner";
-import ViewPanel from "@/components/misc/ViewPanel.vue";
+import Global from "@/global";
 
 const FilterIntensityOptions = [
   { label: "1", value: 1 },

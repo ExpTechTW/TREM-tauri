@@ -22,6 +22,7 @@ export default defineConfig(async () => ({
   resolve: {
     alias: [
       { find: "@", replacement: resolve("./src") },
+      { find: "~", replacement: resolve(".") },
     ]
   }
 }));

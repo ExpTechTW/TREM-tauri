@@ -1,5 +1,5 @@
-import type { PartialReport, Report } from "#/@exptechtw/api-wrapper/dist/types";
 import { defineStore } from "pinia";
+import type { PartialReport, Report } from "#/@exptechtw/api-wrapper/dist/types";
 
 export const useReportStore = defineStore("report", {
   state: () => ({ partial: new Map<string, PartialReport>(), cache: new Map<string, Report>() }),

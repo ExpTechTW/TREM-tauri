@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import MapView from "../components/map/MapView.vue";
+import NavigationRail from "../components/navigation/NavigationRail.vue";
+
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import NavigationRail from "../components/navigation/NavigationRail.vue";
-import MapView from "../components/map/MapView.vue";
+
 import Global from "@/global";
 
 const route = useRoute();

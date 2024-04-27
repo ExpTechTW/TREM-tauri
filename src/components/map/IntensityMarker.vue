@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useMapStore } from "@/stores/map_store";
-import { Marker, type LngLatLike } from "maplibre-gl";
-import { ComponentPublicInstance, onMounted, onUnmounted, ref } from "vue";
 import IntensityBlock from "../misc/IntensityBlock.vue";
+
+import { ComponentPublicInstance, onMounted, onUnmounted, ref } from "vue";
+import { Marker, type LngLatLike } from "maplibre-gl";
+import { useMapStore } from "@/stores/map_store";
 
 const props = withDefaults(
   defineProps<{

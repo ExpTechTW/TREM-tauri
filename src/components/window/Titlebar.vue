@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import WindowControlButton from "./WindowControlButton.vue";
-import { version } from "../../../package.json";
-import { getCurrent } from "@tauri-apps/api/webviewWindow";
+
 import { onUnmounted, ref } from "vue";
+import { getCurrent } from "@tauri-apps/api/webviewWindow";
+
+import { version } from "~/package.json";
 
 const webview = getCurrent();
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { StationIntensity } from "#/@exptechtw/api-wrapper/dist/types";
 import IntensityBlock from "../misc/IntensityBlock.vue";
+
+import type { StationIntensity } from "#/@exptechtw/api-wrapper/dist/types";
 
 defineProps<{
   station: StationIntensity;

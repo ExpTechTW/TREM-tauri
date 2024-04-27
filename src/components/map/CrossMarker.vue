@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useMapStore } from "@/stores/map_store";
-import { type LngLatLike, Marker } from "maplibre-gl";
 import { onMounted, onUnmounted, ref, watch } from "vue";
+import { Marker, type LngLatLike } from "maplibre-gl";
+import { useMapStore } from "@/stores/map_store";
 
 const props = withDefaults(
   defineProps<{

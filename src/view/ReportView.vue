@@ -1,22 +1,27 @@
 <script setup lang="ts">
-import { PartialReport, Report } from "#/@exptechtw/api-wrapper/dist/types";
+import AreaIntensityItem from "@/components/report/AreaIntensityItem.vue";
+import Button from "primevue/button";
+import CrossMarker from "@/components/map/CrossMarker.vue";
 import Intensity from "@/components/misc/Intensity.vue";
+import IntensityMarker from "@/components/map/IntensityMarker.vue";
+import MaterialSymbols from "@/components/misc/MaterialSymbols.vue";
+import ProgressBar from "primevue/progressbar";
+
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import Global from "@/global";
+import { LngLatBounds } from "maplibre-gl";
 import {
   extractLocationFromString,
   toFormattedTimeString,
 } from "@/helpers/utils";
-import Button from "primevue/button";
-import MaterialSymbols from "@/components/misc/MaterialSymbols.vue";
-import { useReportStore } from "@/stores/report_store";
-import { LngLatBounds } from "maplibre-gl";
 import { useMapStore } from "@/stores/map_store";
-import ProgressBar from "primevue/progressbar";
-import IntensityMarker from "@/components/map/IntensityMarker.vue";
-import CrossMarker from "@/components/map/CrossMarker.vue";
-import AreaIntensityItem from "@/components/report/AreaIntensityItem.vue";
+import { useReportStore } from "@/stores/report_store";
+
+import type {
+  PartialReport,
+  Report,
+} from "#/@exptechtw/api-wrapper/dist/types";
+import Global from "@/global";
 
 const route = useRoute();
 const router = useRouter();
@@ -44,7 +49,10 @@ const setupStationMarkers = (report: Report) => {
   }
 
   bounds.extend([report.lon, report.lat]);
-  window.setTimeout(() => mapStore.map?.fitBounds(bounds, { padding: 64 }), 50);
+  window.setTimeout(
+    () => mapStore.map?.fitBounds(bounds, { padding: 32, maxZoom: 9 }),
+    50
+  );
 };
 
 onMounted(() => {

@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import RtsMarker from "@/components/map/RtsMarker.vue";
+
 import { onMounted } from "vue";
 import { useRtsStore } from "@/stores/rts_store";
 import { useStationStore } from "@/stores/station_store";
+
 import Global from "@/global";
-import RtsMarker from "@/components/map/RtsMarker.vue";
 
 const rtsStore = useRtsStore();
 const stationStore = useStationStore();

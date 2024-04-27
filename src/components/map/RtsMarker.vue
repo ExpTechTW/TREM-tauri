@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { RtsStation } from "#/@exptechtw/api-wrapper/dist/types";
-import { useMapStore } from "@/stores/map_store";
-import { Marker, type LngLatLike } from "maplibre-gl";
 import { onMounted, onUnmounted, ref } from "vue";
+import { Marker, type LngLatLike } from "maplibre-gl";
 import { scale } from "chroma-js";
+import { useMapStore } from "@/stores/map_store";
+
+import { RtsStation } from "#/@exptechtw/api-wrapper/dist/types";
 
 const i = scale([
   "#0500A3",

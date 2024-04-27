@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { AreaIntensity } from "#/@exptechtw/api-wrapper/dist/types";
 import StationIntensityItem from "./StationIntensityItem.vue";
+
+import type { AreaIntensity } from "#/@exptechtw/api-wrapper/dist/types";
 
 defineProps<{
   area: AreaIntensity;

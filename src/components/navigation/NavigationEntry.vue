@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from "vue-router";
 import MaterialSymbols from "../misc/MaterialSymbols.vue";
+
 import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 const props = defineProps<{
   icon: string;

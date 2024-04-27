@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { PartialReport } from "#/@exptechtw/api-wrapper/dist/types";
+import Intensity from "../misc/Intensity.vue";
+import CrossMarker from "../map/CrossMarker.vue";
+
+import { onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { Popup } from "maplibre-gl";
 import {
   extractLocationFromString,
   toFormattedTimeString,
 } from "@/helpers/utils";
-import Intensity from "../misc/Intensity.vue";
-import CrossMarker from "../map/CrossMarker.vue";
-import { onMounted, onUnmounted, ref } from "vue";
-import { Popup } from "maplibre-gl";
 import { useMapStore } from "@/stores/map_store";
+
+import type { PartialReport } from "#/@exptechtw/api-wrapper/dist/types";
 
 const props = defineProps<{
   report: PartialReport;
