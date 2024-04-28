@@ -14,7 +14,7 @@
 
 .intensity-0 {
   color: #fff;
-  outline: 1px solid #808080;
+  outline: 1px solid #888;
   background-color: #202020;
 }
 
@@ -138,6 +138,8 @@
 .intensity-unknown {
   color: #fff;
   background-color: var(--intensity-unknow);
+  outline: 1px solid #888;
+  opacity: 0.6;
 
   .inner {
     fill: var(--intensity-unknow);

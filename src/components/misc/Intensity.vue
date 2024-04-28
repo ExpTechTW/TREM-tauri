@@ -24,12 +24,12 @@ withDefaults(
       width: `${size}px`,
       height: `${size}px`,
       borderRadius: `${borderRadius}px`,
-      fontSize: `${intensity ? (size / 3) * 2 : size / 2}px`,
+      fontSize: `${intensity != null ? size / 2 : size / 3}px`,
       fontWeight: bold ? 700 : 400,
     }"
   >
     {{
-      intensity
+      intensity != null
         ? ["0", "1", "2", "3", "4", "5⁻", "5⁺", "6⁻", "6⁺", "7"][intensity]
         : "不明"
     }}
@@ -41,6 +41,7 @@ withDefaults(
   display: grid;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   letter-spacing: -1px;
 }
 </style>

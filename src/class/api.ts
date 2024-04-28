@@ -14,7 +14,10 @@ export class ExpTechApi {
   }
 
   async #get(url: string, options?: RequestInit) {
-    const res = await fetch(url, options);
+    const res = await fetch(url, {
+      connectTimeout: 2000,
+      ...options
+    });
 
     if (res.ok) {
       return res.json();

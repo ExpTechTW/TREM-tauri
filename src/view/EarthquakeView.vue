@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import RtsMarker from "@/components/map/RtsMarker.vue";
+import RtsColorLegend from "@/components/map/RtsColorLegend.vue";
 
 import { onMounted } from "vue";
 import { useRtsStore } from "@/stores/rts_store";
@@ -21,10 +22,20 @@ onMounted(() => {
   <div id="earthquake">
     <template v-if="stationStore.value" v-for="(s, id) in stationStore.value">
       <RtsMarker
-        :id="`rts-${id}`"
-        :rts="rtsStore.station[id]"
+        :id="id"
+        :station="s"
         :lnglat="[s.info[0].lon, s.info[0].lat]"
+        :rts="rtsStore.station[id]"
       />
     </template>
+    <RtsColorLegend id="rts-color-legend" />
   </div>
 </template>
+
+<style scoped>
+.rts-color-legend {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+}
+</style>
