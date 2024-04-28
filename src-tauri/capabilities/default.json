@@ -41,8 +41,12 @@
     "fs:allow-write-text-file",
     "fs:allow-read-text-file",
     {
-      "identifier":"fs:scope",
-      "allow": ["$APPCONFIG","$APPCONFIG/*"]
-    }
+      "identifier": "fs:scope",
+      "allow": [
+        "$APPCONFIG",
+        "$APPCONFIG/*"
+      ]
+    },
+    "shell:default"
   ]
 }

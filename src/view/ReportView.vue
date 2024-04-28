@@ -10,9 +10,11 @@ import ProgressBar from "primevue/progressbar";
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { LngLatBounds } from "maplibre-gl";
+import { open } from "@tauri-apps/plugin-shell";
 import {
   extractLocationFromString,
   toFormattedTimeString,
+  toReportUrl,
 } from "@/helpers/utils";
 import { useMapStore } from "@/stores/map_store";
 import { useReportStore } from "@/stores/report_store";
@@ -35,6 +37,13 @@ let progressInterval: number;
 
 const back = () => {
   router.back();
+};
+
+const openReport = () => {
+  if (report.value) {
+    const url = toReportUrl(report.value.id);
+    open(url).catch(console.error);
+  }
 };
 
 const setupStationMarkers = (report: Report) => {
@@ -110,21 +119,26 @@ onMounted(() => {
     </Button>
 
     <div v-if="report" class="report-item" style="bottom: 8px; left: 8px">
-      <Intensity :intensity="report.int" />
-      <div class="report-item-content">
-        <div class="report-title">
-          {{
-            report.no % 1000
-              ? `第 ${report.no % 1000} 號有感地震`
-              : extractLocationFromString(report.loc)
-          }}
+      <div class="report-item-container">
+        <Intensity :intensity="report.int" />
+        <div class="report-item-content">
+          <div class="report-title">
+            {{
+              report.no % 1000
+                ? `第 ${report.no % 1000} 號有感地震`
+                : extractLocationFromString(report.loc)
+            }}
+          </div>
+          <div class="report-info">
+            <span>{{ toFormattedTimeString(report.time) }}</span>
+            <span>
+              規模 M {{ report.mag.toFixed(1) }} 深度 {{ report.depth }} km
+            </span>
+          </div>
         </div>
-        <div class="report-info">
-          <span>{{ toFormattedTimeString(report.time) }}</span>
-          <span>
-            規模 M {{ report.mag.toFixed(1) }} 深度 {{ report.depth }} km
-          </span>
-        </div>
+      </div>
+      <div v-ripple class="report-open-btn" @click="openReport">
+        <MaterialSymbols icon="open_in_new" :size="16" />
       </div>
     </div>
 
@@ -173,10 +187,15 @@ onMounted(() => {
 
 .report-item {
   display: flex;
-  align-items: center;
-  padding: 8px 12px;
   border-radius: 12px;
   background-color: var(--p-surface-800);
+  overflow: hidden;
+}
+
+.report-item-container {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
 }
 
 .report-item-content {
@@ -197,6 +216,15 @@ onMounted(() => {
   opacity: 0.65;
   font-size: 12px;
   line-height: 150%;
+}
+
+.report-open-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  overflow: hidden;
 }
 
 .side-panel {
