@@ -54,9 +54,9 @@ const router = createRouter({
           },
         },
         {
-          path: "/replay/path/:path",
+          path: "/replay",
           components: {
-            navigation: ReplayView
+            stack: ReplayView
           },
         },
         {

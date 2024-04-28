@@ -6,7 +6,9 @@ import Titlebar from "./components/window/Titlebar.vue";
 
 import { onUnmounted, ref } from "vue";
 import { getCurrent } from "@tauri-apps/api/window";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const win = getCurrent();
 
 const isFileDropOverlayVisible = ref(false);
@@ -14,8 +16,6 @@ const replayFilePath = ref("");
 
 const uFileDrop = win.onDragDropEvent((event) => {
   if (event.payload.type === "dragged") {
-    console.log("User hovering", event.payload.paths);
-
     const files = event.payload.paths.filter((v) => v.endsWith(".trply"));
 
     if (files.length) {
@@ -23,11 +23,18 @@ const uFileDrop = win.onDragDropEvent((event) => {
       replayFilePath.value = files[0];
     }
   } else if (event.payload.type === "dropped") {
-    console.log("User dropped", event.payload.paths);
+    const files = event.payload.paths.filter((v) => v.endsWith(".trply"));
+
     isFileDropOverlayVisible.value = false;
     replayFilePath.value = "";
+
+    router.push({
+      path: "/replay",
+      query: {
+        path: files[0],
+      },
+    });
   } else if (event.payload.type === "cancelled") {
-    console.log("File drop cancelled");
     isFileDropOverlayVisible.value = false;
     replayFilePath.value = "";
   }

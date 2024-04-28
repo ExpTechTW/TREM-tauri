@@ -37,6 +37,7 @@
         }
       ]
     },
+    "fs:allow-read-file",
     "fs:allow-mkdir",
     "fs:allow-exists",
     "fs:allow-write-text-file",

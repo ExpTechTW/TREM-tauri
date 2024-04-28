@@ -62,6 +62,7 @@ body {
 }
 
 #app {
+  position: relative;
   display: grid;
   grid-template-rows: 32px 1fr;
   width: 100svw;

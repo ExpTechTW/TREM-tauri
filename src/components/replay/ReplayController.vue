@@ -4,13 +4,39 @@ import MaterialSymbols from "../misc/MaterialSymbols.vue";
 import ProgressBar from "primevue/progressbar";
 import Slider from "primevue/slider";
 
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
+
+const props = defineProps<{
+  frames: number;
+  progress: number;
+  frame: number;
+  playing: boolean;
+  loading: boolean;
+}>();
+
+const emit = defineEmits<{
+  forward: [];
+  replay: [];
+  pause: [];
+  play: [];
+  timeline: [];
+  seek: [frame: number];
+}>();
 
 const router = useRouter();
 
-const progress = ref(15);
-const sliderProgress = ref(15);
+const sliderProgress = ref(0);
+const syncProgress = ref(true);
+
+watch(
+  () => props.frame,
+  () => {
+    if (syncProgress.value) {
+      sliderProgress.value = props.frame;
+    }
+  }
+);
 
 const endReplay = () => {
   router.back();
@@ -20,8 +46,21 @@ const endReplay = () => {
 <template>
   <div class="replay-controller">
     <div class="replay-progress">
-      <ProgressBar class="progress-bar" :value="progress" :show-value="false" />
-      <Slider v-model="sliderProgress" class="progress-slider" />
+      <ProgressBar
+        class="progress-bar"
+        :class="{ loaded: !loading }"
+        :value="loading ? undefined : progress"
+        :show-value="false"
+      />
+      <Slider
+        v-if="!loading"
+        v-model="sliderProgress"
+        class="progress-slider"
+        :class="{ loaded: !loading }"
+        :min="0"
+        :max="frames"
+        @slideend="() => emit('seek', sliderProgress)"
+      />
     </div>
     <div class="replay-actions">
       <Button class="end-replay-btn" severity="danger" text @click="endReplay">
@@ -29,22 +68,31 @@ const endReplay = () => {
           <MaterialSymbols icon="close" />
         </template>
       </Button>
-      <Button severity="secondary" text>
+      <Button severity="secondary" text @click="() => emit('replay')">
         <template #icon>
           <MaterialSymbols icon="replay_10" />
         </template>
       </Button>
-      <Button severity="primary" text>
+      <Button
+        severity="primary"
+        text
+        @click="() => (playing ? emit('pause') : emit('play'))"
+      >
         <template #icon>
-          <MaterialSymbols icon="play_arrow" />
+          <MaterialSymbols :icon="playing ? 'pause' : 'play_arrow'" />
         </template>
       </Button>
-      <Button severity="secondary" text>
+      <Button severity="secondary" text @click="() => emit('forward')">
         <template #icon>
           <MaterialSymbols icon="forward_10" />
         </template>
       </Button>
-      <Button class="open-timeline-btn" severity="secondary" text>
+      <Button
+        class="open-timeline-btn"
+        severity="secondary"
+        text
+        @click="() => emit('timeline')"
+      >
         <template #icon>
           <MaterialSymbols icon="animation" />
         </template>
@@ -61,7 +109,7 @@ const endReplay = () => {
   width: 30svw;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   padding: 8px 8px 4px 8px;
   border-radius: 8px;
   translate: -50%;
@@ -90,11 +138,11 @@ const endReplay = () => {
   width: 100%;
 }
 
-.progress-slider {
+.progress-slider.loaded {
   background-color: transparent;
 }
 
-.progress-bar {
+.progress-bar.loaded {
   background-color: color-mix(
     in srgb,
     var(--p-surface-700),
@@ -102,8 +150,8 @@ const endReplay = () => {
   );
 }
 
-.progress-slider:deep(> .p-slider-range),
-.progress-bar:deep(> .p-progressbar-value) {
+.progress-slider.loaded:deep(> .p-slider-range),
+.progress-bar.loaded:deep(> .p-progressbar-value) {
   background-color: color-mix(
     in srgb,
     transparent,
