@@ -24,7 +24,21 @@ export const IntensityColors = [
   "#b720e9", // 7
 ];
 
-export const IntensityDomain = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+export const InstrumentalIntensityColors = [
+  "#0005d0", // -3
+  "#004bf8", // -2
+  "#009EF8", // -1
+  "#79E5FD", // 0
+  "#49E9AD", // 1
+  "#44fa34", // 2
+  "#beff0c", // 3
+  "#fff000", // 4
+  "#ff9300", // 5
+  "#fc5235", // 6
+  "#b720e9", // 7
+];
+
+export const IntensityDomain = [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7];
 
 export const PgaDomain = [
   0, 3, 5, 8, 25, 80, 140, 250, 440, 800,

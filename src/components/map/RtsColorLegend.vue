@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  InstrumentalIntensityColors,
   IntensityColors,
   IntensityDomain,
   PgaDomain,
@@ -11,7 +12,7 @@ const configStore = useConfigStore();
 
 const titles = ["計測震度", "PGA", "PGV"];
 const units = ["", "gal", "cm/s"];
-const domains = [IntensityDomain.map((v) => v - 2), PgaDomain, PgvDomain];
+const domains = [IntensityDomain, PgaDomain, PgvDomain];
 </script>
 
 <template>
@@ -26,7 +27,7 @@ const domains = [IntensityDomain.map((v) => v - 2), PgaDomain, PgvDomain];
     </div>
     <div class="legend-content">
       <div class="color-bar">
-        <svg xmlns="http://www.w3.org/2000/svg" height="120" width="6">
+        <svg xmlns="http://www.w3.org/2000/svg" height="140" width="6">
           <defs>
             <linearGradient
               id="legend-color-bar-fill"
@@ -36,7 +37,9 @@ const domains = [IntensityDomain.map((v) => v - 2), PgaDomain, PgvDomain];
               y2="0%"
             >
               <stop
-                v-for="(color, i) in IntensityColors"
+                v-for="(color, i) in configStore.earthquake.display == 0
+                  ? InstrumentalIntensityColors
+                  : IntensityColors"
                 :offset="`${(i / IntensityColors.length) * 100}%`"
                 :stop-color="color"
               />
@@ -70,6 +73,7 @@ const domains = [IntensityDomain.map((v) => v - 2), PgaDomain, PgvDomain];
   background-color: var(--p-surface-700);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
   padding: 6px;
   border-radius: 8px;
@@ -102,7 +106,8 @@ const domains = [IntensityDomain.map((v) => v - 2), PgaDomain, PgvDomain];
 .color-bar {
   display: flex;
   height: 100%;
-  margin: 4px 0;
+  margin-top: 8px;
+  margin-bottom: 5px;
   padding: 1.5px;
   border-radius: 2px;
   background-color: var(--p-surface-200);

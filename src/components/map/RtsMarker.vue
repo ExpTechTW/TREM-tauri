@@ -7,6 +7,7 @@ import { scale } from "chroma-js";
 import { useMapStore } from "@/stores/map_store";
 
 import {
+  InstrumentalIntensityColors,
   IntensityColors,
   IntensityDomain,
   PgaDomain,
@@ -19,7 +20,7 @@ import type { RtsStation, Station } from "#/@exptechtw/api-wrapper/dist/types";
 import codes from "@/assets/json/code.json";
 import Tag from "primevue/tag";
 
-const i = scale(IntensityColors).domain(IntensityDomain);
+const i = scale(InstrumentalIntensityColors).domain(IntensityDomain);
 const pga = scale(IntensityColors).domain(PgaDomain);
 const pgv = scale(IntensityColors).domain(PgvDomain);
 
