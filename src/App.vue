@@ -5,20 +5,31 @@ import Toast from "primevue/toast";
 import Titlebar from "./components/window/Titlebar.vue";
 
 import { onUnmounted, ref } from "vue";
-
-import { getCurrent } from "@tauri-apps/api/webview";
+import { getCurrent } from "@tauri-apps/api/window";
 
 const win = getCurrent();
 
 const isFileDropOverlayVisible = ref(false);
+const replayFilePath = ref("");
 
-const uFileDrop = win.onFileDropEvent((event) => {
-  if (event.payload.type === "hover") {
+const uFileDrop = win.onDragDropEvent((event) => {
+  if (event.payload.type === "dragged") {
     console.log("User hovering", event.payload.paths);
-  } else if (event.payload.type === "drop") {
+
+    const files = event.payload.paths.filter((v) => v.endsWith(".trply"));
+
+    if (files.length) {
+      isFileDropOverlayVisible.value = true;
+      replayFilePath.value = files[0];
+    }
+  } else if (event.payload.type === "dropped") {
     console.log("User dropped", event.payload.paths);
-  } else {
+    isFileDropOverlayVisible.value = false;
+    replayFilePath.value = "";
+  } else if (event.payload.type === "cancelled") {
     console.log("File drop cancelled");
+    isFileDropOverlayVisible.value = false;
+    replayFilePath.value = "";
   }
 });
 
@@ -36,7 +47,10 @@ onUnmounted(() => {
   </router-view>
   <ConfirmDialog />
   <Toast />
-  <FileDropOverlayView :isVisible="isFileDropOverlayVisible" />
+  <FileDropOverlayView
+    :path="replayFilePath"
+    :isVisible="isFileDropOverlayVisible"
+  />
 </template>
 
 <style>

@@ -8,6 +8,7 @@
   "permissions": [
     "path:default",
     "event:default",
+    "path:default",
     "window:default",
     "window:allow-start-dragging",
     "window:allow-set-title",
@@ -46,7 +47,6 @@
         "$APPCONFIG",
         "$APPCONFIG/*"
       ]
-    },
-    "shell:default"
+    }
   ]
 }

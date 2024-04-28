@@ -110,8 +110,8 @@ onMounted(() => {
       severity="secondary"
       label="返回"
       rounded
-      @click="back"
       style="top: 16px; left: 16px"
+      @click="back"
     >
       <template #icon>
         <MaterialSymbols :icon="`\ue5c4`" style="margin-right: 8px" />
@@ -225,6 +225,11 @@ onMounted(() => {
   justify-content: center;
   padding: 0 8px;
   overflow: hidden;
+  transition: background-color 0.1s ease-in-out;
+}
+
+.report-open-btn:hover {
+  background-color: var(--p-highlight-background);
 }
 
 .side-panel {

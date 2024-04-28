@@ -19,6 +19,7 @@ import ConfigView from "@/view/ConfigView.vue";
 import EarthquakeView from "./view/EarthquakeView.vue";
 import ReportListView from "@/view/ReportListView.vue";
 import ReportView from "@/view/ReportView.vue";
+import ReplayView from "./view/ReplayView.vue";
 
 const win = getCurrent();
 
@@ -50,6 +51,12 @@ const router = createRouter({
           path: "/report/:id",
           components: {
             stack: ReportView
+          },
+        },
+        {
+          path: "/replay/path/:path",
+          components: {
+            navigation: ReplayView
           },
         },
         {

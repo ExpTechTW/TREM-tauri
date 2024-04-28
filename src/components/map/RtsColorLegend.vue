@@ -77,6 +77,7 @@ const domains = [IntensityDomain, PgaDomain, PgvDomain];
   gap: 4px;
   padding: 6px;
   border-radius: 8px;
+  z-index: 500;
 }
 
 .legend-header {

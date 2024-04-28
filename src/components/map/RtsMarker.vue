@@ -221,21 +221,23 @@ onUnmounted(() => {
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr;
-  gap: 4px;
+  gap: 4px 16px;
   font-size: 10px;
 }
 
 .rts-info {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
 .rts-info-label {
   flex: 1;
+  font-weight: bold;
 }
 
 .rts-info-unit {
   opacity: 0.6;
+  font-weight: normal;
 }
 </style>
