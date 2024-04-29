@@ -82,7 +82,8 @@ const mouseleave = () => {
       <ProgressBar
         class="progress-bar"
         :class="{ loaded: !loading }"
-        :value="loading ? undefined : progress"
+        :value="progress"
+        :mode="loading ? 'indeterminate' : 'determinate'"
         :show-value="false"
       />
       <Slider

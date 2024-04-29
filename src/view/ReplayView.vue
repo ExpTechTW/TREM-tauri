@@ -101,7 +101,8 @@ const scheduleNextFrame = () => {
       playerTimer = window.setTimeout(() => {
         if (isPlaying.value) {
           currentFrame.value++;
-          progress.value = (currentFrame.value / replayData.value.length) * 100;
+          progress.value =
+            (currentFrame.value / (replayData.value.length - 1)) * 100;
           playerTimer = null;
           scheduleNextFrame();
         } else {
@@ -111,17 +112,20 @@ const scheduleNextFrame = () => {
           }
         }
       }, next.time - current.time);
-    } else {
-      if (playerTimer != null) {
-        window.clearTimeout(playerTimer);
-        playerTimer = null;
-      }
     }
+  } else {
+    pause();
   }
 };
 
 const resume = () => {
   isPlaying.value = true;
+
+  if (progress.value == 100) {
+    currentFrame.value = 0;
+    progress.value = 0;
+  }
+
   scheduleNextFrame();
 };
 
@@ -140,22 +144,22 @@ const replay = () => {
     currentFrame.value = 0;
   }
 
-  progress.value = (currentFrame.value / replayData.value.length) * 100;
+  progress.value = (currentFrame.value / (replayData.value.length - 1)) * 100;
 };
 
 const forward = () => {
   if (currentFrame.value < replayData.value.length - 10) {
     currentFrame.value += 10;
   } else {
-    currentFrame.value = replayData.value.length;
+    currentFrame.value = replayData.value.length - 1;
   }
 
-  progress.value = (currentFrame.value / replayData.value.length) * 100;
+  progress.value = (currentFrame.value / (replayData.value.length - 1)) * 100;
 };
 
 const seekToFrame = (frame: number) => {
   currentFrame.value = frame;
-  progress.value = (currentFrame.value / replayData.value.length) * 100;
+  progress.value = (currentFrame.value / (replayData.value.length - 1)) * 100;
   console.log(currentFrame.value);
   console.log(currentRtsFrame.value);
 };
@@ -170,7 +174,7 @@ onMounted(() => {
 <template>
   <div id="replay">
     <ReplayController
-      :frames="replayData.length"
+      :frames="replayData.length - 1"
       :frame="currentFrame"
       :progress="progress"
       :playing="isPlaying"
