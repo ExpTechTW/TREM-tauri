@@ -38,6 +38,15 @@ watch(
   }
 );
 
+const slidestart = () => {
+  syncProgress.value = false;
+};
+
+const slideend = () => {
+  syncProgress.value = true;
+  emit("seek", sliderProgress.value);
+};
+
 const endReplay = () => {
   router.back();
 };
@@ -59,7 +68,8 @@ const endReplay = () => {
         :class="{ loaded: !loading }"
         :min="0"
         :max="frames"
-        @slideend="() => emit('seek', sliderProgress)"
+        @change="slidestart"
+        @slideend="slideend"
       />
     </div>
     <div class="replay-actions">

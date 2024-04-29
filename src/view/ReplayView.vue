@@ -100,6 +100,7 @@ const scheduleNextFrame = () => {
       player = window.setTimeout(() => {
         if (isPlaying.value) {
           currentFrame.value++;
+          progress.value = (currentFrame.value / replayData.value.length) * 100;
           player = null;
           scheduleNextFrame();
         } else {
