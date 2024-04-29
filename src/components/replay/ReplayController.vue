@@ -86,34 +86,38 @@ const mouseleave = () => {
     @mouseenter="mouseenter"
     @mouseleave="mouseleave"
   >
-    <div class="replay-progress">
-      <ProgressBar
-        class="progress-bar"
-        :class="{ loaded: !loading }"
-        :value="progress"
-        :mode="loading ? 'indeterminate' : 'determinate'"
-        :show-value="false"
-      />
-      <Slider
-        v-if="!loading"
-        v-model="sliderProgress"
-        class="progress-slider"
-        :class="{ loaded: !loading, hide: isControllerHidden }"
-        :min="0"
-        :max="frames"
-        @change="slidestart"
-        @slideend="slideend"
-      />
-      <template v-if="!loading" v-for="e in events">
-        <div
-          v-tooltip.top="{ value: e.label }"
-          class="event-marker"
-          :style="{
+    <div class="replay-progress-container">
+      <div class="current-frame">{{ frame }}</div>
+      <div class="replay-progress">
+        <ProgressBar
+          class="progress-bar"
+          :class="{ loaded: !loading }"
+          :value="progress"
+          :mode="loading ? 'indeterminate' : 'determinate'"
+          :show-value="false"
+        />
+        <Slider
+          v-if="!loading"
+          v-model="sliderProgress"
+          class="progress-slider"
+          :class="{ loaded: !loading, hide: isControllerHidden }"
+          :min="0"
+          :max="frames"
+          @change="slidestart"
+          @slideend="slideend"
+        />
+        <template v-if="!loading" v-for="e in events">
+          <div
+            v-tooltip.top="{ value: e.label }"
+            class="event-marker"
+            :style="{
             left: `${(e.frame / frames) * 100}%`,
             backgroundColor: EventColors[e.type as keyof typeof EventColors],
           }"
-        ></div>
-      </template>
+          ></div>
+        </template>
+      </div>
+      <div class="total-frames">{{ frames }}</div>
     </div>
     <div class="replay-actions">
       <Button class="end-replay-btn" severity="danger" text @click="endReplay">
@@ -132,7 +136,7 @@ const mouseleave = () => {
         @click="() => (playing ? emit('pause') : emit('play'))"
       >
         <template #icon>
-          <MaterialSymbols :icon="playing ? 'pause' : 'play_arrow'" />
+          <MaterialSymbols :icon="playing ? 'pause' : 'play_arrow'" filled />
         </template>
       </Button>
       <Button severity="secondary" text @click="() => emit('forward')">
@@ -162,7 +166,7 @@ const mouseleave = () => {
   width: 30svw;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 4px;
   padding: 8px 8px 4px 8px;
   border-radius: 8px;
   translate: -50%;
@@ -174,11 +178,25 @@ const mouseleave = () => {
 }
 
 .replay-controller.hide {
-  bottom: -48px;
+  bottom: -44px;
+}
+
+.replay-progress-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .replay-progress {
+  flex: 1;
   position: relative;
+  height: 3px;
+}
+
+.current-frame,
+.total-frames {
+  font-size: 10px;
+  line-height: 100%;
 }
 
 .replay-actions {
@@ -202,10 +220,22 @@ const mouseleave = () => {
 
 .progress-slider:deep(> .p-slider-handle) {
   z-index: 5;
+  height: 12px;
+  width: 12px;
+  margin: -6px;
+  opacity: 0;
+  background-color: var(--p-surface-900);
+  cursor: e-resize;
 }
 
-.progress-slider.hide:deep(> .p-slider-handle) {
-  opacity: 0;
+.progress-slider:deep(> .p-slider-handle::before) {
+  height: 8px;
+  width: 8px;
+  background-color: var(--p-primary-color);
+}
+
+.progress-slider:hover:deep(> .p-slider-handle) {
+  opacity: 1;
 }
 
 .progress-bar.loaded {
@@ -229,7 +259,7 @@ const mouseleave = () => {
   position: absolute;
   height: 6px;
   width: 2px;
-  bottom: -3px;
+  bottom: 0;
 }
 
 .replay-controller.hide .event-marker {
