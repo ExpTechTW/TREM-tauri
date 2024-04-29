@@ -2,8 +2,8 @@ import type { Eew, EewSource, Rts } from "#/@exptechtw/api-wrapper/dist/types";
 
 export type Events = {
   frame: number;
-  timestamp: number;
   type: EewSource | "rts";
+  label: string;
 };
 
 export type RtsEewData = {

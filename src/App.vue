@@ -4,7 +4,7 @@ import FileDropOverlayView from "./view/FileDropOverlayView.vue";
 import Toast from "primevue/toast";
 import Titlebar from "./components/window/Titlebar.vue";
 
-import { onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useRouter } from "vue-router";
 
@@ -40,8 +40,19 @@ const uFileDrop = win.onDragDropEvent((event) => {
   }
 });
 
+const preventContextMenu = (e: MouseEvent) => {
+  if (e.bubbles) {
+    e.preventDefault();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("contextmenu", preventContextMenu);
+});
+
 onUnmounted(() => {
   uFileDrop.then((f) => f());
+  document.removeEventListener("contextmenu", preventContextMenu);
 });
 </script>
 

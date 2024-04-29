@@ -127,8 +127,10 @@ onUnmounted(() => {
             :value="station.net"
           />
         </div>
-        <div v-if="info" class="rts-popup-subtitle">
-          {{ station.info[0].code }} {{ info.city }} {{ info.town }}
+        <div class="rts-popup-subtitle">
+          <span v-if="info">
+            {{ station.info[0].code }} {{ info.city }} {{ info.town }}
+          </span>
         </div>
         <div class="rts-popup-info">
           <div class="rts-info">

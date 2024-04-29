@@ -6,13 +6,15 @@ import Slider from "primevue/slider";
 
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import type { Events } from "@/view/ReplayView";
 
 const props = defineProps<{
-  frames: number;
   progress: number;
   frame: number;
   playing: boolean;
   loading: boolean;
+  frames: number;
+  events: Events[];
 }>();
 
 const emit = defineEmits<{
@@ -30,6 +32,12 @@ const sliderProgress = ref(0);
 const syncProgress = ref(true);
 const isControllerHidden = ref(false);
 let idleTimer: number | null = null;
+
+const EventColors = {
+  rts: "var(--p-amber-400)",
+  cwa: "var(--p-sky-400)",
+  trem: "var(--p-purple-400)",
+};
 
 watch(
   () => props.frame,
@@ -96,6 +104,16 @@ const mouseleave = () => {
         @change="slidestart"
         @slideend="slideend"
       />
+      <template v-if="!loading" v-for="e in events">
+        <div
+          v-tooltip.top="{ value: e.label }"
+          class="event-marker"
+          :style="{
+            left: `${(e.frame / frames) * 100}%`,
+            backgroundColor: EventColors[e.type as keyof typeof EventColors],
+          }"
+        ></div>
+      </template>
     </div>
     <div class="replay-actions">
       <Button class="end-replay-btn" severity="danger" text @click="endReplay">
@@ -182,6 +200,10 @@ const mouseleave = () => {
   background-color: transparent;
 }
 
+.progress-slider:deep(> .p-slider-handle) {
+  z-index: 5;
+}
+
 .progress-slider.hide:deep(> .p-slider-handle) {
   opacity: 0;
 }
@@ -201,6 +223,17 @@ const mouseleave = () => {
     transparent,
     var(--p-progressbar-value-background)
   );
+}
+
+.event-marker {
+  position: absolute;
+  height: 6px;
+  width: 2px;
+  bottom: -3px;
+}
+
+.replay-controller.hide .event-marker {
+  height: 3px;
 }
 
 .end-replay-btn {

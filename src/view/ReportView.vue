@@ -137,7 +137,12 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div v-ripple class="report-open-btn" @click="openReport">
+      <div
+        v-ripple
+        v-tooltip.top="{ value: '在瀏覽器中開啟', showDelay: 1000 }"
+        class="report-open-btn"
+        @click="openReport"
+      >
         <MaterialSymbols icon="open_in_new" :size="16" />
       </div>
     </div>

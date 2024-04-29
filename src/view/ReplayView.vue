@@ -10,6 +10,7 @@ import type { Events, Frame, RtsEewData, RtsFrame } from "./ReplayView";
 import { useStationStore } from "@/stores/station_store";
 import RtsMarker from "@/components/map/RtsMarker.vue";
 import RtsColorLegend from "@/components/map/RtsColorLegend.vue";
+import { toFormattedTimeString } from "@/helpers/utils";
 
 const toast = useToast();
 const route = useRoute();
@@ -72,6 +73,16 @@ const loadData = async () => {
             data: eew,
             time: +filename,
           });
+
+          if (eew.serial == 1) {
+            events.value.push({
+              type: eew.author,
+              frame: i,
+              label: `${
+                toFormattedTimeString(+filename).split(" ")[1]
+              } ${eew.author.toUpperCase()} 地震速報`,
+            });
+          }
         }
       }
     }
@@ -174,11 +185,12 @@ onMounted(() => {
 <template>
   <div id="replay">
     <ReplayController
-      :frames="replayData.length - 1"
       :frame="currentFrame"
       :progress="progress"
       :playing="isPlaying"
       :loading="isLoading"
+      :frames="replayData.length - 1"
+      :events="events"
       @replay="replay"
       @forward="forward"
       @play="resume"
