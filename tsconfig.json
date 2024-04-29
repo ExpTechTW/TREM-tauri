@@ -21,7 +21,6 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["./src/*"],
-      "#/*": ["./node_modules/*"],
       "~/*": ["./*"]
     },
   },

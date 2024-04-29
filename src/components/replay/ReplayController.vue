@@ -5,7 +5,6 @@ import ProgressBar from "primevue/progressbar";
 import Slider from "primevue/slider";
 
 import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
 import type { Events } from "@/view/ReplayView";
 
 const props = defineProps<{
@@ -22,11 +21,10 @@ const emit = defineEmits<{
   replay: [];
   pause: [];
   play: [];
+  end: [];
   timeline: [];
   seek: [frame: number];
 }>();
-
-const router = useRouter();
 
 const sliderProgress = ref(0);
 const syncProgress = ref(true);
@@ -37,6 +35,7 @@ const EventColors = {
   rts: "var(--p-amber-400)",
   cwa: "var(--p-sky-400)",
   trem: "var(--p-purple-400)",
+  nsspe: "var(--p-emerald-400)",
 };
 
 watch(
@@ -55,10 +54,6 @@ const slidestart = () => {
 const slideend = () => {
   syncProgress.value = true;
   emit("seek", sliderProgress.value);
-};
-
-const endReplay = () => {
-  router.back();
 };
 
 const mouseenter = () => {
@@ -111,16 +106,21 @@ const mouseleave = () => {
             v-tooltip.top="{ value: e.label }"
             class="event-marker"
             :style="{
-            left: `${(e.frame / frames) * 100}%`,
-            backgroundColor: EventColors[e.type as keyof typeof EventColors],
-          }"
+              left: `${(e.frame / frames) * 100}%`,
+              backgroundColor: EventColors[e.type as keyof typeof EventColors],
+            }"
           ></div>
         </template>
       </div>
       <div class="total-frames">{{ frames }}</div>
     </div>
     <div class="replay-actions">
-      <Button class="end-replay-btn" severity="danger" text @click="endReplay">
+      <Button
+        class="end-replay-btn"
+        severity="danger"
+        text
+        @click="() => emit('end')"
+      >
         <template #icon>
           <MaterialSymbols icon="close" />
         </template>
@@ -191,6 +191,7 @@ const mouseleave = () => {
   flex: 1;
   position: relative;
   height: 3px;
+  cursor: pointer;
 }
 
 .current-frame,
@@ -244,6 +245,10 @@ const mouseleave = () => {
     var(--p-surface-700),
     var(--p-surface-800)
   );
+}
+
+.progress-bar.loaded:deep(> .p-progressbar-value) {
+  transition: none;
 }
 
 .progress-slider.loaded:deep(> .p-slider-range),

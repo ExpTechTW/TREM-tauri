@@ -6,8 +6,9 @@ import Titlebar from "./components/window/Titlebar.vue";
 
 import { onMounted, onUnmounted, ref } from "vue";
 import { getCurrent } from "@tauri-apps/api/window";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
+const route = useRoute();
 const router = useRouter();
 const win = getCurrent();
 
@@ -15,6 +16,8 @@ const isFileDropOverlayVisible = ref(false);
 const replayFilePath = ref("");
 
 const uFileDrop = win.onDragDropEvent((event) => {
+  if (route.path == "/replay") return;
+
   if (event.payload.type === "dragged") {
     const files = event.payload.paths.filter((v) => v.endsWith(".trply"));
 

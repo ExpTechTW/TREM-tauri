@@ -1,16 +1,19 @@
 <script setup lang="ts">
+import TimeDisplay from "@/components/misc/TimeDisplay.vue";
 import ReplayController from "@/components/replay/ReplayController.vue";
+import RtsColorLegend from "@/components/map/RtsColorLegend.vue";
+import RtsMarker from "@/components/map/RtsMarker.vue";
 
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useToast } from "primevue/usetoast";
 import { useRoute, useRouter } from "vue-router";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { loadAsync } from "jszip";
-import type { Events, Frame, RtsEewData, RtsFrame } from "./ReplayView";
 import { useStationStore } from "@/stores/station_store";
-import RtsMarker from "@/components/map/RtsMarker.vue";
-import RtsColorLegend from "@/components/map/RtsColorLegend.vue";
-import { toFormattedTimeString } from "@/helpers/utils";
+import { playSound } from "@/helpers/sound";
+import { roundIntensity, toFormattedTimeString } from "@/helpers/utils";
+import { EewSource } from "@exptechtw/api-wrapper";
+import type { Events, Frame, RtsEewData, RtsFrame } from "./ReplayView";
 
 const toast = useToast();
 const route = useRoute();
@@ -24,7 +27,6 @@ const progress = ref(0);
 const events = ref<Events[]>([]);
 const replayData = ref<Frame[]>([]);
 let playerTimer: number | null = null;
-let idleTimer: number | null = null;
 
 const currentRtsFrame = computed((): RtsFrame | undefined => {
   if (!replayData.value.length) return;
@@ -49,7 +51,7 @@ const loadData = async () => {
   try {
     const binary = await readFile(route.query.path as string);
     const zip = await loadAsync(binary);
-    const eewFlag = {} as Record<string, number>;
+    let maxInt = 0;
 
     for (let i = 0, k = Object.keys(zip.files), n = k.length; i < n; i++) {
       const filename = k[i];
@@ -57,38 +59,85 @@ const loadData = async () => {
       const data = JSON.parse(content) as RtsEewData;
 
       if (data.rts.time) {
+        const sound = [];
+        let frameMaxInt = 0;
+
+        for (const sid in data.rts.station) {
+          const s = data.rts.station[sid];
+          const int = roundIntensity(s.I);
+          if (s.alert && int > frameMaxInt) {
+            frameMaxInt = int;
+          }
+        }
+
+        if (frameMaxInt > maxInt) {
+          maxInt = frameMaxInt;
+          sound.push(`intensity${maxInt}`);
+        }
+
         replayData.value.push({
           type: "rts",
           data: data.rts,
           time: data.rts.time,
+          sound: sound,
         });
       }
 
+      const eewFlag = {} as Record<string, number>;
+
       for (const eew of data.eew) {
-        if (eew.serial > (eewFlag[eew.id] ?? 0)) {
+        const sound = [];
+
+        if (eew.serial == 1 && !eewFlag[eew.id]) {
           eewFlag[eew.id] = eew.serial;
+          console.log(eew);
 
-          replayData.value.push({
-            type: "eew",
-            data: eew,
-            time: +filename,
-          });
-
-          if (eew.serial == 1) {
-            events.value.push({
-              type: eew.author,
-              frame: i,
-              label: `${
-                toFormattedTimeString(+filename).split(" ")[1]
-              } ${eew.author.toUpperCase()} 地震速報`,
-            });
-          }
+          sound.push(eew.author);
+        } else if (eew.author == "cwa") {
+          sound.push("update");
         }
+
+        replayData.value.push({
+          type: "eew",
+          data: eew,
+          time: +filename,
+          sound,
+        });
       }
     }
 
     replayData.value.sort((a, b) => a.time - b.time);
-    console.log(replayData);
+
+    const eewFlag = {} as Record<string, number>;
+
+    for (let i = 0, n = replayData.value.length; i < n; i++) {
+      const f = replayData.value[i];
+
+      if (f.type != "eew") continue;
+
+      const data = f.data;
+
+      if (data.serial > (eewFlag[data.id] ?? 0)) {
+        eewFlag[data.id] = data.serial;
+
+        if (data.serial == 1) {
+          const type =
+            data.author == EewSource.Trem && data.detail == 0
+              ? "nsspe"
+              : f.data.author;
+
+          events.value.push({
+            type,
+            frame: i,
+            label: `${
+              toFormattedTimeString(f.time).split(" ")[1]
+            } ${type.toUpperCase()} ${
+              type != "nsspe" ? "地震速報" : ""
+            }`.trim(),
+          });
+        }
+      }
+    }
 
     isLoading.value = false;
   } catch (error) {
@@ -103,6 +152,16 @@ const loadData = async () => {
   }
 };
 
+const playFrame = (index: number) => {
+  progress.value = (currentFrame.value / (replayData.value.length - 1)) * 100;
+
+  const f = replayData.value[index];
+
+  for (const soundName of f.sound) {
+    playSound(soundName);
+  }
+};
+
 const scheduleNextFrame = () => {
   const current = replayData.value[currentFrame.value];
   const next = replayData.value[currentFrame.value + 1];
@@ -111,9 +170,7 @@ const scheduleNextFrame = () => {
     if (playerTimer == null) {
       playerTimer = window.setTimeout(() => {
         if (isPlaying.value) {
-          currentFrame.value++;
-          progress.value =
-            (currentFrame.value / (replayData.value.length - 1)) * 100;
+          playFrame(++currentFrame.value);
           playerTimer = null;
           scheduleNextFrame();
         } else {
@@ -175,10 +232,60 @@ const seekToFrame = (frame: number) => {
   console.log(currentRtsFrame.value);
 };
 
+const endReplay = () => {
+  router.back();
+};
+
+const keydown = (e: KeyboardEvent) => {
+  switch (e.key) {
+    case "j":
+    case "ArrowLeft": {
+      e.preventDefault();
+      replay();
+      break;
+    }
+
+    case "l":
+    case "ArrowRight": {
+      e.preventDefault();
+      forward();
+      break;
+    }
+
+    case "k":
+    case " ": {
+      e.preventDefault();
+
+      if (isPlaying.value) {
+        pause();
+      } else {
+        resume();
+      }
+
+      break;
+    }
+
+    case "Escape": {
+      e.preventDefault();
+      endReplay();
+      break;
+    }
+
+    default:
+      break;
+  }
+};
+
 onMounted(() => {
   loadData().then(() => {
     scheduleNextFrame();
   });
+
+  document.addEventListener("keydown", keydown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", keydown);
 });
 </script>
 
@@ -196,6 +303,7 @@ onMounted(() => {
       @play="resume"
       @pause="pause"
       @seek="seekToFrame"
+      @end="endReplay"
     />
     <template v-if="stationStore.value" v-for="(s, id) in stationStore.value">
       <RtsMarker
@@ -206,6 +314,7 @@ onMounted(() => {
       />
     </template>
     <RtsColorLegend id="rts-color-legend" />
+    <TimeDisplay v-if="currentRtsFrame" :time="currentRtsFrame.time" />
   </div>
 </template>
 

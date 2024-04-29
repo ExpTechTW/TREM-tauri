@@ -19,10 +19,7 @@ import {
 import { useMapStore } from "@/stores/map_store";
 import { useReportStore } from "@/stores/report_store";
 
-import type {
-  PartialReport,
-  Report,
-} from "#/@exptechtw/api-wrapper/dist/types";
+import type { PartialReport, Report } from "@exptechtw/api-wrapper";
 import Global from "@/global";
 
 const route = useRoute();

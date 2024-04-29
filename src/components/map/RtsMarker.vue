@@ -16,7 +16,7 @@ import {
 import { useConfigStore } from "@/stores/config_store";
 import { roundIntensity } from "@/helpers/utils";
 
-import type { RtsStation, Station } from "#/@exptechtw/api-wrapper/dist/types";
+import type { RtsStation, Station } from "@exptechtw/api-wrapper";
 import codes from "@/assets/json/code.json";
 import Tag from "primevue/tag";
 

@@ -11,7 +11,7 @@ import {
 } from "@/helpers/utils";
 import { useMapStore } from "@/stores/map_store";
 
-import type { PartialReport } from "#/@exptechtw/api-wrapper/dist/types";
+import type { PartialReport } from "@exptechtw/api-wrapper";
 
 const props = defineProps<{
   report: PartialReport;

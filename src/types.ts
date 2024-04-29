@@ -1,4 +1,4 @@
-import type { Eew, EewSource, EewStatus } from "#/@exptechtw/api-wrapper/dist/types";
+import type { Eew, EewSource, EewStatus } from "@exptechtw/api-wrapper";
 import code from "./assets/json/code.json";
 
 export interface LastNtp {
