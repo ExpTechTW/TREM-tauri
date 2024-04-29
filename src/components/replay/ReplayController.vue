@@ -28,6 +28,8 @@ const router = useRouter();
 
 const sliderProgress = ref(0);
 const syncProgress = ref(true);
+const isControllerHidden = ref(false);
+let idleTimer: number | null = null;
 
 watch(
   () => props.frame,
@@ -50,10 +52,32 @@ const slideend = () => {
 const endReplay = () => {
   router.back();
 };
+
+const mouseenter = () => {
+  isControllerHidden.value = false;
+  if (idleTimer != null) {
+    window.clearTimeout(idleTimer);
+    idleTimer = null;
+  }
+};
+
+const mouseleave = () => {
+  if (idleTimer == null) {
+    idleTimer = window.setTimeout(() => {
+      isControllerHidden.value = true;
+      idleTimer = null;
+    }, 5000);
+  }
+};
 </script>
 
 <template>
-  <div class="replay-controller">
+  <div
+    class="replay-controller"
+    :class="{ hide: isControllerHidden }"
+    @mouseenter="mouseenter"
+    @mouseleave="mouseleave"
+  >
     <div class="replay-progress">
       <ProgressBar
         class="progress-bar"
@@ -65,7 +89,7 @@ const endReplay = () => {
         v-if="!loading"
         v-model="sliderProgress"
         class="progress-slider"
-        :class="{ loaded: !loading }"
+        :class="{ loaded: !loading, hide: isControllerHidden }"
         :min="0"
         :max="frames"
         @change="slidestart"
@@ -127,6 +151,11 @@ const endReplay = () => {
   background-color: color-mix(in srgb, transparent, var(--p-surface-700) 85%);
   z-index: 900;
   pointer-events: all;
+  transition: bottom 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.replay-controller.hide {
+  bottom: -48px;
 }
 
 .replay-progress {
@@ -150,6 +179,10 @@ const endReplay = () => {
 
 .progress-slider.loaded {
   background-color: transparent;
+}
+
+.progress-slider.hide:deep(> .p-slider-handle) {
+  opacity: 0;
 }
 
 .progress-bar.loaded {

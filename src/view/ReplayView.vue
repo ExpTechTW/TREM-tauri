@@ -22,7 +22,8 @@ const currentFrame = ref(0);
 const progress = ref(0);
 const events = ref<Events[]>([]);
 const replayData = ref<Frame[]>([]);
-let player: number | null = null;
+let playerTimer: number | null = null;
+let idleTimer: number | null = null;
 
 const currentRtsFrame = computed((): RtsFrame | undefined => {
   if (!replayData.value.length) return;
@@ -96,24 +97,24 @@ const scheduleNextFrame = () => {
   const next = replayData.value[currentFrame.value + 1];
 
   if (next) {
-    if (player == null) {
-      player = window.setTimeout(() => {
+    if (playerTimer == null) {
+      playerTimer = window.setTimeout(() => {
         if (isPlaying.value) {
           currentFrame.value++;
           progress.value = (currentFrame.value / replayData.value.length) * 100;
-          player = null;
+          playerTimer = null;
           scheduleNextFrame();
         } else {
-          if (player != null) {
-            window.clearTimeout(player);
-            player = null;
+          if (playerTimer != null) {
+            window.clearTimeout(playerTimer);
+            playerTimer = null;
           }
         }
       }, next.time - current.time);
     } else {
-      if (player != null) {
-        window.clearTimeout(player);
-        player = null;
+      if (playerTimer != null) {
+        window.clearTimeout(playerTimer);
+        playerTimer = null;
       }
     }
   }
@@ -126,9 +127,9 @@ const resume = () => {
 
 const pause = () => {
   isPlaying.value = false;
-  if (player != null) {
-    window.clearTimeout(player);
-    player = null;
+  if (playerTimer != null) {
+    window.clearTimeout(playerTimer);
+    playerTimer = null;
   }
 };
 
