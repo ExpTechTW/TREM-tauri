@@ -43,9 +43,11 @@ const props = withDefaults(
 const mapStore = useMapStore();
 
 let marker: Marker;
-const popup = new Popup({ closeButton: false, offset: 16 }).setLngLat(
-  props.lnglat
-);
+const popup = new Popup({
+  closeButton: false,
+  offset: 16,
+  maxWidth: "none",
+}).setLngLat(props.lnglat);
 
 const zIndexOverride = ref<number>();
 const markerElement = ref<HTMLDivElement>();

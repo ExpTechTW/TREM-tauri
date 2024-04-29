@@ -1,22 +1,47 @@
 <script setup lang="ts">
 import ReplayController from "@/components/replay/ReplayController.vue";
 
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useToast } from "primevue/usetoast";
 import { useRoute, useRouter } from "vue-router";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { loadAsync } from "jszip";
-import type { Events, Frame, RtsEewData } from "./ReplayView";
+import type { Events, Frame, RtsEewData, RtsFrame } from "./ReplayView";
+import { useStationStore } from "@/stores/station_store";
+import RtsMarker from "@/components/map/RtsMarker.vue";
+import RtsColorLegend from "@/components/map/RtsColorLegend.vue";
 
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
+const stationStore = useStationStore();
+
 const isPlaying = ref(true);
 const isLoading = ref(true);
 const currentFrame = ref(0);
 const progress = ref(0);
-const replayData = [] as Frame[];
 const events = ref<Events[]>([]);
+const replayData = ref<Frame[]>([]);
+let player: number | null = null;
+
+const currentRtsFrame = computed((): RtsFrame | undefined => {
+  if (!replayData.value.length) return;
+
+  let index = currentFrame.value;
+  let frame = replayData.value[index];
+
+  if (frame.type == "rts") {
+    return frame;
+  }
+
+  while (index >= 0) {
+    index--;
+    frame = replayData.value[index];
+    if (frame.type == "rts") {
+      return frame;
+    }
+  }
+});
 
 const loadData = async () => {
   try {
@@ -30,7 +55,7 @@ const loadData = async () => {
       const data = JSON.parse(content) as RtsEewData;
 
       if (data.rts.time) {
-        replayData.push({
+        replayData.value.push({
           type: "rts",
           data: data.rts,
           time: data.rts.time,
@@ -41,7 +66,7 @@ const loadData = async () => {
         if (eew.serial > (eewFlag[eew.id] ?? 0)) {
           eewFlag[eew.id] = eew.serial;
 
-          replayData.push({
+          replayData.value.push({
             type: "eew",
             data: eew,
             time: +filename,
@@ -50,7 +75,7 @@ const loadData = async () => {
       }
     }
 
-    replayData.sort((a, b) => a.time - b.time);
+    replayData.value.sort((a, b) => a.time - b.time);
     console.log(replayData);
 
     isLoading.value = false;
@@ -66,12 +91,44 @@ const loadData = async () => {
   }
 };
 
-const play = () => {
+const scheduleNextFrame = () => {
+  const current = replayData.value[currentFrame.value];
+  const next = replayData.value[currentFrame.value + 1];
+
+  if (next) {
+    if (player == null) {
+      player = window.setTimeout(() => {
+        if (isPlaying.value) {
+          currentFrame.value++;
+          player = null;
+          scheduleNextFrame();
+        } else {
+          if (player != null) {
+            window.clearTimeout(player);
+            player = null;
+          }
+        }
+      }, next.time - current.time);
+    } else {
+      if (player != null) {
+        window.clearTimeout(player);
+        player = null;
+      }
+    }
+  }
+};
+
+const resume = () => {
   isPlaying.value = true;
+  scheduleNextFrame();
 };
 
 const pause = () => {
   isPlaying.value = false;
+  if (player != null) {
+    window.clearTimeout(player);
+    player = null;
+  }
 };
 
 const replay = () => {
@@ -81,27 +138,30 @@ const replay = () => {
     currentFrame.value = 0;
   }
 
-  progress.value = (currentFrame.value / replayData.length) * 100;
+  progress.value = (currentFrame.value / replayData.value.length) * 100;
 };
 
 const forward = () => {
-  if (currentFrame.value < replayData.length - 10) {
+  if (currentFrame.value < replayData.value.length - 10) {
     currentFrame.value += 10;
   } else {
-    currentFrame.value = replayData.length;
+    currentFrame.value = replayData.value.length;
   }
 
-  progress.value = (currentFrame.value / replayData.length) * 100;
+  progress.value = (currentFrame.value / replayData.value.length) * 100;
 };
 
 const seekToFrame = (frame: number) => {
   currentFrame.value = frame;
-  progress.value = (currentFrame.value / replayData.length) * 100;
+  progress.value = (currentFrame.value / replayData.value.length) * 100;
+  console.log(currentFrame.value);
+  console.log(currentRtsFrame.value);
 };
 
 onMounted(() => {
-  console.log(route.query);
-  loadData();
+  loadData().then(() => {
+    scheduleNextFrame();
+  });
 });
 </script>
 
@@ -115,9 +175,26 @@ onMounted(() => {
       :loading="isLoading"
       @replay="replay"
       @forward="forward"
-      @play="play"
+      @play="resume"
       @pause="pause"
       @seek="seekToFrame"
     />
+    <template v-if="stationStore.value" v-for="(s, id) in stationStore.value">
+      <RtsMarker
+        :id="id"
+        :station="s"
+        :lnglat="[s.info[0].lon, s.info[0].lat]"
+        :rts="currentRtsFrame?.data?.station?.[id]"
+      />
+    </template>
+    <RtsColorLegend id="rts-color-legend" />
   </div>
 </template>
+
+<style scoped>
+.rts-color-legend {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+}
+</style>
