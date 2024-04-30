@@ -45,6 +45,9 @@ body {
 
   /* maplibre overrides*/
 
+  .maplibregl-canvas:focus-visible {
+    outline: none;
+  }
   .maplibregl-popup {
     box-shadow: 0 0 16px 0 hsl(0deg 0% 0% / 0.2);
     z-index: 999;

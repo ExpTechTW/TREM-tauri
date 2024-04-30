@@ -6,12 +6,13 @@ import DotMarker from "@/components/map/DotMarker.vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 import type { EewEvent } from "../../types";
-import { EewStatus } from "@exptechtw/api-wrapper";
-import { getMarkerSizeOnZoom } from "@/helpers/utils";
+import { EewSource, EewStatus, EewType } from "@exptechtw/api-wrapper";
+import { calculateWaveRadius, getMarkerSizeOnZoom } from "@/helpers/utils";
 import { useMapStore } from "@/stores/map_store";
 
-defineProps<{
-  eew: EewEvent;
+const props = defineProps<{
+  eew: EewType;
+  time: number;
 }>();
 
 const mapStore = useMapStore();
@@ -23,11 +24,17 @@ const markerSize = computed(() => {
 });
 
 const markerOpacity = ref(1);
+let flashState = true;
 let flashTimer: number | null = null;
 
-const flashMarkers = (state: boolean) => {
-  markerOpacity.value = state ? 1 : 0;
+const flashMarkers = () => {
+  flashState = !flashState;
+  markerOpacity.value = flashState ? 1 : 0;
 };
+
+const waveRadius = computed(() =>
+  calculateWaveRadius(props.time, props.eew.eq.depth, props.eew.eq.time)
+);
 
 /* 
 const unwatchTemplate = watch(
@@ -60,35 +67,40 @@ onBeforeUnmount(() => {
 
 <template>
   <CrossMarker
-    v-if="eew.detail"
-    :lnglat="[eew.lng, eew.lat]"
-    :class="{ cancelled: eew.cancel }"
+    v-if="eew.author != EewSource.Trem || eew.detail"
+    :lnglat="[eew.eq.lon, eew.eq.lat]"
     :size="markerSize"
-    :opacity="markerOpacity"
+    :opacity="eew.status == EewStatus.Cancel ? 0.4 : markerOpacity"
     :z-index="1000"
   />
   <DotMarker
     v-else
-    :class="{ cancelled: eew.cancel }"
-    :lnglat="[eew.lng, eew.lat]"
+    :class="{ cancelled: eew.status == EewStatus.Cancel }"
+    :lnglat="[eew.eq.lon, eew.eq.lat]"
     :size="markerSize"
     :opacity="markerOpacity"
-    :intensity="eew.max"
+    :intensity="eew.eq.max"
     :z-index="1000"
   />
   <CircleMarker
-    v-if="eew.detail && !eew.cancel"
+    v-if="
+      (eew.author != EewSource.Trem || eew.detail) &&
+      eew.status != EewStatus.Cancel
+    "
     type="s"
-    :radius="eew.r.s"
-    :lnglat="[eew.lng, eew.lat]"
+    :radius="waveRadius.s"
+    :lnglat="[eew.eq.lon, eew.eq.lat]"
     :alert="eew.status == EewStatus.Alert"
     :z-index="1000"
   />
   <CircleMarker
-    v-if="eew.detail && !eew.cancel"
+    v-if="
+      (eew.author != EewSource.Trem || eew.detail) &&
+      eew.status != EewStatus.Cancel
+    "
     type="p"
-    :radius="eew.r.p"
-    :lnglat="[eew.lng, eew.lat]"
+    :radius="waveRadius.p"
+    :lnglat="[eew.eq.lon, eew.eq.lat]"
     :alert="eew.status == EewStatus.Alert"
     :z-index="1000"
   />

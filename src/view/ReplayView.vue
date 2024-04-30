@@ -14,7 +14,7 @@ import { playSound } from "@/helpers/sound";
 import { roundIntensity, toFormattedTimeString } from "@/helpers/utils";
 import { EewSource, EewType } from "@exptechtw/api-wrapper";
 import type { Events, Frame, RtsEewData, RtsFrame } from "./ReplayView";
-import CircleMarker from "@/components/map/CircleMarker.vue";
+import EewMarker from "@/components/map/EewMarker.vue";
 
 const toast = useToast();
 const route = useRoute();
@@ -28,6 +28,10 @@ const progress = ref(0);
 const events = ref<Events[]>([]);
 const replayData = ref<Frame[]>([]);
 let playerTimer: number | null = null;
+
+const currentTime = computed<number | undefined>(
+  () => replayData.value[currentFrame.value]?.time
+);
 
 const currentRtsFrame = computed((): RtsFrame | undefined => {
   if (!replayData.value.length) return;
@@ -50,8 +54,8 @@ const currentRtsFrame = computed((): RtsFrame | undefined => {
 
 const currentEewState = computed((): EewType[] => {
   const data = [] as EewType[];
-
-  if (!replayData.value.length) return data;
+  let current = currentTime.value;
+  if (!replayData.value.length || !current) return data;
 
   let flag = {} as Record<string, EewType>;
 
@@ -63,7 +67,7 @@ const currentEewState = computed((): EewType[] => {
     flag[f.data.id] = f.data;
   }
 
-  return Object.values(flag);
+  return Object.values(flag).filter((v) => current - v.eq.time < 120_000);
 });
 
 const loadData = async () => {
@@ -329,11 +333,15 @@ onUnmounted(() => {
           :station="s"
           :lnglat="[s.info[0].lon, s.info[0].lat]"
           :rts="currentRtsFrame?.data?.station?.[id]"
+          :hideZero="!!currentEewState.length"
         />
       </template>
     </template>
     <RtsColorLegend id="rts-color-legend" />
-    <TimeDisplay v-if="currentRtsFrame" :time="currentRtsFrame.time" />
+    <TimeDisplay v-if="currentTime" :time="currentTime" />
+    <template v-if="currentTime" v-for="eew in currentEewState" :key="eew.id">
+      <EewMarker :eew="eew" :time="currentTime" />
+    </template>
   </div>
 </template>
 

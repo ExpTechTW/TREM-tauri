@@ -33,10 +33,12 @@ const props = withDefaults(
     lnglat: LngLatLike;
     rts?: RtsStation;
     alert?: boolean;
+    hideZero?: boolean;
   }>(),
   {
     alert: false,
     zIndex: 1,
+    hideZero: false,
   }
 );
 
@@ -68,6 +70,8 @@ const markerMouseleave = () => {
 };
 
 const getMarkerColor = (rts: RtsStation) => {
+  if (rts.alert) return i(rts.I).hex();
+
   switch (configStore.earthquake.display) {
     case 1:
       return pga(rts.pga).hex();
@@ -106,7 +110,12 @@ onUnmounted(() => {
     :id="`rts-marker-${id}`"
     class="rts-marker"
     :style="{
-      backgroundColor: rts ? getMarkerColor(rts) : '',
+      display: hideZero && (!rts || !rts.alert) ? 'none' : '',
+      backgroundColor: rts
+        ? hideZero && rts.I < 1
+          ? '#888'
+          : getMarkerColor(rts)
+        : '',
       zIndex: rts ? rts.i + 10 : 1,
     }"
     @mouseover="markerMouseover"
@@ -116,7 +125,7 @@ onUnmounted(() => {
   <div ref="rtsMarkerPopupElement" class="rts-popup-item">
     <div class="rts-popup-container">
       <div class="rts-popup-leading">
-        <Intensity :intensity="rts ? roundIntensity(rts.i) : null" />
+        <Intensity :intensity="rts ? roundIntensity(rts.I) : null" />
         <span class="caption">震度階</span>
       </div>
       <div class="rts-popup-content">

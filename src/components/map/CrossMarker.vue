@@ -22,6 +22,13 @@ const mapStore = useMapStore();
 const markerElement = ref<HTMLDivElement>();
 let marker: Marker;
 
+const unwatchLngLat = watch(
+  () => props.lnglat,
+  () => {
+    if (marker) marker.setLngLat(props.lnglat);
+  }
+);
+
 const unwatchOpacity = watch(
   () => props.opacity,
   () => {
@@ -44,6 +51,7 @@ onUnmounted(() => {
   if (marker) {
     marker.remove();
   }
+  unwatchLngLat();
   unwatchOpacity();
 });
 </script>

@@ -54,6 +54,14 @@ const updateCircle = () => {
 
 const unwatch = watch(() => props.radius, updateCircle);
 
+const unwatchLngLat = watch(
+  () => props.lnglat,
+  () => {
+    if (strokeMarker) strokeMarker.setLngLat(props.lnglat);
+    if (backgroundMarker) backgroundMarker.setLngLat(props.lnglat);
+  }
+);
+
 onMounted(() => {
   if (!mapStore.map) return;
 
@@ -73,6 +81,7 @@ onMounted(() => {
       .addTo(mapStore.map);
   }
 
+  updateCircle();
   mapStore.map.on("move", updateCircle);
 });
 
@@ -89,20 +98,21 @@ onBeforeUnmount(() => {
 
   mapStore.map.off("move", updateCircle);
   unwatch();
+  unwatchLngLat();
 });
 </script>
 
 <template>
-  <div ref="strokeTemplate">
+  <div ref="strokeTemplate" class="circle-marker-stroke">
     <div
-      class="circle circle-marker-stroke"
+      class="circle stroke"
       :class="{ [type]: true, alert }"
       :style="{ height: radiusInPixel, width: radiusInPixel }"
     ></div>
   </div>
-  <div ref="backgroundTemplate">
+  <div ref="backgroundTemplate" class="circle-marker-background">
     <div
-      class="circle circle-marker-background"
+      class="circle background"
       :class="{ [type]: true, alert }"
       :style="{ height: radiusInPixel, width: radiusInPixel }"
     ></div>
@@ -119,7 +129,11 @@ onBeforeUnmount(() => {
   translate: -50% -50%;
 }
 
-.circle-marker-stroke {
+.circle-marker-background {
+  z-index: -1;
+}
+
+.stroke {
   border: 3px solid transparent;
   border-radius: 100%;
 
@@ -136,23 +150,7 @@ onBeforeUnmount(() => {
   }
 }
 
-.circle-marker-stroke {
-  border: 3px solid transparent;
-
-  &.p {
-    border-color: #6bf;
-  }
-
-  &.s:not(.alert) {
-    border-color: #ffa500;
-  }
-
-  &.s.alert {
-    border-color: #f22;
-  }
-}
-
-.circle-marker-background {
+.background {
   opacity: 0.4;
 
   &.s:not(.alert) {
@@ -160,7 +158,7 @@ onBeforeUnmount(() => {
   }
 
   &.s.alert {
-    border-color: radial-gradient(transparent 40%, #f22);
+    background: radial-gradient(transparent 40%, #f22);
   }
 }
 </style>

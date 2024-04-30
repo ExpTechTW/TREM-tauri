@@ -227,6 +227,7 @@ const mouseleave = () => {
   opacity: 0;
   background-color: var(--p-surface-900);
   cursor: e-resize;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .progress-slider:deep(> .p-slider-handle::before) {
@@ -235,7 +236,8 @@ const mouseleave = () => {
   background-color: var(--p-primary-color);
 }
 
-.progress-slider:hover:deep(> .p-slider-handle) {
+.progress-slider:hover:deep(> .p-slider-handle),
+.progress-slider:active:deep(> .p-slider-handle) {
   opacity: 1;
 }
 
