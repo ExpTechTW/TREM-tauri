@@ -12,8 +12,9 @@ import { loadAsync } from "jszip";
 import { useStationStore } from "@/stores/station_store";
 import { playSound } from "@/helpers/sound";
 import { roundIntensity, toFormattedTimeString } from "@/helpers/utils";
-import { EewSource } from "@exptechtw/api-wrapper";
+import { EewSource, EewType } from "@exptechtw/api-wrapper";
 import type { Events, Frame, RtsEewData, RtsFrame } from "./ReplayView";
+import CircleMarker from "@/components/map/CircleMarker.vue";
 
 const toast = useToast();
 const route = useRoute();
@@ -45,6 +46,24 @@ const currentRtsFrame = computed((): RtsFrame | undefined => {
       return frame;
     }
   }
+});
+
+const currentEewState = computed((): EewType[] => {
+  const data = [] as EewType[];
+
+  if (!replayData.value.length) return data;
+
+  let flag = {} as Record<string, EewType>;
+
+  for (let i = 0, n = currentFrame.value; i <= n; i++) {
+    const f = replayData.value[i];
+
+    if (f.type != "eew") continue;
+
+    flag[f.data.id] = f.data;
+  }
+
+  return Object.values(flag);
 });
 
 const loadData = async () => {
@@ -228,8 +247,6 @@ const forward = () => {
 const seekToFrame = (frame: number) => {
   currentFrame.value = frame;
   progress.value = (currentFrame.value / (replayData.value.length - 1)) * 100;
-  console.log(currentFrame.value);
-  console.log(currentRtsFrame.value);
 };
 
 const endReplay = () => {
@@ -305,13 +322,15 @@ onUnmounted(() => {
       @seek="seekToFrame"
       @end="endReplay"
     />
-    <template v-if="stationStore.value" v-for="(s, id) in stationStore.value">
-      <RtsMarker
-        :id="id"
-        :station="s"
-        :lnglat="[s.info[0].lon, s.info[0].lat]"
-        :rts="currentRtsFrame?.data?.station?.[id]"
-      />
+    <template v-if="stationStore.value">
+      <template v-for="(s, id) in stationStore.value">
+        <RtsMarker
+          :id="id"
+          :station="s"
+          :lnglat="[s.info[0].lon, s.info[0].lat]"
+          :rts="currentRtsFrame?.data?.station?.[id]"
+        />
+      </template>
     </template>
     <RtsColorLegend id="rts-color-legend" />
     <TimeDisplay v-if="currentRtsFrame" :time="currentRtsFrame.time" />

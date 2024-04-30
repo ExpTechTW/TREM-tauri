@@ -7,6 +7,7 @@ import { useRtsStore } from "@/stores/rts_store";
 import { useStationStore } from "@/stores/station_store";
 
 import Global from "@/global";
+import CircleMarker from "@/components/map/CircleMarker.vue";
 
 const rtsStore = useRtsStore();
 const stationStore = useStationStore();
@@ -29,6 +30,13 @@ onMounted(() => {
       />
     </template>
     <RtsColorLegend id="rts-color-legend" />
+    <CircleMarker
+      type="s"
+      :radius="384.61"
+      :lnglat="[121.53697868241125, 25.29965377731923]"
+      :alert="false"
+      :z-index="99999"
+    />
   </div>
 </template>
 
