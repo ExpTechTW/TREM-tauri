@@ -1,4 +1,4 @@
-import type { Eew, PartialReport, Report, Rts, Station } from "#/@exptechtw/api-wrapper/dist/types/index";
+import type { Eew, PartialReport, Report, Rts, Station } from "@exptechtw/api-wrapper";
 import { fetch } from "@tauri-apps/plugin-http";
 import { Route } from "@/class/route";
 

@@ -11,9 +11,10 @@
   "app": {
     "windows": [
       {
-        "title": "trem-tauri",
+        "title": "TREM Tauri",
         "width": 1000,
         "height": 600,
+        "resizable": true,
         "decorations": false,
         "transparent": true,
         "windowEffects": {
@@ -34,6 +35,18 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "licenseFile": "./assets/terms.rtf",
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "installerIcon": "icons/icon.ico",
+        "languages": ["English", "TradChinese", "Japanese"],
+        "sidebarImage": "./assets/sidebar.bmp"
+      },
+      "wix":{
+        "language": "zh-TW"
+      }
+    }
   }
 }

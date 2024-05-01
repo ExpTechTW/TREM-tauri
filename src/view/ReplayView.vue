@@ -113,8 +113,6 @@ const loadData = async () => {
 
         if (eew.serial == 1 && !eewFlag[eew.id]) {
           eewFlag[eew.id] = eew.serial;
-          console.log(eew);
-
           sound.push(eew.author);
         } else if (eew.author == "cwa") {
           sound.push("update");

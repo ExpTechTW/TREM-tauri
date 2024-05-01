@@ -5,7 +5,6 @@ import DotMarker from "@/components/map/DotMarker.vue";
 
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import type { EewEvent } from "../../types";
 import { EewSource, EewStatus, EewType } from "@exptechtw/api-wrapper";
 import { calculateWaveRadius, getMarkerSizeOnZoom } from "@/helpers/utils";
 import { useMapStore } from "@/stores/map_store";

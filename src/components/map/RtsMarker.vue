@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Intensity from "../misc/Intensity.vue";
+import IntensityBall from "../misc/IntensityBall.vue";
 
 import { onMounted, onUnmounted, ref } from "vue";
 import { Marker, Popup, type LngLatLike } from "maplibre-gl";
@@ -110,17 +111,25 @@ onUnmounted(() => {
     :id="`rts-marker-${id}`"
     class="rts-marker"
     :style="{
-      display: hideZero && (!rts || !rts.alert) ? 'none' : '',
-      backgroundColor: rts
-        ? hideZero && rts.I < 1
-          ? '#888'
-          : getMarkerColor(rts)
-        : '',
       zIndex: rts ? rts.i + 10 : 1,
     }"
     @mouseover="markerMouseover"
     @mouseleave="markerMouseleave"
-  ></div>
+  >
+    <div
+      v-if="!rts?.alert || roundIntensity(rts.I) < 1"
+      class="marker-rts-dot"
+      :style="{
+        display: hideZero && (!rts || !rts.alert) ? 'none' : '',
+        backgroundColor: rts
+          ? hideZero && rts.I < 1
+            ? '#888'
+            : getMarkerColor(rts)
+          : '',
+      }"
+    ></div>
+    <IntensityBall v-else-if="rts" :intensity="roundIntensity(rts.I)" />
+  </div>
 
   <div ref="rtsMarkerPopupElement" class="rts-popup-item">
     <div class="rts-popup-container">
@@ -170,17 +179,16 @@ onUnmounted(() => {
 
 <style scoped>
 .rts-marker {
-  height: 8px;
-  width: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 64px;
-  font-weight: 600;
-  border: 1px solid var(--p-surface-500);
-  transition: background-color 0.1s ease-out;
   cursor: pointer;
   pointer-events: all;
+}
+
+.marker-rts-dot {
+  border-radius: 64px;
+  height: 8px;
+  width: 8px;
+  border: 1px solid var(--p-surface-500);
+  transition: background-color 0.1s ease-out;
 }
 
 .rts-popup-item {
