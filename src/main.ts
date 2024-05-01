@@ -1,41 +1,97 @@
+import { getCurrent } from "@tauri-apps/api/webviewWindow";
+import { createApp, type Plugin } from "vue";
+import { createMemoryHistory, createRouter } from "vue-router";
+import { createPinia } from "pinia";
+import PrimeVueStyled from 'primevue/styled';
+import ConfirmationService from 'primevue/confirmationservice';
+import FocusTrap from "primevue/focustrap";
+import Ripple from 'primevue/ripple';
+import Tooltip from "primevue/tooltip";
+import ToastService from "primevue/toastservice";
+
 import App from "./App.vue";
 
-import {
-  enable as enableAutoStart,
-  disable as disableAutoStart,
-  isEnabled as isAutoStartEnabled,
-} from "@tauri-apps/plugin-autostart";
-import { createApp } from "vue";
-import { getCurrent } from "@tauri-apps/api/window";
-import { getMatches } from "@tauri-apps/plugin-cli";
-
-import { Config } from "./scripts/class/config";
-import { version } from "../package.json";
-
-import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.css";
 
-const webviewWindow = getCurrent();
+import MainRoute from "@/routes/MainRoute.vue";
+import LoginRoute from "@/routes/LoginRoute.vue";
+import ConfigView from "@/view/ConfigView.vue";
+import EarthquakeView from "./view/EarthquakeView.vue";
+import ReportListView from "@/view/ReportListView.vue";
+import ReportView from "@/view/ReportView.vue";
+import ReplayView from "./view/ReplayView.vue";
 
-const args = await getMatches();
+const win = getCurrent();
 
-if (!args.args["quiet"].value) {
-  webviewWindow.show();
-  webviewWindow.setTitle(`TREM Tauri | 臺灣即時地震監測 v${version}`);
-}
+const pinia = createPinia();
 
-const config = new Config();
+const router = createRouter({
+  history: createMemoryHistory(),
+  routes: [
+    {
+      path: "/",
+      component: MainRoute,
+      meta: {
+        title: "TREM Tauri"
+      },
+      children: [
+        {
+          path: "/",
+          components: {
+            stack: EarthquakeView
+          },
+        },
+        {
+          path: "/report",
+          components: {
+            navigation: ReportListView
+          },
+        },
+        {
+          path: "/report/:id",
+          components: {
+            stack: ReportView
+          },
+        },
+        {
+          path: "/replay",
+          components: {
+            stack: ReplayView
+          },
+        },
+        {
+          path: "/config",
+          components: {
+            navigation: ConfigView,
+            stack: EarthquakeView
+          },
+        }
+      ]
+    },
+    {
+      path: "/login", component: LoginRoute,
+      meta: {
+        title: "TREM Tauri"
+      }
+    },
+  ]
+});
 
-const app = createApp(App);
-app.provide("config", config);
-app.mount("#app");
+router.beforeEach((to, _, next) => {
+  if (typeof to.meta.title == "string") {
+    win.setTitle(to.meta.title);
+  }
 
-window.onbeforeunload = () => app.unmount();
+  next();
+});
 
-await webviewWindow.setAlwaysOnTop(config.cache.behavior.alwaysOnTop);
-
-if (config.cache.system.startWithSystem) {
-  await enableAutoStart();
-} else if (await isAutoStartEnabled()) {
-  await disableAutoStart();
-}
+createApp(App)
+  .use(pinia)
+  .use(router)
+  .use(PrimeVueStyled as unknown as Plugin, { ripple: true })
+  .use(ConfirmationService)
+  .use(ToastService)
+  .directive("focustrap", FocusTrap)
+  .directive("ripple", Ripple)
+  .directive("tooltip", Tooltip)
+  .mount("#app");

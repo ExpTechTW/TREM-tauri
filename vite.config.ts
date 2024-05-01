@@ -1,8 +1,12 @@
 import { defineConfig } from "vite";
+import { resolve } from "path";
 import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
+  build: {
+    target: "esnext"
+  },
   plugins: [vue()],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
@@ -18,16 +22,10 @@ export default defineConfig(async () => ({
       ignored: ["**/src-tauri/**"],
     },
   },
-  build: {
-    target: "esnext",
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            return id.toString().split("node_modules/")[1].split("/")[0].toString();
-          }
-        }
-      }
-    }
+  resolve: {
+    alias: [
+      { find: "@", replacement: resolve("./src") },
+      { find: "~", replacement: resolve(".") },
+    ]
   }
 }));

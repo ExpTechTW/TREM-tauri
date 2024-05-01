@@ -1,68 +1,78 @@
-@import "material-symbols/rounded.css";
-@import "./styles/font.css";
-@import "./styles/skeleton.css";
-@import "./styles/intensity.css";
+@import url(./styles/colors.css);
 
 :root {
-  font-family: "Lato", "Noto Sans TC", sans-serif;
+  font-family: Inter, "Noto Sans TC", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  font-synthesis: none;
+  font-variant-numeric: tabular-nums;
+  line-height: 24px;
   text-rendering: optimizeLegibility;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-
-  --surface-hsl: 0deg 0% 30%;
-  --surface-variant-hsl: 0deg 0% 22%;
-  --background-hsl: 0deg 0% 14%;
-  --background-variant-hsl: 0deg 0% 18%;
-}
-
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 4px;
 }
 
 body {
   position: fixed;
   inset: 0;
   margin: 0;
-  background-color: hsl(var(--background-hsl));
-  color: #fff;
-}
+  color: var(--t-secondary-text-color);
+  background-color: var(--t-background-color);
+  background-blend-mode: multiply;
+  transition: background-color 0.1s ease-in-out;
+  white-space: nowrap;
+  user-select: none;
 
-.container {
-  margin: 0;
-  padding-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
+  /* primevue overrides */
 
-.pga-intensity-0 {
-  background-color: lightgray;
+  .p-panel-toggleable .p-panel-header {
+    padding: 0.5rem 0.875rem;
+  }
+  .p-panel-content {
+    padding: 0 0.875rem 0.875rem 0.875rem;
+  }
+  .p-panel-header-icon {
+    overflow: hidden;
+  }
+  .p-progressbar-determinate .p-progressbar-value-animate {
+    transition: width 0.5s ease-in-out;
+  }
+  .p-tooltip-text {
+    padding: 8px;
+    line-height: 100%;
+    font-size: 14px;
+  }
 
-  &:empty::after {
-    content: "1";
+  /* maplibre overrides*/
+
+  .maplibregl-canvas:focus-visible {
+    outline: none;
+  }
+  .maplibregl-popup {
+    box-shadow: 0 0 16px 0 hwb(0 0% 100% / 0.2);
+    z-index: 9999;
+  }
+  .maplibregl-popup-content {
+    font-family: Inter, "Noto Sans TC", sans-serif;
+    background-color: var(--t-surface-elevated-color);
+    outline: 1px solid var(--p-surface-400);
+    padding: 8px;
+    border-radius: 8px;
+  }
+  .maplibregl-popup-tip {
+    display: none;
   }
 }
 
-#svg-defs {
-  position: fixed;
-  visibility: hidden;
-  pointer-events: none;
+body.win11 {
+  background-color: transparent;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f6f6f6;
-    background-color: #2f2f2f;
-  }
+#app {
+  position: relative;
+  display: grid;
+  grid-template-rows: 32px 1fr;
+  width: 100svw;
+  height: 100svh;
 }

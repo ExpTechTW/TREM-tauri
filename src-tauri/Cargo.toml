@@ -1,33 +1,23 @@
 [package]
 name = "trem-tauri"
-version = "0.0.0"
-description = "Taiwan Realtime Earthquake Monitoring"
-authors = ["ExpTechTW"]
-license = "APGL-3.0"
-repository = ""
+version = "0.1.0"
+description = "Taiwan Real-time Earthquake Monitoring"
+authors = ["ExpTech Studio"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[lib]
-name = "app_lib"
-crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.0-beta", features = ["devtools", "tray-icon"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-tauri-plugin-autostart = "2.0.0-beta"
-tauri-plugin-cli = "2.0.0-beta"
-tauri-plugin-clipboard-manager = "2.0.0-beta"
-tauri-plugin-fs = "2.0.0-beta"
+tauri = { version = "2.0.0-beta", features = [] }
 tauri-plugin-http = "2.0.0-beta"
-tauri-plugin-log = "2.0.0-beta"
 tauri-plugin-shell = "2.0.0-beta"
-
-[features]
-# this feature is used for production builds or when `devPath` points to the filesystem
-# DO NOT REMOVE!!
-custom-protocol = ["tauri/custom-protocol"]
+tauri-plugin-single-instance = "2.0.0-beta"
+tauri-plugin-websocket = "2.0.0-beta"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri-plugin-fs = "2.0.0-beta.6"
+tauri-plugin-os = "2.0.0-beta.4"
+whoami = "1.5.1"

@@ -1,0 +1,26 @@
+:root {
+  --t-background-color: var(--p-surface-50);
+  --t-surface-color: var(--p-surface-100);
+  --t-surface-elevated-color: var(--p-surface-200);
+  --t-primary-text-color: var(--p-surface-900);
+  --t-secondary-text-color: var(--p-surface-700);
+  --t-tertiary-text-color: var(--p-surface-500);
+  --t-scrollbar-thumb-color: var(--p-surface-400);
+  --t-outline-color: var(--p-surface-400);
+
+  --t-elevated-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --t-background-color: var(--p-surface-950);
+    --t-surface-color: var(--p-surface-900);
+    --t-surface-elevated-color: var(--p-surface-800);
+    --t-primary-text-color: var(--p-surface-100);
+    --t-secondary-text-color: var(--p-surface-200);
+    --t-tertiary-text-color: var(--p-surface-300);
+    --t-scrollbar-thumb-color: var(--p-surface-600);
+    --t-outline-color: var(--p-surface-600);
+  }
+}
