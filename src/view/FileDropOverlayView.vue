@@ -29,7 +29,7 @@ const filename = computed(() => props.path.split(/(\\|\/)/g).pop());
   inset: 0;
   padding: 24px;
   opacity: 0;
-  background-color: color-mix(in srgb, transparent, var(--p-surface-900) 60%);
+  background-color: color-mix(in srgb, transparent, var(--p-surface-0) 60%);
   pointer-events: none;
   transition: opacity 0.2s ease-in-out;
   z-index: 9999999;
@@ -50,7 +50,7 @@ const filename = computed(() => props.path.split(/(\\|\/)/g).pop());
   width: 100%;
   border-radius: 16px;
   border: 4px dashed var(--p-primary-color);
-  background-color: color-mix(in srgb, transparent, var(--p-surface-800) 90%);
+  background-color: color-mix(in srgb, transparent, var(--p-surface-100) 90%);
 }
 
 .title {
@@ -64,5 +64,15 @@ const filename = computed(() => props.path.split(/(\\|\/)/g).pop());
 
 .filename {
   color: var(--p-primary-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  .file-drop-overlay {
+    background-color: color-mix(in srgb, transparent, var(--p-surface-900) 60%);
+  }
+
+  .file-drop-container {
+    background-color: color-mix(in srgb, transparent, var(--p-surface-800) 90%);
+  }
 }
 </style>

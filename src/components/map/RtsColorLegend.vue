@@ -70,12 +70,13 @@ const domains = [IntensityDomain, PgaDomain, PgvDomain];
 
 <style>
 .rts-color-legend {
-  background-color: var(--p-surface-700);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   padding: 6px;
+  background-color: var(--t-surface-elevated-color);
+  border: 1px solid var(--t-outline-color);
   border-radius: 8px;
   z-index: 500;
 }

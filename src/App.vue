@@ -7,6 +7,7 @@ import Titlebar from "./components/window/Titlebar.vue";
 import { onMounted, onUnmounted, ref } from "vue";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useRoute, useRouter } from "vue-router";
+import { platform, version } from "@tauri-apps/plugin-os";
 
 const route = useRoute();
 const router = useRouter();
@@ -49,8 +50,19 @@ const preventContextMenu = (e: MouseEvent) => {
   }
 };
 
+const checkWindows11 = async () => {
+  if ((await platform()) != "windows") return;
+
+  const buildNumber = +(await version()).split(".")[2];
+
+  if (buildNumber > 22000) {
+    document.body.classList.add("win11");
+  }
+};
+
 onMounted(() => {
   document.addEventListener("contextmenu", preventContextMenu);
+  checkWindows11();
 });
 
 onUnmounted(() => {
@@ -82,6 +94,6 @@ onUnmounted(() => {
 ::-webkit-scrollbar-thumb {
   width: 6px;
   border-radius: 8px;
-  background-color: var(--p-surface-600);
+  background-color: var(--t-scrollbar-thumb-color);
 }
 </style>

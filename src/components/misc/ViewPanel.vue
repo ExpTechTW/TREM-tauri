@@ -37,17 +37,7 @@ withDefaults(
   padding: 8px;
   font-size: 18px;
   font-weight: bold;
-  color: var(--p-surface-0);
-}
-
-.panel-header.large {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--p-surface-0);
+  color: var(--t-primary-text-color);
 }
 
 .header-subtitle {

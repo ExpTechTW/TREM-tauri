@@ -170,8 +170,9 @@ const mouseleave = () => {
   padding: 8px 8px 4px 8px;
   border-radius: 8px;
   translate: -50%;
-  border: 1px solid var(--p-surface-600);
-  background-color: color-mix(in srgb, transparent, var(--p-surface-700) 85%);
+  border: 1px solid var(--t-outline-color);
+  background-color: var(--t-surface-elevated-color);
+  box-shadow: var(--t-elevated-shadow);
   z-index: 900;
   pointer-events: all;
   transition: bottom 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -225,7 +226,7 @@ const mouseleave = () => {
   width: 12px;
   margin: -6px;
   opacity: 0;
-  background-color: var(--p-surface-900);
+  background-color: var(--t-surface-color);
   cursor: e-resize;
   transition: opacity 0.2s ease-in-out;
 }
@@ -242,11 +243,7 @@ const mouseleave = () => {
 }
 
 .progress-bar.loaded {
-  background-color: color-mix(
-    in srgb,
-    var(--p-surface-700),
-    var(--p-surface-800)
-  );
+  background-color: color-mix(in srgb, transparent, var(--t-outline-color));
 }
 
 .progress-bar.loaded:deep(> .p-progressbar-value) {

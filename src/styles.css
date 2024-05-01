@@ -1,3 +1,5 @@
+@import url(./styles/colors.css);
+
 :root {
   font-family: Inter, "Noto Sans TC", sans-serif;
   font-size: 16px;
@@ -15,9 +17,8 @@ body {
   position: fixed;
   inset: 0;
   margin: 0;
-  color: var(--p-surface-200);
-  background-color: color-mix(in lab, transparent, var(--p-surface-950) 64%);
-  background-color: transparent;
+  color: var(--t-secondary-text-color);
+  background-color: var(--t-background-color);
   background-blend-mode: multiply;
   transition: background-color 0.1s ease-in-out;
   white-space: nowrap;
@@ -49,12 +50,12 @@ body {
     outline: none;
   }
   .maplibregl-popup {
-    box-shadow: 0 0 16px 0 hsl(0deg 0% 0% / 0.2);
-    z-index: 999;
+    box-shadow: 0 0 16px 0 hwb(0 0% 100% / 0.2);
+    z-index: 9999;
   }
   .maplibregl-popup-content {
     font-family: Inter, "Noto Sans TC", sans-serif;
-    background-color: var(--p-surface-800);
+    background-color: var(--t-surface-elevated-color);
     outline: 1px solid var(--p-surface-400);
     padding: 8px;
     border-radius: 8px;
@@ -62,6 +63,10 @@ body {
   .maplibregl-popup-tip {
     display: none;
   }
+}
+
+body.win11 {
+  background-color: transparent;
 }
 
 #app {

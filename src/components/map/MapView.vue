@@ -1,11 +1,95 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from "vue";
 import { Map as MaplibreMap } from "maplibre-gl";
+import { getCurrent } from "@tauri-apps/api/window";
 import { useMapStore } from "@/stores/map_store";
 
+import type { MapColorScheme } from "./MapView";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 const mapStore = useMapStore();
+
+const win = getCurrent();
+
+const MapThemeColors = {
+  Light: {
+    PrimaryBackgroundColor: "#f8fafc",
+    PrimaryStrokeColor: "#94a3b8",
+    SecondaryBackgroundColor: "#f8fafc",
+    SecondaryStrokeColor: "#cbd5e1",
+  },
+  Dark: {
+    // var(--p-surface-750)
+    PrimaryBackgroundColor: "#333338",
+    // var(--p-surface-500)
+    PrimaryStrokeColor: "#71717a",
+    // var(--p-surface-800)
+    SecondaryBackgroundColor: "#27272a",
+    // var(--p-surface-700)
+    SecondaryStrokeColor: "#3f3f46",
+  },
+};
+
+const setMapTheme = (colorScheme: MapColorScheme) => {
+  if (!mapStore.map) return;
+
+  for (const layerId of ["cn", "jp", "kp", "kr"]) {
+    mapStore.map.setPaintProperty(
+      layerId,
+      "fill-color",
+      colorScheme.SecondaryBackgroundColor
+    );
+    mapStore.map.setPaintProperty(
+      layerId,
+      "fill-outline-color",
+      colorScheme.SecondaryBackgroundColor
+    );
+  }
+
+  mapStore.map.setPaintProperty(
+    "county",
+    "fill-color",
+    colorScheme.PrimaryBackgroundColor
+  );
+
+  mapStore.map.setPaintProperty(
+    "county_outline",
+    "line-color",
+    colorScheme.SecondaryBackgroundColor
+  );
+
+  mapStore.map.setPaintProperty("town", "fill-color", [
+    "match",
+    ["coalesce", ["feature-state", "int"], 0],
+    9,
+    "#9600c8",
+    8,
+    "#c00000",
+    7,
+    "#ff0000",
+    6,
+    "#ff6400",
+    5,
+    "#ff9600",
+    4,
+    "#ffc800",
+    3,
+    "#1e9632",
+    2,
+    "#0070e0",
+    1,
+    "#004080",
+    colorScheme.PrimaryBackgroundColor,
+  ]);
+};
+
+const uThemeChanged = win.onThemeChanged((event) => {
+  if (event.payload == "light") {
+    setMapTheme(MapThemeColors.Light);
+  } else {
+    setMapTheme(MapThemeColors.Dark);
+  }
+});
 
 onMounted(() => {
   const initialState = { lng: 120.5, lat: 23.6, zoom: 6.75 };
@@ -61,51 +145,44 @@ onMounted(() => {
     renderWorldCopies: false,
   });
 
-  map.on("load", () => {
+  map.on("load", async () => {
+    const theme = (await win.theme()) == "light" ? "Light" : "Dark";
+    const colorTheme = MapThemeColors[theme];
+
+    const secondaryPaintProperty = {
+      "fill-color": colorTheme.SecondaryBackgroundColor,
+      "fill-opacity": 1,
+      "fill-outline-color": colorTheme.SecondaryStrokeColor,
+    };
+
     map
       .addLayer({
         id: "cn",
         type: "fill",
         source: "cn",
         layout: {},
-        paint: {
-          "fill-color": "#1f2937",
-          "fill-opacity": 1,
-          "fill-outline-color": "#374151",
-        },
+        paint: secondaryPaintProperty,
       })
       .addLayer({
         id: "jp",
         type: "fill",
         source: "jp",
         layout: {},
-        paint: {
-          "fill-color": "#1f2937",
-          "fill-opacity": 1,
-          "fill-outline-color": "#374151",
-        },
+        paint: secondaryPaintProperty,
       })
       .addLayer({
         id: "kp",
         type: "fill",
         source: "kp",
         layout: {},
-        paint: {
-          "fill-color": "#1f2937",
-          "fill-opacity": 1,
-          "fill-outline-color": "#374151",
-        },
+        paint: secondaryPaintProperty,
       })
       .addLayer({
         id: "kr",
         type: "fill",
         source: "kr",
         layout: {},
-        paint: {
-          "fill-color": "#1f2937",
-          "fill-opacity": 1,
-          "fill-outline-color": "#374151",
-        },
+        paint: secondaryPaintProperty,
       })
       .addLayer({
         id: "county",
@@ -113,7 +190,7 @@ onMounted(() => {
         source: "tw_county",
         layout: {},
         paint: {
-          "fill-color": "#374151",
+          "fill-color": colorTheme.PrimaryBackgroundColor,
           "fill-opacity": 1,
         },
       })
@@ -146,7 +223,7 @@ onMounted(() => {
             "#0070e0",
             1,
             "#004080",
-            "#374151",
+            colorTheme.PrimaryBackgroundColor,
           ],
           "fill-opacity": [
             "case",
@@ -168,7 +245,7 @@ onMounted(() => {
         source: "tw_county",
         layout: {},
         paint: {
-          "line-color": "#9ca3af",
+          "line-color": colorTheme.PrimaryStrokeColor,
           "line-opacity": 1,
           "line-width": 0.6,
         },
@@ -222,6 +299,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   mapStore.value?.remove();
+  uThemeChanged.then((f) => f());
 });
 </script>
 

@@ -14,12 +14,12 @@ defineProps<{
 <style scoped>
 .time-display {
   position: absolute;
-  left: 8px;
-  bottom: 4px;
+  left: 6px;
+  bottom: 6px;
   padding: 4px;
   border-radius: 6px;
-  border: 1px solid var(--p-surface-600);
-  background-color: var(--p-surface-800);
+  border: 1px solid var(--t-outline-color);
+  background-color: var(--t-surface-elevated-color);
   line-height: 100%;
   font-size: 12px;
   z-index: 900;

@@ -51,7 +51,7 @@ const navigate = () => {
 }
 
 .navigation-entry:not(.active):hover {
-  background-color: var(--p-highlight-background);
+  background-color: color-mix(in srgb, transparent, var(--p-primary-color) 8%);
 }
 
 .active {

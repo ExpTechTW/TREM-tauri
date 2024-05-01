@@ -17,6 +17,7 @@
     "window:allow-maximize",
     "window:allow-unmaximize",
     "window:allow-close",
+    "window:allow-theme",
     "app:default",
     "image:default",
     "resources:default",
@@ -48,6 +49,10 @@
         "$APPCONFIG",
         "$APPCONFIG/*"
       ]
-    }
+    },
+    "os:allow-platform",
+    "os:allow-arch",
+    "os:allow-family",
+    "os:allow-version"
   ]
 }

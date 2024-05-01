@@ -54,9 +54,14 @@ onMounted(() => {
 
 .content {
   position: relative;
-  background-color: color-mix(in lab, transparent, var(--p-surface-100) 4%);
+  background-color: var(--t-surface-color);
   border-radius: 8px;
   overflow: hidden;
+}
+
+body.win11 .content {
+  background-color: color-mix(in srgb, transparent, var(--p-surface-0) 60%);
+  outline: 1px solid var(--p-surface-200);
 }
 
 .stack {
@@ -91,5 +96,12 @@ onMounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  body.win11 .content {
+    background-color: color-mix(in srgb, transparent, var(--p-surface-100) 5%);
+    outline: none;
+  }
 }
 </style>

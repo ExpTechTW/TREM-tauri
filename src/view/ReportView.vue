@@ -107,6 +107,7 @@ onMounted(() => {
       severity="secondary"
       label="返回"
       rounded
+      raised
       style="top: 16px; left: 16px"
       @click="back"
     >
@@ -190,7 +191,8 @@ onMounted(() => {
 .report-item {
   display: flex;
   border-radius: 12px;
-  background-color: var(--p-surface-800);
+  background-color: var(--t-surface-elevated-color);
+  box-shadow: var(--t-elevated-shadow);
   overflow: hidden;
 }
 
@@ -231,7 +233,11 @@ onMounted(() => {
 }
 
 .report-open-btn:hover {
-  background-color: var(--p-highlight-background);
+  background-color: color-mix(
+    in srgb,
+    var(--t-surface-elevated-color),
+    var(--p-primary-color) 8%
+  );
 }
 
 .side-panel {

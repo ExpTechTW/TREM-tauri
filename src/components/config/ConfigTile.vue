@@ -66,7 +66,7 @@ const slots = useSlots();
 }
 
 .tile-subtitle {
-  color: var(--p-c-surface-350);
+  color: var(--t-tertiary-text-color);
   font-size: smaller;
 }
 </style>
