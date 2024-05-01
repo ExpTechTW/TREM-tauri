@@ -2,14 +2,20 @@
 import RtsMarker from "@/components/map/RtsMarker.vue";
 import RtsColorLegend from "@/components/map/RtsColorLegend.vue";
 
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useRtsStore } from "@/stores/rts_store";
 import { useStationStore } from "@/stores/station_store";
 
 import Global from "@/global";
+import TimeDisplay from "@/components/misc/TimeDisplay.vue";
 
 const rtsStore = useRtsStore();
 const stationStore = useStationStore();
+
+const currentTime = computed(() => {
+  if (rtsStore.time) return rtsStore.time;
+  return Date.now();
+});
 
 onMounted(() => {
   Global.api.getStations().then((v) => {
@@ -29,6 +35,7 @@ onMounted(() => {
       />
     </template>
     <RtsColorLegend id="rts-color-legend" />
+    <TimeDisplay :time="currentTime" />
   </div>
 </template>
 

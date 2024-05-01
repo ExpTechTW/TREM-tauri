@@ -4,9 +4,11 @@ import { Route } from "@/class/route";
 
 export class ExpTechApi {
   token: string;
+  route: Route;
 
   constructor(token?: string) {
     this.token = token || "";
+    this.route = new Route();
   }
 
   setToken(token: string) {
@@ -15,6 +17,7 @@ export class ExpTechApi {
 
   async #get(url: string, options?: RequestInit) {
     const res = await fetch(url, {
+      keepalive: true,
       connectTimeout: 2000,
       ...options
     });
@@ -27,11 +30,11 @@ export class ExpTechApi {
   }
 
   async getStations(requestOptions?: RequestInit): Promise<Record<string, Station>> {
-    return await this.#get(Route.station, requestOptions);
+    return await this.#get(this.route.station, requestOptions);
   }
 
   async getReportList(limit?: number, requestOptions?: RequestInit): Promise<PartialReport[]> {
-    const data = await this.#get(Route.reportList(limit), requestOptions) as PartialReport[];
+    const data = await this.#get(this.route.reportList(limit), requestOptions) as PartialReport[];
 
     for (const report of data) {
       report.no = +report.id.split("-")[0];
@@ -41,7 +44,7 @@ export class ExpTechApi {
   }
 
   async getReport(id: string, requestOptions?: RequestInit): Promise<Report> {
-    const data = await this.#get(Route.report(id), requestOptions);
+    const data = await this.#get(this.route.report(id), requestOptions);
 
     data.no = +data.id.split("-")[0];
     data.int = Object.keys(data.list).reduce(
@@ -66,10 +69,10 @@ export class ExpTechApi {
   }
 
   async getRts(time?: number, requestOptions?: RequestInit): Promise<Rts> {
-    return await this.#get(Route.rts(time), requestOptions);
+    return await this.#get(this.route.rts(time), requestOptions);
   }
 
   async getEew(time?: number, requestOptions?: RequestInit): Promise<Eew> {
-    return await this.#get(Route.eew(time), requestOptions);
+    return await this.#get(this.route.eew(time), requestOptions);
   }
 }
