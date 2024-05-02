@@ -28,10 +28,8 @@ import PostalCode from "./assets/json/code.json";
 import {
   calculateEpicenterDistance,
   calculateExpectedIntensity,
-  calculateIntensity,
   calculateLocalExpectedWaveTime,
   calculateWaveRadius,
-  roundIntensity,
 } from "./scripts/helper/utils";
 import { getAudio } from "./scripts/helper/audio";
 import JSZip from "jszip";
@@ -253,16 +251,10 @@ api.on(WebSocketEvent.Eew, (e) => {
       lat: e.eq.lat,
       lng: e.eq.lon,
     })({ lng: area.lng, lat: area.lat })(e.eq.depth);
-    const localExpectedIntensity = calculateIntensity(
-      surfaceDistance,
-      distance,
-      e.eq.mag,
-      e.eq.depth
-    );
 
     data.surface = surfaceDistance;
     data.distance = distance;
-    data.i = roundIntensity(localExpectedIntensity);
+    data.i = intensity[config.cache.location.area];
 
     let { p, s } = calculateLocalExpectedWaveTime(
       data.distance,
