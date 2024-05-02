@@ -262,7 +262,8 @@ export const calculateExpectedIntensity = (
         surfaceDistance,
         distance,
         magnitude,
-        depth
+        depth,
+        town.site
       );
 
       if (int > maxIntensity) {
