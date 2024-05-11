@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
   <div class="area-intensity-item">
-    {{ area.area }}
+    <span class="area-name">{{ area.area }}</span>
     <template
       v-for="station in area.stations"
       :key="`${area.area} ${station.station}`"
@@ -25,5 +25,10 @@ defineProps<{
   padding: 4px;
   display: flex;
   flex-direction: column;
+}
+
+.area-name {
+  font-size: smaller;
+  color: var(--p-primary-color);
 }
 </style>

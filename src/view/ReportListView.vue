@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import InputSwitch from "primevue/inputswitch";
-import MaterialSymbols from "@/components/misc/MaterialSymbols.vue";
 import MultiSelect from "primevue/multiselect";
-import Panel from "primevue/panel";
+import Panel from "@/components/misc/Panel.vue";
 import ProgressSpinner from "primevue/progressspinner";
 import ReportItem from "@/components/report/ReportItem.vue";
 import ViewPanel from "@/components/misc/ViewPanel.vue";
@@ -71,18 +70,7 @@ onMounted(() => {
 
 <template>
   <ViewPanel class="report-wrapper" title="地震報告">
-    <Panel class="filter-panel" toggleable collapsed>
-      <template #header>
-        <div class="filter-header">
-          <MaterialSymbols icon="filter_alt" :size="22" />
-          <span>篩選器</span>
-        </div>
-      </template>
-      <template #togglericon="{ collapsed }">
-        <div class="toggler-icon" :class="{ collapsed }">
-          <MaterialSymbols icon="arrow_drop_down" />
-        </div>
-      </template>
+    <Panel class="filter-panel" title="篩選器" titleIcon="filter_alt" collapsed>
       <div class="filter-list">
         <label class="filter-item" for="filter-numbered">
           <div class="filter-label">只顯示編號報告</div>
@@ -143,24 +131,6 @@ onMounted(() => {
   margin: 8px;
 }
 
-.filter-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.toggler-icon {
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  rotate: 180deg;
-  transition: rotate 0.2s ease-in-out;
-}
-
-.toggler-icon.collapsed {
-  rotate: 0deg;
-}
-
 .filter-list {
   display: flex;
   flex-direction: column;
@@ -177,4 +147,3 @@ onMounted(() => {
   font-size: 14px;
 }
 </style>
-@/stores/report_store

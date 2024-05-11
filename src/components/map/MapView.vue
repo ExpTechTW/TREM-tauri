@@ -60,7 +60,7 @@ const setMapTheme = (colorScheme: MapColorScheme) => {
 
   mapStore.map.setPaintProperty("town", "fill-color", [
     "match",
-    ["coalesce", ["feature-state", "int"], 0],
+    ["number", ["feature-state", "intensity"], 0],
     9,
     "#9600c8",
     8,
@@ -204,7 +204,7 @@ onMounted(() => {
         paint: {
           "fill-color": [
             "match",
-            ["coalesce", ["feature-state", "int"], 0],
+            ["number", ["feature-state", "intensity"], 0],
             9,
             "#9600c8",
             8,
@@ -227,13 +227,13 @@ onMounted(() => {
           ],
           "fill-opacity": [
             "case",
-            [">=", ["coalesce", ["feature-state", "int"], -1], 0],
+            [">=", ["number", ["feature-state", "intensity"], -1], 0],
             1,
             0,
           ],
           "fill-outline-color": [
             "case",
-            ["coalesce", ["feature-state", "override"], false],
+            ["boolean", ["feature-state", "override"], false],
             "#fff",
             "#8691a4",
           ],
@@ -257,7 +257,7 @@ onMounted(() => {
         paint: {
           "line-color": [
             "match",
-            ["coalesce", ["feature-state", "int"], 0],
+            ["number", ["feature-state", "intensity"], 0],
             9,
             "#f22",
             8,
@@ -282,7 +282,7 @@ onMounted(() => {
           "line-width": 3,
           "line-opacity": [
             "case",
-            [">=", ["coalesce", ["feature-state", "int"], -1], 0],
+            [">=", ["number", ["feature-state", "intensity"], -1], 0],
             1,
             0,
           ],

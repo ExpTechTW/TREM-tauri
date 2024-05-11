@@ -3,20 +3,20 @@ import { onMounted, onBeforeUnmount, onUpdated } from "vue";
 import { useMapStore } from "@/stores/map_store";
 
 const props = defineProps<{
-  code: string;
+  box: string;
   intensity: number;
-  override?: number;
 }>();
 
 const mapStore = useMapStore();
 
 onMounted(() => {
   if (mapStore.map) {
+    console.log("mount", props.box, props.intensity);
+
     mapStore.map.setFeatureState(
-      { source: "tw_town", id: props.code },
+      { source: "box", id: props.box },
       {
-        intensity: props.override ?? props.intensity,
-        override: props.override != undefined,
+        intensity: props.intensity,
       }
     );
   }
@@ -25,10 +25,9 @@ onMounted(() => {
 onUpdated(() => {
   if (mapStore.map) {
     mapStore.map.setFeatureState(
-      { source: "tw_town", id: props.code },
+      { source: "box", id: props.box },
       {
-        intensity: props.override ?? props.intensity,
-        override: props.override != undefined,
+        intensity: props.intensity,
       }
     );
   }
@@ -37,13 +36,11 @@ onUpdated(() => {
 onBeforeUnmount(() => {
   if (mapStore.map) {
     mapStore.map.removeFeatureState(
-      { source: "tw_town", id: props.override ?? props.code },
+      { source: "box", id: props.box },
       "intensity"
-    );
-    mapStore.map.removeFeatureState(
-      { source: "tw_town", id: props.override ?? props.code },
-      "override"
     );
   }
 });
 </script>
+
+<template></template>

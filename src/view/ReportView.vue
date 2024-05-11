@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AreaIntensityItem from "@/components/report/AreaIntensityItem.vue";
 import Button from "primevue/button";
 import CrossMarker from "@/components/map/CrossMarker.vue";
 import Intensity from "@/components/misc/Intensity.vue";
@@ -21,6 +20,7 @@ import { useReportStore } from "@/stores/report_store";
 
 import type { PartialReport, Report } from "@exptechtw/api-wrapper";
 import Global from "@/global";
+import AreaIntensityPanel from "@/components/report/AreaIntensityPanel.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -146,11 +146,8 @@ onMounted(() => {
     </div>
 
     <div class="side-panel">
-      <div class="side-panel-wrapper">
-        <template v-for="area in fullReport?.list">
-          <AreaIntensityItem :area="area" />
-        </template>
-      </div>
+      <MapLayerControlPanel />
+      <AreaIntensityPanel :areas="fullReport?.list" />
     </div>
 
     <template v-for="area in fullReport?.list">
@@ -194,6 +191,7 @@ onMounted(() => {
   background-color: var(--t-surface-elevated-color);
   box-shadow: var(--t-elevated-shadow);
   overflow: hidden;
+  z-index: 9999;
 }
 
 .report-item-container {
@@ -244,13 +242,10 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   position: absolute;
-  right: 0;
-  max-height: calc(100% - 16px);
-  margin: 8px;
-}
-
-.side-panel-wrapper {
-  padding-right: 4px;
-  overflow-y: auto;
+  right: 4px;
+  max-height: 100%;
+  padding: 8px 0;
+  border-radius: 8px;
+  z-index: 9999;
 }
 </style>

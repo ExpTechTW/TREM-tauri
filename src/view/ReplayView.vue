@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import BoxIntensity from "@/components/map/BoxIntensity.vue";
 import TimeDisplay from "@/components/misc/TimeDisplay.vue";
 import ReplayController from "@/components/replay/ReplayController.vue";
 import RtsColorLegend from "@/components/map/RtsColorLegend.vue";
 import RtsMarker from "@/components/map/RtsMarker.vue";
 
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useToast } from "primevue/usetoast";
 import { useRoute, useRouter } from "vue-router";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { loadAsync } from "jszip";
+import { useMapStore } from "@/stores/map_store";
 import { useStationStore } from "@/stores/station_store";
 import { playSound } from "@/helpers/sound";
 import { roundIntensity, toFormattedTimeString } from "@/helpers/utils";
@@ -19,6 +21,7 @@ import EewMarker from "@/components/map/EewMarker.vue";
 const toast = useToast();
 const route = useRoute();
 const router = useRouter();
+const mapStore = useMapStore();
 const stationStore = useStationStore();
 
 const isPlaying = ref(true);
@@ -28,6 +31,8 @@ const progress = ref(0);
 const events = ref<Events[]>([]);
 const replayData = ref<Frame[]>([]);
 let playerTimer: number | null = null;
+let flashTimer: number | null = null;
+let flashState = false;
 
 const currentTime = computed<number | undefined>(
   () => replayData.value[currentFrame.value]?.time
@@ -207,6 +212,22 @@ const scheduleNextFrame = () => {
   }
 };
 
+const flash = (state?: boolean) => {
+  if (mapStore.map) {
+    if (state == undefined) {
+      flashState = !flashState;
+    } else {
+      flashState = state;
+    }
+
+    mapStore.map.setLayoutProperty(
+      "box",
+      "visibility",
+      flashState ? "visible" : "none"
+    );
+  }
+};
+
 const resume = () => {
   isPlaying.value = true;
 
@@ -295,6 +316,22 @@ const keydown = (e: KeyboardEvent) => {
   }
 };
 
+watch(
+  () => !Object.keys(currentRtsFrame.value?.data?.box ?? {}).length,
+  (v) => {
+    if (v) {
+      if (flashTimer != null) {
+        window.clearInterval(flashTimer);
+        flashTimer = null;
+      }
+    } else {
+      if (flashTimer == null) {
+        flashTimer = window.setInterval(flash, 700);
+      }
+    }
+  }
+);
+
 onMounted(() => {
   loadData().then(() => {
     scheduleNextFrame();
@@ -340,6 +377,13 @@ onUnmounted(() => {
     <template v-if="currentTime" v-for="eew in currentEewState" :key="eew.id">
       <EewMarker :eew="eew" :time="currentTime" />
     </template>
+    <BoxIntensity
+      v-if="currentRtsFrame"
+      v-for="(intensity, box) in currentRtsFrame.data.box"
+      :key="box"
+      :box="box"
+      :intensity="intensity"
+    />
   </div>
 </template>
 
