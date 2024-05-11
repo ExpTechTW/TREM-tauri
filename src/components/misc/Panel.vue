@@ -27,10 +27,6 @@ defineProps<{
 </template>
 
 <style scoped>
-.panel {
-  min-height: 0;
-}
-
 .panel-header {
   display: flex;
   align-items: center;

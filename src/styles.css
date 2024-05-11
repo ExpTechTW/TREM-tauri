@@ -31,10 +31,6 @@ body {
   }
   .p-panel-content {
     padding: 0 0.875rem 0.875rem 0.875rem;
-    min-height: 0;
-  }
-  .p-toggleable-content {
-    min-height: 0;
   }
   .p-panel-header-icon {
     overflow: hidden;
