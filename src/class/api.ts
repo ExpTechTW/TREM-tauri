@@ -1,4 +1,4 @@
-import type { Eew, PartialReport, Report, Rts, Station } from "@exptechtw/api-wrapper";
+import type { EewType, PartialReport, Report, Rts, Station } from "@exptechtw/api-wrapper";
 import { fetch } from "@tauri-apps/plugin-http";
 import { Route } from "@/class/route";
 
@@ -72,7 +72,7 @@ export class ExpTechApi {
     return await this.#get(this.route.rts(time), requestOptions);
   }
 
-  async getEew(time?: number, requestOptions?: RequestInit): Promise<Eew> {
+  async getEew(time?: number, requestOptions?: RequestInit): Promise<EewType[]> {
     return await this.#get(this.route.eew(time), requestOptions);
   }
 }
