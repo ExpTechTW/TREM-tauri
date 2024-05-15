@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import Button from "primevue/button";
 import CrossMarker from "@/components/map/CrossMarker.vue";
+import CountyIntensity from "@/components/map/CountyIntensity.vue";
 import Intensity from "@/components/misc/Intensity.vue";
 import IntensityMarker from "@/components/map/IntensityMarker.vue";
 import MaterialSymbols from "@/components/misc/MaterialSymbols.vue";
 import ProgressBar from "primevue/progressbar";
 
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { LngLatBounds } from "maplibre-gl";
+import { LngLatBounds, LngLatLike } from "maplibre-gl";
 import { open } from "@tauri-apps/plugin-shell";
 import {
   extractLocationFromString,
@@ -21,6 +22,8 @@ import { useReportStore } from "@/stores/report_store";
 import type { PartialReport, Report } from "@exptechtw/api-wrapper";
 import Global from "@/global";
 import AreaIntensityPanel from "@/components/report/AreaIntensityPanel.vue";
+import countyCodeTable from "@/assets/json/county_code.json";
+import countyCoordinates from "@/assets/json/county_coordinates.json";
 
 const route = useRoute();
 const router = useRouter();
@@ -28,6 +31,7 @@ const mapStore = useMapStore();
 const reportStore = useReportStore();
 const report = ref<PartialReport>();
 const fullReport = ref<Report>();
+const shouldClusterIntensityMarkers = ref(false);
 
 const progress = ref(0);
 let progressInterval: number;
@@ -61,6 +65,17 @@ const setupStationMarkers = (report: Report) => {
   );
 };
 
+const onMapZoom = () => {
+  if (!mapStore.map) return;
+  shouldClusterIntensityMarkers.value = mapStore.map.getZoom() < 7;
+};
+
+const setupMapEventListener = () => {
+  if (!mapStore.map) return;
+
+  mapStore.map.on("zoom", onMapZoom);
+};
+
 onMounted(() => {
   const id = route.params.id as string;
 
@@ -91,6 +106,14 @@ onMounted(() => {
     progress.value = 100;
     setupStationMarkers(fullReport.value);
   }
+
+  setupMapEventListener();
+});
+
+onUnmounted(() => {
+  if (!mapStore.map) return;
+
+  mapStore.map.off("zoom", onMapZoom);
 });
 </script>
 
@@ -150,8 +173,20 @@ onMounted(() => {
       <AreaIntensityPanel :areas="fullReport?.list" />
     </div>
 
-    <template v-for="area in fullReport?.list">
+    <template v-if="mapStore.map" v-for="area in fullReport?.list">
+      <CountyIntensity
+        :code="countyCodeTable[area.area as keyof typeof countyCodeTable]"
+        :intensity="area.int"
+      />
+
+      <IntensityMarker
+        v-if="shouldClusterIntensityMarkers"
+        :lnglat="(countyCoordinates[area.area as keyof typeof countyCoordinates] as LngLatLike)"
+        :intensity="area.int"
+        :zIndex="area.int"
+      />
       <template
+        v-if="!shouldClusterIntensityMarkers"
         v-for="station in area.stations"
         :key="`report-intensity-${area.area}${station.station}`"
       >
