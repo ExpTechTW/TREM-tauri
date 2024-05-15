@@ -1,5 +1,5 @@
 import type { Eew, EewSource, EewStatus } from "@exptechtw/api-wrapper";
-import code from "./assets/json/code.json";
+import code from "./assets/json/town_code.json";
 
 export interface LastNtp {
   server: number;
