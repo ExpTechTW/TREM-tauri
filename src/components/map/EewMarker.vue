@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import CircleMarker from "@/components/map/CircleMarker.vue";
 import CrossMarker from "@/components/map/CrossMarker.vue";
 import DotMarker from "@/components/map/DotMarker.vue";
+import WaveMarker from "./WaveMarker.vue";
 
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
@@ -81,27 +81,25 @@ onBeforeUnmount(() => {
     :intensity="eew.eq.max"
     :z-index="1000"
   />
-  <CircleMarker
-    v-if="
-      (eew.author != EewSource.Trem || eew.detail) &&
-      eew.status != EewStatus.Cancel
-    "
-    type="s"
-    :radius="waveRadius.s"
-    :lnglat="[eew.eq.lon, eew.eq.lat]"
-    :alert="eew.status == EewStatus.Alert"
-    :z-index="1000"
-  />
-  <CircleMarker
+  <WaveMarker
     v-if="
       (eew.author != EewSource.Trem || eew.detail) &&
       eew.status != EewStatus.Cancel
     "
     type="p"
-    :radius="waveRadius.p"
     :lnglat="[eew.eq.lon, eew.eq.lat]"
+    :radius="waveRadius.p"
     :alert="eew.status == EewStatus.Alert"
-    :z-index="1000"
+  />
+  <WaveMarker
+    v-if="
+      (eew.author != EewSource.Trem || eew.detail) &&
+      eew.status != EewStatus.Cancel
+    "
+    type="s"
+    :lnglat="[eew.eq.lon, eew.eq.lat]"
+    :radius="waveRadius.s"
+    :alert="eew.status == EewStatus.Alert"
   />
 </template>
 

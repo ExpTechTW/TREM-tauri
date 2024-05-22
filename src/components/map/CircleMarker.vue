@@ -5,19 +5,22 @@ import { kmToPixels } from "@/helpers/utils";
 import { useMapStore } from "@/stores/map_store";
 import { Marker } from "maplibre-gl";
 
-const props = defineProps<{
-  type: "s" | "p";
-  radius: number;
-  lnglat: [number, number];
-  alert: boolean;
-  zIndex: number;
-}>();
+const props = withDefaults(
+  defineProps<{
+    lnglat: [number, number];
+    radius: number;
+    opacity?: number;
+    zIndex?: number;
+  }>(),
+  {
+    opacity: 1,
+    zIndex: 1,
+  }
+);
 
 const mapStore = useMapStore();
-const strokeTemplate = ref<HTMLDivElement>();
-const backgroundTemplate = ref<HTMLDivElement>();
-let strokeMarker: Marker;
-let backgroundMarker: Marker;
+const circleTemplate = ref<HTMLDivElement>();
+let circleMarker: Marker;
 
 const radiusInPixel = ref("0px");
 
@@ -52,30 +55,21 @@ const updateCircle = () => {
   updateLock = false;
 };
 
-const unwatch = watch(() => props.radius, updateCircle);
+const unwatchRadius = watch(() => props.radius, updateCircle);
 
 const unwatchLngLat = watch(
   () => props.lnglat,
   () => {
-    if (strokeMarker) strokeMarker.setLngLat(props.lnglat);
-    if (backgroundMarker) backgroundMarker.setLngLat(props.lnglat);
+    if (circleMarker) circleMarker.setLngLat(props.lnglat);
   }
 );
 
 onMounted(() => {
   if (!mapStore.map) return;
 
-  if (strokeTemplate.value) {
-    strokeMarker = new Marker({
-      element: strokeTemplate.value,
-    })
-      .setLngLat(props.lnglat)
-      .addTo(mapStore.map);
-  }
-
-  if (backgroundTemplate.value) {
-    backgroundMarker = new Marker({
-      element: backgroundTemplate.value,
+  if (circleTemplate.value) {
+    circleMarker = new Marker({
+      element: circleTemplate.value,
     })
       .setLngLat(props.lnglat)
       .addTo(mapStore.map);
@@ -88,32 +82,20 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (!mapStore.map) return;
 
-  if (strokeMarker) {
-    strokeMarker.remove();
-  }
-
-  if (backgroundMarker) {
-    backgroundMarker.remove();
+  if (circleMarker) {
+    circleMarker.remove();
   }
 
   mapStore.map.off("move", updateCircle);
-  unwatch();
+  unwatchRadius();
   unwatchLngLat();
 });
 </script>
 
 <template>
-  <div ref="strokeTemplate" class="circle-marker-stroke">
+  <div ref="circleTemplate" class="circle-marker" :style="{ zIndex }">
     <div
-      class="circle stroke"
-      :class="{ [type]: true, alert }"
-      :style="{ height: radiusInPixel, width: radiusInPixel }"
-    ></div>
-  </div>
-  <div ref="backgroundTemplate" class="circle-marker-background">
-    <div
-      class="circle background"
-      :class="{ [type]: true, alert }"
+      class="circle"
       :style="{ height: radiusInPixel, width: radiusInPixel }"
     ></div>
   </div>
@@ -127,38 +109,5 @@ onBeforeUnmount(() => {
   left: 0;
   border-radius: 100%;
   translate: -50% -50%;
-}
-
-.circle-marker-background {
-  z-index: -1;
-}
-
-.stroke {
-  border: 3px solid transparent;
-  border-radius: 100%;
-
-  &.p {
-    border-color: #6bf;
-  }
-
-  &.s:not(.alert) {
-    border-color: #ffa500;
-  }
-
-  &.s.alert {
-    border-color: #f22;
-  }
-}
-
-.background {
-  opacity: 0.4;
-
-  &.s:not(.alert) {
-    background: radial-gradient(transparent 40%, #ffa500);
-  }
-
-  &.s.alert {
-    background: radial-gradient(transparent 40%, #f22);
-  }
 }
 </style>
