@@ -11,10 +11,16 @@ const props = withDefaults(
     radius: number;
     opacity?: number;
     zIndex?: number;
+    stroke?: number;
+    strokeColor?: string;
+    fillColor?: string;
+    label?: string;
   }>(),
   {
     opacity: 1,
     zIndex: 1,
+    strokeColor: "#aaa",
+    label: "",
   }
 );
 
@@ -96,7 +102,15 @@ onBeforeUnmount(() => {
   <div ref="circleTemplate" class="circle-marker" :style="{ zIndex }">
     <div
       class="circle"
-      :style="{ height: radiusInPixel, width: radiusInPixel }"
+      :data-label="label"
+      :style="{
+        height: radiusInPixel,
+        width: radiusInPixel,
+        borderWidth: `${stroke}px`,
+        borderColor: strokeColor,
+        background: fillColor,
+        opacity,
+      }"
     ></div>
   </div>
 </template>
@@ -109,5 +123,13 @@ onBeforeUnmount(() => {
   left: 0;
   border-radius: 100%;
   translate: -50% -50%;
+  border-style: solid;
+}
+
+.circle::before {
+  content: attr(data-label);
+  position: absolute;
+  left: 50%;
+  translate: -50%;
 }
 </style>

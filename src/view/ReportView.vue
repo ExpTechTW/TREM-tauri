@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import AreaIntensityPanel from "@/components/report/AreaIntensityPanel.vue";
 import Button from "primevue/button";
+import CircleMarker from "@/components/map/CircleMarker.vue";
 import CrossMarker from "@/components/map/CrossMarker.vue";
 import CountyIntensity from "@/components/map/CountyIntensity.vue";
 import Intensity from "@/components/misc/Intensity.vue";
@@ -7,11 +9,12 @@ import IntensityMarker from "@/components/map/IntensityMarker.vue";
 import MaterialSymbols from "@/components/misc/MaterialSymbols.vue";
 import ProgressBar from "primevue/progressbar";
 
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { LngLatBounds, LngLatLike } from "maplibre-gl";
 import { open } from "@tauri-apps/plugin-shell";
 import {
+  calculateWaveRadius,
   extractLocationFromString,
   toFormattedTimeString,
   toReportUrl,
@@ -21,7 +24,6 @@ import { useReportStore } from "@/stores/report_store";
 
 import type { PartialReport, Report } from "@exptechtw/api-wrapper";
 import Global from "@/global";
-import AreaIntensityPanel from "@/components/report/AreaIntensityPanel.vue";
 import countyCodeTable from "@/assets/json/county_code.json";
 import countyCoordinates from "@/assets/json/county_coordinates.json";
 
@@ -36,6 +38,30 @@ const shouldClusterIntensityMarkers = ref(false);
 const progress = ref(0);
 let progressInterval: number;
 
+const waves = computed(() => {
+  const w: { radius: number; seconds: number }[] = [];
+
+  if (!report.value) {
+    return w;
+  }
+
+  for (let offset = 1; offset <= 7; offset++) {
+    const offsetTime = report.value.time + offset * 10 * 1000;
+    const { s } = calculateWaveRadius(
+      offsetTime,
+      report.value.depth,
+      report.value.time
+    );
+
+    w.push({
+      radius: s,
+      seconds: offset * 10,
+    });
+  }
+
+  return w;
+});
+
 const back = () => {
   router.back();
 };
@@ -43,6 +69,7 @@ const back = () => {
 const openReport = () => {
   if (report.value) {
     const url = toReportUrl(report.value.id);
+
     open(url).catch(console.error);
   }
 };
@@ -197,6 +224,17 @@ onUnmounted(() => {
         />
       </template>
     </template>
+
+    <template v-if="report" v-for="w in waves">
+      <CircleMarker
+        class="wave-time-circle"
+        :lnglat="[report.lon, report.lat]"
+        :radius="w.radius"
+        :stroke="1"
+        :label="`${w.seconds}秒`"
+      />
+    </template>
+
     <CrossMarker
       v-if="report"
       :lnglat="[report.lon, report.lat]"
