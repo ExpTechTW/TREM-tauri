@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
   />
 </template>
 
-<style lang="scss">
+<style>
 .cancelled {
   opacity: 0.6 !important;
   filter: saturate(0);

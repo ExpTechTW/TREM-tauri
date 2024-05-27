@@ -77,7 +77,7 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .dot-marker {
   transition: opacity 0s;
   z-index: 100;
