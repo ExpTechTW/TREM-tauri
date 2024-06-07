@@ -109,7 +109,6 @@ const login = async () => {
           <InputText
             v-model="name"
             id="account-name-input"
-            autocomplete="username"
             :loading="isLoading"
             :disabled="isLoading"
           />
@@ -150,6 +149,17 @@ const login = async () => {
 
 .input-label {
   font-size: smaller;
+  transition: color 0.1s ease-in-out;
+}
+
+.input-label:has(+ input:focus),
+.input-label:has(+ div input:focus) {
+  color: var(--p-primary-color);
+}
+
+.input-label:has(+ input.p-invalid),
+.input-label:has(+ div input.p-invalid) {
+  color: var(--p-form-field-invalid-border-color);
 }
 
 .field {
