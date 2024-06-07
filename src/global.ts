@@ -13,6 +13,9 @@ export default {
 
     window.setInterval(() => {
       api.getRts().then((v) => {
+        if (v.time < rtsStore.time) {
+          return;
+        }
         rtsStore.$patch(v);
       });
       api.getEew().then((v) => {
