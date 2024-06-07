@@ -1,5 +1,5 @@
-import type { EewType, PartialReport, Report, Rts, Station } from "@exptechtw/api-wrapper";
-import { fetch } from "@tauri-apps/plugin-http";
+import type { AuthenticationDetail, EewType, PartialReport, Report, Rts, Station } from "@exptechtw/api-wrapper";
+import { fetch, type ClientOptions } from "@tauri-apps/plugin-http";
 import { Route } from "@/class/route";
 
 export class ExpTechApi {
@@ -15,7 +15,12 @@ export class ExpTechApi {
     this.token = token;
   }
 
-  async #get(url: string, options?: RequestInit) {
+  /**
+   * Inner get request wrapper
+   * @param {string} url
+   * @returns {Promise<any>}
+   */
+  async #get(url: string, options?: RequestInit & ClientOptions): Promise<any> {
     const res = await fetch(url, {
       keepalive: true,
       connectTimeout: 2000,
@@ -27,6 +32,29 @@ export class ExpTechApi {
     } else {
       throw new Error(`Server returned a status of ${res.status}`);
     }
+  }
+
+  /**
+   * Inner post request wrapper
+   * @param {string} url
+   * @param {BodyInit} body
+   * @returns {Promise<Response>}
+   */
+  async #post(url: string, body: BodyInit, options?: RequestInit & ClientOptions): Promise<Response> {
+    const request = new Request(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      ...options,
+      body,
+    });
+
+    const res = await fetch(request);
+
+    if (!res.ok) throw new Error(`Server returned ${res.status}`);
+
+    return res;
   }
 
   async getStations(requestOptions?: RequestInit): Promise<Record<string, Station>> {
@@ -74,5 +102,17 @@ export class ExpTechApi {
 
   async getEew(time?: number, requestOptions?: RequestInit): Promise<EewType[]> {
     return await this.#get(this.route.eew(time), requestOptions);
+  }
+
+  async getAuthToken(options: AuthenticationDetail, route: (1 | 2) = 1, requestOptions?: RequestInit): Promise<string> {
+    const url = this.route.login(route);
+    const body = JSON.stringify({
+      email: options.email,
+      pass: options.password,
+      name: options.name
+    });
+    console.log(body);
+
+    return (await this.#post(url, body, requestOptions)).text();
   }
 }

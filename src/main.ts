@@ -1,8 +1,9 @@
 import { getCurrent } from "@tauri-apps/api/webviewWindow";
-import { createApp, type Plugin } from "vue";
+import { createApp } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
 import { createPinia } from "pinia";
-import PrimeVueStyled from 'primevue/styled';
+import PrimeVue from 'primevue/config';
+import Aura from 'primevue/themes/aura';
 import ConfirmationService from 'primevue/confirmationservice';
 import FocusTrap from "primevue/focustrap";
 import Ripple from 'primevue/ripple';
@@ -14,9 +15,10 @@ import App from "./App.vue";
 import "./styles.css";
 
 import MainRoute from "@/routes/MainRoute.vue";
-import LoginRoute from "@/routes/LoginRoute.vue";
+import AccountView from "./view/AccountView.vue";
 import ConfigView from "@/view/ConfigView.vue";
 import EarthquakeView from "./view/EarthquakeView.vue";
+import LoginView from "@/view/LoginView.vue";
 import ReportListView from "@/view/ReportListView.vue";
 import ReportView from "@/view/ReportView.vue";
 import ReplayView from "./view/ReplayView.vue";
@@ -65,14 +67,20 @@ const router = createRouter({
             navigation: ConfigView,
             stack: EarthquakeView
           },
-        }
+        },
+        {
+          path: "/account", components: {
+            navigation: AccountView,
+            stack: EarthquakeView
+          },
+        },
+        {
+          path: "/account/login", components: {
+            navigation: LoginView,
+            stack: EarthquakeView
+          },
+        },
       ]
-    },
-    {
-      path: "/login", component: LoginRoute,
-      meta: {
-        title: "TREM Tauri"
-      }
     },
   ]
 });
@@ -88,7 +96,12 @@ router.beforeEach((to, _, next) => {
 createApp(App)
   .use(pinia)
   .use(router)
-  .use(PrimeVueStyled as unknown as Plugin, { ripple: true })
+  .use(PrimeVue, {
+    theme: {
+      preset: Aura
+    },
+    ripple: true,
+  })
   .use(ConfirmationService)
   .use(ToastService)
   .directive("focustrap", FocusTrap)

@@ -23,7 +23,7 @@
     "maplibre-gl": "^4.3.2",
     "material-symbols": "^0.18.0",
     "pinia": "^2.1.7",
-    "primevue": "^4.0.0-beta.3",
+    "primevue": "^4.0.0-beta.4",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2"
   },

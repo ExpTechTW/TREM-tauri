@@ -1,4 +1,6 @@
 export const playSound = (name: string) => {
+  console.log(`playsound: ${name}`);
+
   switch (name) {
     case "intensity1":
       new Audio("/audio/intensity1.wav").play();

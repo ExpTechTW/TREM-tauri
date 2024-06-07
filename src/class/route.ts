@@ -52,4 +52,8 @@ export class Route {
 
     return `${this.lbUrl}/api/v1/eq/eew` as const;
   }
+
+  login(server: number = 1) {
+    return `https://api-${server}.exptech.com.tw/api/v3/et/login` as const;
+  }
 }

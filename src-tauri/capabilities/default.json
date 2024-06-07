@@ -51,6 +51,7 @@
       ]
     },
     "os:allow-platform",
+    "os:allow-hostname",
     "os:allow-arch",
     "os:allow-family",
     "os:allow-version"
