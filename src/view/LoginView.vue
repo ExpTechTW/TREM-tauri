@@ -33,7 +33,10 @@ const login = async () => {
       password: password.value,
       name: `${
         name.value || (await hostname())
-      }/TREM-tauri/${appVersion}/${await platform()}_${await version()}_${await arch()}`,
+      }/TREM-tauri/${appVersion}/${await platform()}_${await version()}_${await arch()}`.replace(
+        /-/g,
+        "_"
+      ),
     });
 
     if (remember.value) {

@@ -44,6 +44,7 @@ export class ExpTechApi {
     const request = new Request(url, {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Accept: "application/json",
       },
       ...options,
