@@ -4,15 +4,25 @@ import MaterialSymbols from "../misc/MaterialSymbols.vue";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-const props = defineProps<{
-  icon: string;
-  label: string;
-  to: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    icon: string;
+    label: string;
+    to: string;
+    activeOnRootPath?: boolean;
+  }>(),
+  {
+    activeOnRootPath: false,
+  }
+);
 
 const router = useRouter();
 const route = useRoute();
-const isActive = computed(() => route.path == props.to);
+const isActive = computed(() =>
+  props.activeOnRootPath
+    ? route.path.startsWith(props.to)
+    : route.path == props.to
+);
 
 const navigate = () => {
   if (isActive.value) {
@@ -56,7 +66,7 @@ const navigate = () => {
 
 .active {
   background-color: var(--p-primary-color);
-  color: var(--p-primary-inverse-color);
+  color: var(--p-primary-contrast-color);
   font-weight: bold;
 }
 
