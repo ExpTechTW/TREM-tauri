@@ -20,8 +20,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div id="titlebar">
-    <div data-tauri-drag-region class="titlebar-title">
+  <div data-tauri-drag-region id="titlebar">
+    <div class="titlebar-title">
       <div class="window-icon">
         <img src="/app.ico" class="window-icon" />
       </div>
