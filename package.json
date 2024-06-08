@@ -12,16 +12,16 @@
     "prettier": "prettier --write ./src"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.0.0-beta.12",
-    "@tauri-apps/plugin-fs": "^2.0.0-beta.3",
-    "@tauri-apps/plugin-http": "^2.0.0-beta.3",
-    "@tauri-apps/plugin-os": "^2.0.0-beta.3",
-    "@tauri-apps/plugin-shell": "^2.0.0-beta.4",
-    "@tauri-apps/plugin-websocket": "^2.0.0-beta.3",
+    "@tauri-apps/api": "^2.0.0-beta.13",
+    "@tauri-apps/plugin-fs": "2.0.0-beta.5",
+    "@tauri-apps/plugin-http": "2.0.0-beta.5",
+    "@tauri-apps/plugin-os": "2.0.0-beta.5",
+    "@tauri-apps/plugin-shell": "2.0.0-beta.6",
+    "@tauri-apps/plugin-websocket": "2.0.0-beta.5",
     "chroma-js": "^2.4.2",
     "jszip": "^3.10.1",
     "maplibre-gl": "^4.3.2",
-    "material-symbols": "^0.18.0",
+    "material-symbols": "^0.20.0",
     "pinia": "^2.1.7",
     "primevue": "^4.0.0-beta.4",
     "vue": "^3.4.27",
@@ -31,10 +31,10 @@
     "@exptechtw/api-wrapper": "github:ExpTechTW/api-wrapper",
     "@tauri-apps/cli": "^2.0.0-beta.13",
     "@types/chroma-js": "^2.4.4",
-    "@types/node": "^20.12.12",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@types/node": "^20.14.2",
+    "@vitejs/plugin-vue": "^5.0.5",
     "typescript": "^5.4.5",
-    "vite": "^5.2.11",
+    "vite": "^5.2.13",
     "vue-tsc": "^2.0.19"
   }
 }
