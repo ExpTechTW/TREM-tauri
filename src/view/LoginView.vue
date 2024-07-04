@@ -2,6 +2,8 @@
 import ViewPanel from "@/components/misc/ViewPanel.vue";
 import Button from "primevue/button";
 import Checkbox from "primevue/checkbox";
+import Chip from "primevue/chip";
+import Divider from "primevue/divider";
 import InputText from "primevue/inputtext";
 import Password from "primevue/password";
 
@@ -9,10 +11,10 @@ import Global from "@/global";
 
 import { version as appVersion } from "~/package.json";
 
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useAccountStore } from "@/stores/account_store";
 import { useRouter } from "vue-router";
-import { hostname, platform, version, arch } from "@tauri-apps/plugin-os";
+import { hostname, version } from "@tauri-apps/plugin-os";
 
 const accountStore = useAccountStore();
 const router = useRouter();
@@ -22,21 +24,27 @@ const name = ref("");
 const remember = ref(false);
 const isLoading = ref(false);
 const error = ref<string | null>(null);
+const nameError = ref<string | null>(null);
 
 const login = async () => {
   isLoading.value = true;
   error.value = null;
+  nameError.value = null;
+
+  const nameInfoString = `/TREM-tauri/${appVersion}/${await version()}`;
+  const nameString = `${name.value}${nameInfoString}`;
+
+  if (nameString.length > 50) {
+    nameError.value = `名稱長度必須小於 ${50 - nameInfoString.length} 個字元`;
+    isLoading.value = false;
+    return;
+  }
 
   try {
     const token = await Global.api.getAuthToken({
       email: email.value,
       password: password.value,
-      name: `${
-        name.value || (await hostname())
-      }/TREM-tauri/${appVersion}/${await platform()}_${await version()}_${await arch()}`.replace(
-        /-/g,
-        "_"
-      ),
+      name: nameString,
     });
 
     if (remember.value) {
@@ -44,7 +52,7 @@ const login = async () => {
         list: {
           [token]: {
             email: email.value,
-            password: password.value,
+            pass: password.value,
             name: name.value,
           },
         },
@@ -65,10 +73,13 @@ const login = async () => {
       }
     }
 
-    console.log(e);
     isLoading.value = false;
   }
 };
+
+onMounted(() => {
+  hostname().then((v) => (name.value = v ?? ""));
+});
 </script>
 
 <template>
@@ -76,7 +87,10 @@ const login = async () => {
     <ViewPanel title="登入">
       <form class="form-container" @submit.prevent="login">
         <div class="input-field">
-          <label for="account-email-input" class="input-label">電子郵件*</label>
+          <label for="account-email-input" class="input-label">
+            電子郵件
+            <span class="text-red-600 dark:text-red-400">*</span>
+          </label>
           <InputText
             v-model="email"
             id="account-email-input"
@@ -91,7 +105,10 @@ const login = async () => {
           </transition>
         </div>
         <div class="input-field">
-          <label for="account-password-input" class="input-label">密碼*</label>
+          <label for="account-password-input" class="input-label">
+            密碼
+            <span class="text-red-600 dark:text-red-400">*</span>
+          </label>
           <Password
             v-model="password"
             input-id="account-password-input"
@@ -112,9 +129,15 @@ const login = async () => {
           <InputText
             v-model="name"
             id="account-name-input"
+            :invalid="nameError != null"
             :loading="isLoading"
             :disabled="isLoading"
           />
+          <transition name="fade">
+            <small v-if="nameError" class="error-message">{{
+              nameError
+            }}</small>
+          </transition>
         </div>
         <div class="field">
           <Checkbox
@@ -132,6 +155,8 @@ const login = async () => {
           :disabled="isLoading"
         />
       </form>
+      <Divider v-if="Object.keys(accountStore.list).length" />
+      <Chip v-for="a in accountStore.list" :label="a.name" />
     </ViewPanel>
   </div>
 </template>

@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
 
 type Account = {
-
+  email: string;
+  pass: string;
+  name: string;
 };
 
 interface AccountState {
   list: Record<string, Account>;
   currentToken: string | null;
-
 }
 
 export const useAccountStore = defineStore("account", {

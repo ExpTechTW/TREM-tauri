@@ -1,15 +1,15 @@
 :root {
-  --intensity-0: #202020;
-  --intensity-1: #004080;
-  --intensity-2: #0070e0;
-  --intensity-3: #1e9632;
-  --intensity-4: #ffc800;
-  --intensity-5: #ff9600;
-  --intensity-6: #ff6400;
-  --intensity-7: #ff0000;
-  --intensity-8: #c00000;
-  --intensity-9: #9600c8;
-  --intensity-unknow: #202020;
+  --intensity-0: 32 32 32;
+  --intensity-1: 0 64 128;
+  --intensity-2: 0 112 224;
+  --intensity-3: 30 150 50;
+  --intensity-4: 255 200 0;
+  --intensity-5: 255 150 0;
+  --intensity-6: 255 100 0;
+  --intensity-7: 255 0 0;
+  --intensity-8: 192 0 0;
+  --intensity-9: 150 0 200;
+  --intensity-unknow: 32 32 32;
 }
 
 .intensity-0 {

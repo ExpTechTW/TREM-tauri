@@ -139,7 +139,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (!mapStore.map) return;
-
   mapStore.map.off("zoom", onMapZoom);
 });
 </script>
@@ -154,11 +153,11 @@ onUnmounted(() => {
       style="left: 0; right: 0; top: 0; height: 4px"
     />
     <Button
+      class="top-4 left-4"
       severity="secondary"
       label="返回"
       rounded
       raised
-      style="top: 16px; left: 16px"
       @click="back"
     >
       <template #icon>
@@ -168,7 +167,7 @@ onUnmounted(() => {
 
     <div v-if="report" class="report-item" style="bottom: 8px; left: 8px">
       <div class="report-item-container">
-        <Intensity :intensity="report.int" />
+        <Intensity :intensity="report.int" :border="!(report.no % 1000)" />
         <div class="report-item-content">
           <div class="report-title">
             {{

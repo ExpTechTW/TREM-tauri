@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { IntensityBgClass } from "@/helpers/constant";
+
 withDefaults(
   defineProps<{
     intensity: number;
@@ -12,8 +14,11 @@ withDefaults(
 </script>
 <template>
   <div
-    class="intensity-ball"
-    :class="[`intensity-${intensity}`]"
+    class="flex items-center justify-center rounded-full font-semibold border-2 transition"
+    :class="[
+      IntensityBgClass[intensity],
+      intensity == 4 || intensity == 5 ? 'text-black' : 'text-white',
+    ]"
     :style="{
       height: `${size}px`,
       width: `${size}px`,
@@ -24,15 +29,3 @@ withDefaults(
     {{ ["0", "1", "2", "3", "4", "5⁻", "5⁺", "6⁻", "6⁺", "7"][intensity] }}
   </div>
 </template>
-
-<style scoped>
-.intensity-ball {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 100%;
-  font-weight: 600;
-  border: 2px solid #fff;
-  transition: background-color 0.1s ease-out;
-}
-</style>

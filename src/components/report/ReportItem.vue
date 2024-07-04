@@ -69,7 +69,7 @@ onUnmounted(() => {
     tabindex="0"
     @click="navigate"
   >
-    <Intensity :intensity="report.int" />
+    <Intensity :intensity="report.int" :border="!(report.no % 1000)" />
     <div class="report-item-content">
       <div class="report-title">
         {{
@@ -102,7 +102,7 @@ onUnmounted(() => {
     class="report-popup-item"
     :class="{ numbered: report.no % 1000 }"
   >
-    <Intensity :intensity="report.int" />
+    <Intensity :intensity="report.int" :border="!(report.no % 1000)" />
     <div class="report-popup-content">
       <div class="report-popup-title">
         {{

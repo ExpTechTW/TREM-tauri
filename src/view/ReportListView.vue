@@ -5,6 +5,7 @@ import Panel from "@/components/misc/Panel.vue";
 import ProgressSpinner from "primevue/progressspinner";
 import ReportItem from "@/components/report/ReportItem.vue";
 import ViewPanel from "@/components/misc/ViewPanel.vue";
+import FilterItem from "@/components/misc/FilterItem.vue";
 
 import { computed, onMounted, reactive } from "vue";
 import { useMapStore } from "@/stores/map_store";
@@ -69,15 +70,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <ViewPanel class="report-wrapper" title="地震報告">
-    <Panel class="filter-panel" title="篩選器" titleIcon="filter_alt" collapsed>
-      <div class="filter-list">
-        <label class="filter-item" for="filter-numbered">
-          <div class="filter-label">只顯示編號報告</div>
+  <ViewPanel title="地震報告">
+    <Panel class="m-2" title="篩選器" titleIcon="filter_alt" collapsed>
+      <div class="flex flex-col gap-2">
+        <FilterItem label="只顯示編號報告" for="filter-numbered">
           <InputSwitch v-model="filters.numbered" input-id="filter-numbered" />
-        </label>
-        <div class="filter-item">
-          <div class="filter-label">最大震度</div>
+        </FilterItem>
+        <FilterItem label="最大震度" for="filter-intensity">
           <MultiSelect
             v-model="filters.intensity"
             :options="FilterIntensityOptions"
@@ -85,9 +84,8 @@ onMounted(() => {
             option-value="value"
             :style="{ width: '120px' }"
           />
-        </div>
-        <div class="filter-item">
-          <div class="filter-label">規模</div>
+        </FilterItem>
+        <FilterItem label="規模" for="filter-magnitude">
           <MultiSelect
             v-model="filters.magnitude"
             :options="FilterMagnitudeOptions"
@@ -95,10 +93,10 @@ onMounted(() => {
             option-value="value"
             :style="{ width: '120px' }"
           />
-        </div>
+        </FilterItem>
       </div>
     </Panel>
-    <div class="report-list">
+    <div class="flex flex-col">
       <ReportItem
         v-if="reportStore.list.length"
         v-for="(report, i) in filteredList"
@@ -107,43 +105,15 @@ onMounted(() => {
         :markerOpacity="0.25 + 0.75 * (1 - i / filteredList.length)"
         :markerZIndex="filteredList.length - i"
       />
-      <ProgressSpinner
-        v-else
-        style="height: 32px; width: 32px"
-        strokeWidth="4"
-      />
+      <ProgressSpinner v-else class="!h-8 !w-8 !my-4" strokeWidth="4" />
     </div>
   </ViewPanel>
 </template>
 
 <style scoped>
-.report-wrapper {
-  width: 280px;
-  overflow-y: auto;
-}
-
-.report-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.filter-panel {
-  margin: 8px;
-}
-
 .filter-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.filter-item {
-  display: flex;
-  align-items: center;
-}
-
-.filter-label {
-  flex: 1;
-  font-size: 14px;
 }
 </style>

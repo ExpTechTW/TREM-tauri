@@ -47,3 +47,16 @@ export const PgaDomain = [
 export const PgvDomain = [
   0, 0.5, 1.2, 1.9, 5.7, 15, 30, 50, 80, 140,
 ];
+
+export const IntensityBgClass = [
+  "bg-intensity-0",
+  "bg-intensity-1",
+  "bg-intensity-2",
+  "bg-intensity-3",
+  "bg-intensity-4",
+  "bg-intensity-5",
+  "bg-intensity-6",
+  "bg-intensity-7",
+  "bg-intensity-8",
+  "bg-intensity-9",
+] as const;

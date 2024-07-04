@@ -28,13 +28,10 @@
       "identifier": "http:default",
       "allow": [
         {
-          "url": "https://raw.githubusercontent.com/ExpTechTW/*"
+          "url": "https://lb-*.exptech.dev"
         },
         {
-          "url": "https://lb-*.exptech.com.tw"
-        },
-        {
-          "url": "https://api-*.exptech.com.tw"
+          "url": "https://api-*.exptech.dev"
         }
       ]
     },
@@ -50,7 +47,7 @@
         "$APPCONFIG/*"
       ]
     },
-    "os:allow-platform",
+    "os:allow-os-type",
     "os:allow-hostname",
     "os:allow-arch",
     "os:allow-family",

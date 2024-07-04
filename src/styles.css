@@ -1,5 +1,9 @@
 @import url(./styles/colors.css);
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   font-family: Inter, "Noto Sans TC", sans-serif;
   font-size: 16px;

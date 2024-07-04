@@ -7,7 +7,7 @@ import Titlebar from "./components/window/Titlebar.vue";
 import { onMounted, onUnmounted, ref } from "vue";
 import { getCurrent } from "@tauri-apps/api/window";
 import { useRoute, useRouter } from "vue-router";
-import { platform, version } from "@tauri-apps/plugin-os";
+import { type, version } from "@tauri-apps/plugin-os";
 
 const route = useRoute();
 const router = useRouter();
@@ -51,7 +51,7 @@ const preventContextMenu = (e: MouseEvent) => {
 };
 
 const checkWindows11 = async () => {
-  if ((await platform()) != "windows") return;
+  if ((await type()) != "windows") return;
 
   const buildNumber = +(await version()).split(".")[2];
 

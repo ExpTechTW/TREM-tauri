@@ -12,35 +12,16 @@ withDefaults(
 </script>
 
 <template>
-  <div class="panel">
-    <div class="panel-header" :class="{ large }">
+  <div
+    class="flex flex-col max-h-full px-2 rounded-lg min-w-64 overflow-y-auto"
+  >
+    <div
+      class="flex items-center gap-2 p-2 text-lg font-bold"
+      :class="{ large }"
+    >
       <div class="header-title">{{ title }}</div>
-      <div v-if="subtitle" class="header-subtitle">{{ subtitle }}</div>
+      <div v-if="subtitle" class="opacity-60">{{ subtitle }}</div>
     </div>
     <slot />
   </div>
 </template>
-
-<style scoped>
-.panel {
-  display: flex;
-  flex-direction: column;
-  max-height: 100%;
-  padding: 0 8px;
-  border-radius: 8px;
-}
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--t-primary-text-color);
-}
-
-.header-subtitle {
-  opacity: 0.6;
-}
-</style>

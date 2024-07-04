@@ -18,15 +18,15 @@ export class Route {
   }
 
   get lbUrl() {
-    return `https://lb-${this.lb}.exptech.com.tw` as const;
+    return `https://lb-${this.lb}.exptech.dev` as const;
   }
 
   get apiUrl() {
-    return `https://api-${this.api}.exptech.com.tw` as const;
+    return `https://api-${this.api}.exptech.dev` as const;
   }
 
   get station() {
-    return "https://raw.githubusercontent.com/ExpTechTW/API/master/resource/station.json" as const;
+    return `${this.apiUrl}/api/v1/trem/station` as const;
   }
 
   reportList(limit = 50) {

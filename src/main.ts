@@ -3,7 +3,7 @@ import { createApp } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
 import { createPinia } from "pinia";
 import PrimeVue from 'primevue/config';
-import Aura from 'primevue/themes/aura';
+import Aura from '@primevue/themes/aura';
 import ConfirmationService from 'primevue/confirmationservice';
 import FocusTrap from "primevue/focustrap";
 import Ripple from 'primevue/ripple';
