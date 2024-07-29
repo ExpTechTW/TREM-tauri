@@ -5,13 +5,13 @@ import Toast from "primevue/toast";
 import Titlebar from "./components/window/Titlebar.vue";
 
 import { onMounted, onUnmounted, ref } from "vue";
-import { getCurrent } from "@tauri-apps/api/window";
 import { useRoute, useRouter } from "vue-router";
 import { type, version } from "@tauri-apps/plugin-os";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 const route = useRoute();
 const router = useRouter();
-const win = getCurrent();
+const win = getCurrentWindow();
 
 const isFileDropOverlayVisible = ref(false);
 const replayFilePath = ref("");
@@ -19,14 +19,14 @@ const replayFilePath = ref("");
 const uFileDrop = win.onDragDropEvent((event) => {
   if (route.path == "/replay") return;
 
-  if (event.payload.type === "dragged") {
+  if (event.payload.type === "enter") {
     const files = event.payload.paths.filter((v) => v.endsWith(".trply"));
 
     if (files.length) {
       isFileDropOverlayVisible.value = true;
       replayFilePath.value = files[0];
     }
-  } else if (event.payload.type === "dropped") {
+  } else if (event.payload.type === "drop") {
     const files = event.payload.paths.filter((v) => v.endsWith(".trply"));
 
     isFileDropOverlayVisible.value = false;
@@ -38,7 +38,7 @@ const uFileDrop = win.onDragDropEvent((event) => {
         path: files[0],
       },
     });
-  } else if (event.payload.type === "cancelled") {
+  } else if (event.payload.type === "leave") {
     isFileDropOverlayVisible.value = false;
     replayFilePath.value = "";
   }

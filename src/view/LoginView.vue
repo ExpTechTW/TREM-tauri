@@ -134,9 +134,9 @@ onMounted(() => {
             :disabled="isLoading"
           />
           <transition name="fade">
-            <small v-if="nameError" class="error-message">{{
-              nameError
-            }}</small>
+            <small v-if="nameError" class="error-message">
+              {{ nameError }}
+            </small>
           </transition>
         </div>
         <div class="field">
@@ -156,7 +156,7 @@ onMounted(() => {
         />
       </form>
       <Divider v-if="Object.keys(accountStore.list).length" />
-      <Chip v-for="a in accountStore.list" :label="a.name" />
+      <Chip v-for="account in accountStore.list" :label="account.name" />
     </ViewPanel>
   </div>
 </template>

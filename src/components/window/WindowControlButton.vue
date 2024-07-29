@@ -1,9 +1,8 @@
 <script setup lang="ts">
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import MaterialSymbols from "../misc/MaterialSymbols.vue";
 
-import { getCurrent } from "@tauri-apps/api/webviewWindow";
-
-const webview = getCurrent();
+const webview = getCurrentWindow();
 
 const props = defineProps<{
   type: "minimize" | "maximize" | "restore" | "close";

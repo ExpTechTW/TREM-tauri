@@ -8,7 +8,6 @@
   "permissions": [
     "path:default",
     "event:default",
-    "path:default",
     "window:default",
     "window:allow-start-dragging",
     "window:allow-set-title",
@@ -51,6 +50,13 @@
     "os:allow-hostname",
     "os:allow-arch",
     "os:allow-family",
-    "os:allow-version"
+    "os:allow-version",
+    "stronghold:allow-initialize",
+    "stronghold:allow-create-client",
+    "stronghold:allow-load-client",
+    "stronghold:allow-save",
+    "stronghold:allow-save-store-record",
+    "stronghold:allow-get-store-record",
+    "stronghold:allow-remove-store-record"
   ]
 }

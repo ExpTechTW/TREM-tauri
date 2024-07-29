@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import WindowControlButton from "./WindowControlButton.vue";
+import WindowControlButton from "@/components/window/WindowControlButton.vue";
 
 import { onUnmounted, ref } from "vue";
-import { getCurrent } from "@tauri-apps/api/webviewWindow";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 import { version } from "~/package.json";
 
-const webview = getCurrent();
+const webview = getCurrentWindow();
 
 const isMaximized = ref(false);
 

@@ -33,6 +33,7 @@ export const useConfigStore = defineStore("config", {
   state: () => config,
   actions: {
     async save() {
+
       await writeTextFile(
         "config.json",
         JSON.stringify(this.$state, null, 2), {

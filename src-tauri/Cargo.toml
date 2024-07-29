@@ -22,3 +22,5 @@ tauri-plugin-fs = "2.0.0-beta.6"
 tauri-plugin-os = "2.0.0-beta.4"
 whoami = "1.5.1"
 windows = { version = "0.56.0", features = ["Win32_UI_Shell"] }
+tauri-plugin-stronghold = "2.0.0-beta.7"
+rust-argon2 = "2.1.0"
