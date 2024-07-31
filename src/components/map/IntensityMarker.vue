@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import IntensityBlock from "../misc/IntensityBlock.vue";
 
-import { ComponentPublicInstance, onMounted, onUnmounted, ref } from "vue";
+import { type ComponentPublicInstance, onMounted, onUnmounted, ref } from "vue";
 import { Marker, type LngLatLike } from "maplibre-gl";
 import { useMapStore } from "@/stores/map_store";
 

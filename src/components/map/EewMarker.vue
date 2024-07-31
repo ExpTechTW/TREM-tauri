@@ -5,7 +5,7 @@ import WaveMarker from "./WaveMarker.vue";
 
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import { EewSource, EewStatus, EewType } from "@exptechtw/api-wrapper";
+import { EewSource, EewStatus, type EewType } from "@exptechtw/api-wrapper";
 import { calculateWaveRadius, getMarkerSizeOnZoom } from "@/helpers/utils";
 import { useMapStore } from "@/stores/map_store";
 

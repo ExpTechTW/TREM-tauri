@@ -4,14 +4,18 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview",
+    "dev": "nuxt dev",
+    "build": "nuxt generate",
+    "preview": "nuxt preview",
     "tauri": "tauri",
     "lint": "eslint ./src --ext .ts,.vue --fix",
     "prettier": "prettier --write ./src"
   },
   "dependencies": {
+    "@kamiya4047/exptech-api-wrapper": "3.1.4",
+    "@material/material-color-utilities": "^0.3.0",
+    "@nuxtjs/tailwindcss": "^6.12.1",
+    "@pinia/nuxt": "^0.5.2",
     "@primevue/themes": "^4.0.2",
     "@tauri-apps/api": "2.0.0-beta.16",
     "@tauri-apps/plugin-fs": "2.0.0-beta.7",
@@ -20,10 +24,12 @@
     "@tauri-apps/plugin-shell": "2.0.0-beta.8",
     "@tauri-apps/plugin-stronghold": "^2.0.0-beta.7",
     "@tauri-apps/plugin-websocket": "2.0.0-beta.7",
+    "@turf/turf": "^7.0.0",
     "chroma-js": "^2.4.2",
     "jszip": "^3.10.1",
     "maplibre-gl": "^4.5.0",
     "material-symbols": "^0.21.2",
+    "nuxt": "^3.12.4",
     "pinia": "^2.2.0",
     "primevue": "^4.0.2",
     "tailwindcss-primeui": "^0.3.4",
@@ -31,7 +37,7 @@
     "vue-router": "^4.4.0"
   },
   "devDependencies": {
-    "@exptechtw/api-wrapper": "github:ExpTechTW/api-wrapper",
+    "@primevue/nuxt-module": "^4.0.2",
     "@tauri-apps/cli": "2.0.0-beta.23",
     "@types/chroma-js": "^2.4.4",
     "@types/node": "^22.0.0",

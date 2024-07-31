@@ -85,6 +85,7 @@ onUnmounted(() => {
         </span>
       </div>
     </div>
+    <!-- 
     <CrossMarker
       class="report-marker"
       :lnglat="[report.lon, report.lat]"
@@ -96,7 +97,9 @@ onUnmounted(() => {
       @mouseover="markerMouseover"
       @mouseleave="markerMouseleave"
     />
+ -->
   </div>
+  <!-- 
   <div
     ref="reportMarkerPopupElement"
     class="report-popup-item"
@@ -119,6 +122,7 @@ onUnmounted(() => {
       </div>
     </div>
   </div>
+   -->
 </template>
 
 <style scoped>

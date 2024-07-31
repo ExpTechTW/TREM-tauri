@@ -34,16 +34,16 @@ const navigate = () => {
 </script>
 
 <template>
-  <div
+  <NuxtLink
     v-ripple
+    to="/reports"
     class="navigation-entry"
     :class="{ active: isActive }"
     tabindex="0"
-    @click="navigate"
   >
     <MaterialSymbols :icon="icon" />
     <div class="label">{{ label }}</div>
-  </div>
+  </NuxtLink>
 </template>
 
 <style scoped>

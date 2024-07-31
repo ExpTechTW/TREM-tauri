@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import MapView from "../components/map/MapView.vue";
-import NavigationRail from "../components/navigation/NavigationRail.vue";
-
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
@@ -17,24 +14,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="main">
-    <div class="navigation">
-      <NavigationRail :expanded="isNavigationRailExpanded" />
-      <router-view name="navigation" v-slot="{ Component }">
-        <component :is="Component" />
-      </router-view>
-    </div>
-    <div class="content">
-      <MapView />
-      <div class="stack">
-        <router-view name="stack" v-slot="{ Component }">
-          <transition name="fade">
-            <component :is="Component" />
-          </transition>
-        </router-view>
-      </div>
-    </div>
-  </div>
+  <main>index</main>
 </template>
 
 <style>

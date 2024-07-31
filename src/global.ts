@@ -1,15 +1,18 @@
 import type { EewType } from "@exptechtw/api-wrapper";
-import { ExpTechApi } from "./class/api";
 import { useEewStore } from "./stores/eew_store";
 import { useRtsStore } from "./stores/rts_store";
 import { appDataDir } from "@tauri-apps/api/path";
 import { Stronghold, type Client } from "@tauri-apps/plugin-stronghold";
+import { ExpTechApi } from "./class/api";
 
 const api = new ExpTechApi();
 
 const vaultPassword = import.meta.env.VITE_STRONGHOLD_PASS;
 
-const stronghold = await Stronghold.load(`${await appDataDir()}/vault.hold`, vaultPassword);
+const stronghold = await Stronghold.load(
+  `${await appDataDir()}/vault.hold`,
+  vaultPassword
+);
 
 let client: Client;
 
@@ -37,11 +40,11 @@ export default {
       api.getEew().then((v) => {
         eewStore.$patch({
           eew: v.reduce(
-            (acc, e) => (acc[e.id] = e, acc),
+            (acc, e) => ((acc[e.id] = e), acc),
             {} as Record<string, EewType>
-          )
+          ),
         });
       });
     }, 1000);
-  }
+  },
 };

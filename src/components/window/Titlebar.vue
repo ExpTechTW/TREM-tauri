@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import WindowControlButton from "@/components/window/WindowControlButton.vue";
-
-import { onUnmounted, ref } from "vue";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-
-import { version } from "~/package.json";
+import { version } from "~~/package.json";
 
 const webview = getCurrentWindow();
 
@@ -23,7 +19,7 @@ onUnmounted(() => {
   <div data-tauri-drag-region id="titlebar">
     <div class="titlebar-title">
       <div class="window-icon">
-        <img src="/app.ico" class="window-icon" />
+        <img src="@/assets/app.ico" class="window-icon" />
       </div>
       <div class="window-title">
         <span class="app-name">TREM Tauri</span>

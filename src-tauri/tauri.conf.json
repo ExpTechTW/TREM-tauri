@@ -4,8 +4,8 @@
   "identifier": "tw.com.exptech.trem",
   "build": {
     "beforeDevCommand": "npm run dev",
-    "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "npm run generate",
+    "devUrl": "http://localhost:3000",
     "frontendDist": "../dist"
   },
   "app": {

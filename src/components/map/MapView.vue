@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from "vue";
 import {
-  DataDrivenPropertyValueSpecification,
+  type DataDrivenPropertyValueSpecification,
+  GeoJSONSource,
   Map as MaplibreMap,
+  type SymbolLayerSpecification,
 } from "maplibre-gl";
-import { useMapStore } from "@/stores/map_store";
 
 import type { MapColorScheme } from "./MapView";
-import "maplibre-gl/dist/maplibre-gl.css";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { featureCollection, point } from "@turf/turf";
 
 const mapStore = useMapStore();
+const reportStore = useReportStore();
 
 const win = getCurrentWindow();
 
@@ -94,6 +95,20 @@ const uThemeChanged = win.onThemeChanged((event) => {
   }
 });
 
+reportStore.$subscribe((mutation, state) => {
+  if (!mapStore.map) return;
+
+  const source = mapStore.map.getSource("reports");
+
+  if (!(source instanceof GeoJSONSource)) return;
+
+  const features = state.partial.map((report) =>
+    point([report.lon, report.lat], report)
+  );
+
+  source.setData(featureCollection(features));
+});
+
 onMounted(async () => {
   const theme = (await win.theme()) == "light" ? "Light" : "Dark";
   const colorTheme = MapThemeColors[theme];
@@ -138,23 +153,18 @@ onMounted(async () => {
           type: "geojson",
           data: "./map/box.json",
         },
+        reports: {
+          type: "geojson",
+          data: featureCollection([]),
+        },
       },
       layers: [
-        /* {
-          id: "background",
-          type: "background",
-          paint: {
-            "background-color": colorTheme.,
-          },
-        }, */
         {
           id: "county",
           type: "fill",
           source: "map",
           "source-layer": "city",
           paint: {
-            // FIXME: workaround waiting for upstream PR to merge
-            // https://github.com/material-foundation/flutter-packages/pull/599
             "fill-color": intensityFillColor,
             "fill-opacity": 1,
           },
@@ -165,8 +175,6 @@ onMounted(async () => {
           source: "map",
           "source-layer": "town",
           paint: {
-            // FIXME: workaround waiting for upstream PR to merge
-            // https://github.com/material-foundation/flutter-packages/pull/599
             "fill-color": intensityFillColor,
             "fill-opacity": [
               "case",
@@ -253,7 +261,16 @@ onMounted(async () => {
             visibility: "none",
           },
         },
+        {
+          id: "reports",
+          type: "symbol",
+          source: "reports",
+          layout: {
+            "icon-image": ["concat", "cross-", ["get", "int"]],
+          },
+        },
       ],
+      sprite: "https://exptech.dev/assets/poi/sprite",
     },
     attributionControl: false,
     center: [initialState.lng, initialState.lat],

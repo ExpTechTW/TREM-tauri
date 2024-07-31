@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
   <div class="navigation-rail" :class="{ expanded }">
-    <NavigationEntry :icon="`\uf64f`" label="地震報告" to="/report" />
+    <NavigationEntry :icon="`\uf64f`" label="地震報告" to="/reports" />
     <NavigationEntry :icon="`\ue8b8`" label="設定" to="/config" />
     <NavigationEntry
       :icon="`\ue7fd`"
